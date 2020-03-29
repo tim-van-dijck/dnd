@@ -1,0 +1,59 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: dnd-php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: dnd-php
+      SERVICE_TAGS: dev
+    working_dir: /var/www/app
+    volumes:
+      - ./:/var/www/app
+      - ./docker/php/local.ini:/usr/local/etc/php/local.ini
+    networks:
+      - dnd-network
+
+  dnd-webserver:
+    image: nginx:alpine
+    container_name: dnd-app
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/app/
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - dnd-network
+
+  dnd-db:
+    image: mysql:5.7.22
+    container_name: dnd-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: dnd
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - dnd-network
+
+networks:
+  dnd-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
