@@ -54,7 +54,7 @@ class CampaignPolicy
     public function update(User $user, Campaign $campaign)
     {
         return $user->roles()
-            ->join('permission_role', 'role.id', '=', 'permission_role.role_id')
+            ->join('permission_role', 'roles.id', '=', 'permission_role.role_id')
             ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
             ->where([
                 'roles.campaign_id' => $campaign->id,

@@ -51,6 +51,7 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
+        dump(Auth::user()->can('view', $campaign));
         if (Auth::user()->can('view', $campaign)) {
             Session::put('campaign_id', $campaign->id);
         }

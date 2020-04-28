@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="campaigns">
+        <h1>Campaigns</h1>
         <a class="uk-button uk-button-primary" href="/campaigns/create">
             <i class="fas fa-plus"></i> Add campaign
         </a>
@@ -17,18 +18,20 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="character in characters.data">
+            @foreach ($campaigns as $campaign)
+            <tr>
                 <td>
                     @can('update', $campaign)
-                    <a href="/campaigns/{{ $campaign->id }}/edit">
+                    <a href="{{ route('campaigns.edit', ['campaign' => $campaign]) }}">
                         <i class="fas fa-edit"></i>
                     </a>
                     @endcan
                 </td>
-                <td>{{ $campaign->name }}</td>
+                <td><a href="{{ route('campaigns.show', ['campaign' => $campaign]) }}">{{ $campaign->name }}</a></td>
                 <td>{{ $campaign->role }}</td>
                 <td></td>
             </tr>
+            @endforeach
             </tbody>
         </table>
         @else
