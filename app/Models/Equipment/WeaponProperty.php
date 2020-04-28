@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class WeaponProperty extends Model
 {
-    //
+    public $timestamps = false;
 }

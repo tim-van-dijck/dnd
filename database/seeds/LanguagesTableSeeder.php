@@ -13,12 +13,12 @@ class LanguagesTableSeeder extends Seeder
      */
     public function run()
     {
-        $languages = json_decode(Storage::get('json/Languages.json'), true);
+        $languages = json_decode(file_get_contents(resource_path('json/Languages.json')), true);
         foreach ($languages as $languageArray) {
             $language = new Language();
             $language->name = $languageArray['name'];
             $language->type = $languageArray['type'];
-            $language->script = $languageArray['script'];
+            $language->script = $languageArray['script'] ?? '';
             $language->save();
         }
     }

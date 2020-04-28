@@ -13,11 +13,11 @@ class TraitsTableSeeder extends Seeder
      */
     public function run()
     {
-        $traits = json_decode(Storage::get('json/Traits.json'), true);
+        $traits = json_decode(file_get_contents(resource_path('json/Traits.json')), true);
         foreach ($traits as $traitArray) {
             $trait = new RaceTrait();
             $trait->name = $traitArray['name'];
-            $trait->description = $traitArray['description'][0];
+            $trait->description = implode('<br>', $traitArray['desc']);
             $trait->save();
         }
     }

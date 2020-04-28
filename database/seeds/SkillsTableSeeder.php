@@ -13,12 +13,12 @@ class SkillsTableSeeder extends Seeder
      */
     public function run()
     {
-        $skills = json_decode(Storage::get('json?Skills.json'), true);
+        $skills = json_decode(file_get_contents(resource_path('json/Skills.json')), true);
         foreach ($skills as $skillArray) {
             $skill = new Skill();
             $skill->name = $skillArray['name'];
-            $skill->description = $skillArray['description'];
-            $skill->ability_score = $skillArray['ability_score'];
+            $skill->description = implode('<br>', $skillArray['desc']);
+            $skill->ability_score = $skillArray['ability_score']['name'];
             $skill->save();
         }
     }
