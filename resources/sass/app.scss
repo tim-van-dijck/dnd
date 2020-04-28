@@ -1,1 +1,52 @@
-//
+@import "~uikit/src/scss/variables-theme.scss";
+@import "~uikit/src/scss/mixins-theme.scss";
+@import "~uikit/src/scss/uikit-theme.scss";
+
+@import "~vue-select/src/scss/vue-select.scss";
+
+@import "partial/header";
+@import "partial/form";
+@import "partial/login";
+@import "partial/navigation";
+
+#content {
+  padding: 82px 0 0 0;
+  background-color: #f7f7f7;
+  margin-left: 0;
+}
+
+#app #content {
+  margin-top: 52px;
+  transition: margin 0.2s cubic-bezier(.4,0,.2,1);
+  padding-top: 30px;
+}
+@media screen and (min-width: 960px){
+  #app {
+    #content {
+      /* equal to left-col width */
+      margin-left: 240px;
+    }
+    #top-head {
+      /* equal to left-col width */
+      left:240px;
+    }
+  }
+}
+
+.uk-card {
+  box-shadow: none;
+}
+
+.uk-heading-primary {
+  letter-spacing: -0.032em;
+  font-weight: 300;
+}
+/* Smooth shadow transition */
+.uk-card {
+  -webkit-transition: box-shadow 0.55s cubic-bezier(.4,0,.2,1);
+  transition: box-shadow 0.55s cubic-bezier(.4,0,.2,1);
+}
+.uk-container.padded {
+  padding-left: 40px;
+  padding-right: 40px;
+}

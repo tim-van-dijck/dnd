@@ -15,8 +15,8 @@ class CreateFeaturesTable extends Migration
     {
         Schema::create('features', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('class_id', false, true);
-            $table->integer('subclass_id', false, true);
+            $table->integer('class_id', false, true)->nullable();
+            $table->integer('subclass_id', false, true)->nullable();
             $table->string('name');
             $table->integer('level');
             $table->text('description');

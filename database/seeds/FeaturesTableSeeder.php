@@ -16,7 +16,7 @@ class FeaturesTableSeeder extends Seeder
      */
     public function run()
     {
-        $features = json_decode(Storage::get('json/Features.json'), true);
+        $features = json_decode(file_get_contents(resource_path('json/Features.json')), true);
         $classes  = CharacterClass::get()->keyBy('name');
         $subclasses = Subclass::get()->keyBy('name');
         foreach ($features as $featureArray) {
@@ -28,8 +28,8 @@ class FeaturesTableSeeder extends Seeder
                 $feature->subclass_id = $this->getSubclassId($subclasses, $featureArray);
             }
             $feature->name = $featureArray['name'];
-            $feature->level = $featureArray['level'];
-            $feature->description = $featureArray['description'][0];
+            $feature->level = $featureArray['level'] ?? 0;
+            $feature->description = implode('<br>', $featureArray['desc']);
             $feature->save();
         }
     }
@@ -50,9 +50,9 @@ class FeaturesTableSeeder extends Seeder
      * @param array $featureArray
      * @return int
      */
-    private function getSubclassId(Collection $subclasses, array $featureArray): int
+    private function getSubclassId(Collection $subclasses, array $featureArray): ?int
     {
         $className = $featureArray['class']['name'];
-        return $subclasses[$className]->id;
+        return empty($subclasses[$className]) ? null : $subclasses[$className]->id;
     }
 }

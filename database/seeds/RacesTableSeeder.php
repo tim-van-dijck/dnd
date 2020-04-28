@@ -14,7 +14,7 @@ class RacesTableSeeder extends Seeder
      */
     public function run()
     {
-        $races = json_decode(Storage::get('json/Races.json'), true);
+        $races = json_decode(file_get_contents(resource_path('json/Races.json')), true);
         $traits = RaceTrait::get()->keyBy('name');
         foreach ($races as $raceArray) {
             $race = new Race();

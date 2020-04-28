@@ -29,5 +29,7 @@ class DatabaseSeeder extends Seeder
 
          $this->call(SpellsTableSeeder::class);
          $this->call(AbilityBonusesTableSeeder::class);
+
+         $this->call(PermissionsTableSeeder::class);
     }
 }

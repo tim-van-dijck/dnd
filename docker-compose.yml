@@ -1,6 +1,6 @@
 version: '3'
 services:
-  app:
+  php:
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,11 +14,11 @@ services:
     working_dir: /var/www/app
     volumes:
       - ./:/var/www/app
-      - ./docker/php/local.ini:/usr/local/etc/php/local.ini
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - dnd-network
 
-  dnd-webserver:
+  app:
     image: nginx:alpine
     container_name: dnd-app
     restart: unless-stopped
@@ -32,7 +32,7 @@ services:
     networks:
       - dnd-network
 
-  dnd-db:
+  db:
     image: mysql:5.7.22
     container_name: dnd-db
     restart: unless-stopped

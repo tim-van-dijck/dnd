@@ -14,7 +14,7 @@ class SubclassesTableSeeder extends Seeder
      */
     public function run()
     {
-        $subclasses = json_decode(Storage::get('json/Subclasses.json'), true);
+        $subclasses = json_decode(file_get_contents(resource_path('json/Subclasses.json')), true);
         $classes = CharacterClass::get()->keyBy('name');
         foreach ($subclasses as $subclassArray) {
             $className = $subclassArray['class']['name'];

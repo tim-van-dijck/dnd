@@ -13,7 +13,7 @@ class ProficienciesTableSeeder extends Seeder
      */
     public function run()
     {
-        $proficiencies = json_decode(Storage::get('json/Proficiencies.json'), true);
+        $proficiencies = json_decode(file_get_contents(resource_path('json/Proficiencies.json')), true);
         foreach ($proficiencies as $proficiencyArray) {
             $proficiency = new Proficiency();
             $proficiency->name = $proficiencyArray['name'];

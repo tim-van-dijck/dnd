@@ -13,7 +13,7 @@ class ClassesTableSeeder extends Seeder
      */
     public function run()
     {
-        $classes = json_decode(Storage::get('json/Classes.json'), true);
+        $classes = json_decode(file_get_contents(resource_path('json/Classes.json')), true);
         foreach ($classes as $classArray) {
             $charClass = new CharacterClass();
             $charClass->name = $classArray['name'];
