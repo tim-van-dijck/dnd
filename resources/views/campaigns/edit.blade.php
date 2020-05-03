@@ -1,18 +1,19 @@
 @extends('layout.app')
 
 @section('content')
-    <h1>Add Campaign</h1>
-    <form class="uk-section uk-section-default" method="post" action="{{ route('campaigns.store') }}">
+    <h1>Edit {{ $campaign->name }}</h1>
+    <form class="uk-section uk-section-default" method="post" action="{{ route('campaigns.update', ['campaign' => $campaign]) }}">
         <div class="uk-container padded">
             <form id="campaign-form" class="uk-form-stacked">
                 @csrf
+                @method('PUT')
                 <div class="uk-margin">
                     <label for="name" class="uk-form-label {{ $errors->has('name') ? 'uk-text-danger': '' }}">Name*</label>
-                    <input id="name" name="name" type="text" class="uk-input {{ $errors->has('name') ? 'uk-form-danger': '' }}" value="{{ old('name') }}">
+                    <input id="name" name="name" type="text" class="uk-input {{ $errors->has('name') ? 'uk-form-danger': '' }}" value="{{ old('name', $campaign->name) }}">
                 </div>
                 <div class="uk-margin">
                     <label for="description" class="uk-form-label {{ $errors->has('name') ? 'uk-form-danger': '' }}">Description</label>
-                    <textarea id="description" name="description">{{ old('description') }}</textarea>
+                    <textarea id="description" name="description">{{ old('description', $campaign->description) }}</textarea>
                 </div>
                 <p class="uk-margin">
                     <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>

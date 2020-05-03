@@ -26,6 +26,7 @@
             </div>
         </header>
         <navigation></navigation>
+        <messages></messages>
         <div id="content" uk-height-viewport="expand: true">
             <div class="uk-container uk-container-expand">
                 <router-view></router-view>

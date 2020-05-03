@@ -23,7 +23,7 @@ class CampaignManager
 
     public function create(array $data): Campaign
     {
-        $campaign = $this->campaignRepository->create($data);
+        $campaign = $this->campaignRepository->store($data);
 
         $adminRole = new Role();
         $adminRole->campaign_id = $campaign->id;

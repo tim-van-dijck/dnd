@@ -9,7 +9,7 @@ class PageController extends Controller
     public function index()
     {
         if (Session::has('campaign_id')) {
-            return view('welcome');
+            return view('campaign');
         } else {
             return redirect()->route('campaigns.index');
         }

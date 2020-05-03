@@ -44,6 +44,7 @@
         created() {
             this.$store.dispatch('Characters/loadCharacters', {campaign_id: 1, type: 'player'});
             this.$store.dispatch('Characters/loadRaces');
+            this.$store.dispatch('Messages/success', 'This is a success message!');
         },
         computed: {
             ...mapState('Characters', ['characters', 'races'])

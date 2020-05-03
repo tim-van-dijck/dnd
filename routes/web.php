@@ -17,7 +17,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/races', 'Character\RaceController@index');
 
     Route::resource('/campaigns', 'Campaign\CampaignController');
-    Route::group(['prefix' => '/campaign/{campaignId}/'], function () {
+    Route::group(['prefix' => '/campaign'], function () {
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
     });
