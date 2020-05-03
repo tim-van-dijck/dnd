@@ -7,6 +7,7 @@ use App\Http\Resources\CharacterResource;
 use App\Models\Character\Character;
 use App\Repositories\CharacterRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CharacterController extends Controller
 {
@@ -18,12 +19,12 @@ class CharacterController extends Controller
      * @param int $campaignId
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(CharacterRepository $characterRepository, Request $request, int $campaignId)
+    public function index(CharacterRepository $characterRepository, Request $request)
     {
         $filters = $request->query('filter', []);
         $page = $request->query('page', []);
         $characters = $characterRepository
-            ->get($campaignId, $filters, $page['number'] ?? null, $page['size'] ?? null);
+            ->get(Session::get('campaign_id'), $filters, $page['number'] ?? null, $page['size'] ?? null);
         return CharacterResource::collection($characters);
     }
 
@@ -36,7 +37,7 @@ class CharacterController extends Controller
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(CharacterRepository $characterRepository, Request $request, int $campaignId)
+    public function store(CharacterRepository $characterRepository, Request $request)
     {
         $this->validate($request, [
             'name' => 'required|string',
@@ -48,8 +49,7 @@ class CharacterController extends Controller
             'private' => 'boolean',
             'bio' => 'string',
         ]);
-
-        $characterRepository->store($campaignId, $request->input());
+        $characterRepository->store(Session::get('campaign_id'), $request->input());
     }
 
     /**

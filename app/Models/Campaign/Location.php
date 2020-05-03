@@ -3,6 +3,7 @@
 namespace App\Models\Campaign;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property Location location
+ * @property Collection locations
  */
 class Location extends Model
 {
@@ -36,5 +38,13 @@ class Location extends Model
     public function location()
     {
         return $this->belongsTo(self::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locations()
+    {
+        return $this->hasMany(self::class);
     }
 }

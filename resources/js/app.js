@@ -13,6 +13,7 @@ Vue.use(Vuex);
 import router from './router';
 import store from './store';
 
+import Messages from './components/layout/messages';
 import Navigation from './components/layout/navigation';
 
 if (document.getElementById('app')) {
@@ -20,6 +21,6 @@ if (document.getElementById('app')) {
         el: '#app',
         router,
         store,
-        components: {Navigation}
+        components: {Messages, Navigation}
     });
 }

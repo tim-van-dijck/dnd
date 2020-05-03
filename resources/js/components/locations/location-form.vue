@@ -62,15 +62,16 @@
         name: "location-form",
         props: ['id'],
         created() {
-            this.location = {};
             if (this.id) {
-                this.$store.dispatch('Locations/findLocation', {campaign_id: 1, id: this.id})
+                this.$store.dispatch('Locations/find', this.id)
                     .then((location) => {
                         this.location = JSON.parse(JSON.stringify(location));
                         if (typeof this.location.map == 'string' && this.location.map.length > 0) {
-                            this.map = this.location.map;
+                            this.map = `/storage/${this.location.map}`;
                         }
                     });
+            } else {
+                this.location = {};
             }
         },
         data() {
@@ -96,12 +97,29 @@
                 reader.readAsDataURL(file);
             },
             save() {
-                let data = {campaign_id: 1, location: this.location};
-                if (this.id) {
+                let location = new FormData();
+                for (let prop of ['name', 'type', 'description', 'location_id', 'map']) {
+                    if ((['map', 'location_id'].includes(prop) || this.location[prop] !== '') && this.location[prop] != null) {
+                        location.append(prop, this.location[prop]);
+                    }
+                }
+
+                let data = {location};
+                if (this.id > 0) {
                     data.id = this.id;
-                    this.$store.dispatch('Locations/updateLocation', data);
+                    this.$store.dispatch('Locations/update', data)
+                        .then(() => {
+                            if (Object.keys(this.errors) == 0) {
+                                this.$router.push({name: 'locations'});
+                            }
+                        });
                 } else {
-                    this.$store.dispatch('Locations/storeLocation', data);
+                    this.$store.dispatch('Locations/store', data)
+                        .then(() => {
+                            if (Object.keys(this.errors) == 0) {
+                                this.$router.push({name: 'locations'});
+                            }
+                        });
                 }
             },
             onSearch(query, loading) {

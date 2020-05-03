@@ -3,13 +3,19 @@
 namespace App\Repositories;
 
 use App\Models\Campaign\Campaign;
+use Illuminate\Database\Eloquent\Collection;
 
 class CampaignRepository
 {
     const DESCRIPTION_ALLOWED_TAGS = [
         '<h1>','<h2>','<h3>','<p>','<span>','<ol>','<ul>','<li>','<b>','<em>','<a>'
     ];
-    public function index(int $userId)
+
+    /**
+     * @param int $userId
+     * @return Collection
+     */
+    public function index(int $userId): Collection
     {
         return Campaign::join('roles', 'roles.campaign_id', '=', 'campaigns.id')
             ->join('role_user', 'role_user.role_id', '=', 'roles.id')
@@ -17,7 +23,11 @@ class CampaignRepository
             ->get(['campaigns.*']);
     }
 
-    public function create(array $data)
+    /**
+     * @param array $data
+     * @return Campaign
+     */
+    public function store(array $data): Campaign
     {
         $campaign = new Campaign();
         $campaign->name = $data['name'];
@@ -25,5 +35,24 @@ class CampaignRepository
         $campaign->save();
 
         return $campaign;
+    }
+
+    /**
+     * @param Campaign $campaign
+     * @param array $data
+     * @return Campaign
+     */
+    public function update(Campaign $campaign, array $data): Campaign
+    {
+        $campaign->name = $data['name'];
+        $campaign->description = $data['description'];
+        $campaign->save();
+
+        return $campaign;
+    }
+
+    public function destroy()
+    {
+
     }
 }

@@ -51,7 +51,6 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        dump(Auth::user()->can('view', $campaign));
         if (Auth::user()->can('view', $campaign)) {
             Session::put('campaign_id', $campaign->id);
         }
@@ -67,17 +66,31 @@ class CampaignController extends Controller
         return view('campaigns.edit', ['campaign' => $campaign]);
     }
 
+    /**
+     * @param Request $request
+     * @param CampaignRepository $campaignRepository
+     * @param Campaign $campaign
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function update(Request $request, CampaignRepository $campaignRepository, Campaign $campaign)
     {
         $this->validate($request, [
            'name' => 'required|string',
            'description' => 'string'
         ]);
+        $campaignRepository->update($campaign, $request->input());
         return redirect()->route('campaigns.index');
     }
 
-    public function destroy()
+    /**
+     * @param CampaignManager $campaignManager
+     * @param Campaign $campaign
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(CampaignManager $campaignManager, Campaign $campaign)
     {
-
+        $campaignManager->destroy($campaign);
+        return redirect()->route('campaigns.index');
     }
 }

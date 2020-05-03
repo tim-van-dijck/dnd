@@ -11,26 +11,26 @@ export const Characters = {
                     commit('SET_RACES', response.data)
                 });
         },
-        loadCharacters({commit}, data) {
-            return axios.get(`/campaign/${data.campaign_id}/characters?filter[type]=${data.type}`)
+        loadCharacters({commit}, type) {
+            return axios.get(`/campaign/characters?filter[type]=${type}`)
                 .then((response) => {
                     commit('SET_CHARACTERS', response.data)
                 });
         },
-        loadCharacter({commit}, data) {
-            return axios.get(`/campaign/${data.campaign_id}/characters/${data.id}`)
+        loadCharacter({commit}, id) {
+            return axios.get(`/campaign/characters/${id}`)
                 .then((response) => {
                     return response.data;
                 });
         },
-        storeCharacter({commit}, data) {
-            return axios.post(`/campaign/${data.campaign_id}/characters`, data.character)
+        storeCharacter({commit}, character) {
+            return axios.post(`/campaign/characters`, character)
                 .then((response) => {
                     commit('SET_CHARACTER', response.data);
                 });
         },
         updateCharacter({commit}, data) {
-            return axios.post('/characters', data)
+            return axios.post(`/campaign/characters/${data.id}`, data.character)
                 .then((response) => {
                     commit('SET_CHARACTER', response.data)
                 });

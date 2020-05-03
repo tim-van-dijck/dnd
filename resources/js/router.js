@@ -5,6 +5,7 @@ import NPCOverview from './components/characters/npc-overview';
 
 import LocationOverview from './components/locations/location-overview';
 import LocationForm from './components/locations/location-form';
+import Location from './components/locations/location';
 
 import VueRouter from "vue-router";
 
@@ -31,6 +32,7 @@ let routes = [
         props: true,
         component: CharacterForm
     },
+
     {
         path: '/locations',
         name: 'locations',
@@ -48,6 +50,40 @@ let routes = [
         name: 'location-edit',
         props: true,
         component: LocationForm
+    },
+    {
+        path: '/locations/:id',
+        name: 'location',
+        props: true,
+        component: Location
+    },
+
+    {
+        path: '/quests',
+        name: 'quests',
+        props: true,
+        component: LocationOverview
+    },
+
+    {
+        path: '/notes',
+        name: 'notes',
+        props: true,
+        component: LocationOverview
+    },
+
+    {
+        path: '/users',
+        name: 'users',
+        props: true,
+        component: LocationOverview
+    },
+
+    {
+        path: '/roles',
+        name: 'roles',
+        props: true,
+        component: LocationOverview
     },
 ];
 
