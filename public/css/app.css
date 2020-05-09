@@ -9613,7 +9613,8 @@ ul.uk-nav-sub {
   color: #222 !important;
 }
 
-.uk-text-success {
+.uk-text-success,
+#quest .actions i.fas.fa-check-circle:hover {
   color: #32d296 !important;
 }
 
@@ -9621,7 +9622,8 @@ ul.uk-nav-sub {
   color: #faa05a !important;
 }
 
-.uk-text-danger {
+.uk-text-danger,
+#quest .actions i.fas.fa-times-circle:hover {
   color: #f0506e !important;
 }
 
@@ -15525,7 +15527,7 @@ iframe.uk-cover {
   padding: 0 0 4px 0;
   background: none;
   border: 1px solid rgba(60, 60, 60, 0.26);
-  border-radius: 4px;
+  border-radius: none;
   white-space: normal;
 }
 
@@ -15604,7 +15606,7 @@ iframe.uk-cover {
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(60, 60, 60, 0.26);
   border-top-style: none;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 none none;
   text-align: left;
   list-style: none;
   background: #fff;
@@ -15652,7 +15654,7 @@ iframe.uk-cover {
   align-items: center;
   background-color: #f0f0f0;
   border: 1px solid rgba(60, 60, 60, 0.26);
-  border-radius: 4px;
+  border-radius: none;
   color: #333;
   line-height: 1.4;
   margin: 4px 2px 0px 2px;
@@ -15847,6 +15849,29 @@ iframe.uk-cover {
   border-color: #f0506e;
 }
 
+.uk-button-round {
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  line-height: 1em;
+  padding: 0;
+  text-align: center;
+}
+
+.uk-button-round > i[class^=fa] {
+  font-size: 1.5em;
+}
+
+.v-select .vs__dropdown-toggle {
+  height: 40px;
+  border: 1px solid #e5e5e5;
+}
+
+.v-select .vs__dropdown-menu {
+  border: 1px solid #e5e5e5;
+  border-top-style: none;
+}
+
 #login {
   background-image: url("/img/bg.png");
   background-position: center center;
@@ -15866,13 +15891,15 @@ iframe.uk-cover {
   right: 0;
   height: 500px;
   width: 300px;
+  overflow: visible;
 }
 
 #messages .message {
+  z-index: 4;
   min-width: 150px;
   margin-bottom: 10px;
-  width: auto;
-  z-index: 4;
+  width: 300px;
+  max-width: 300px;
 }
 
 .slide-enter-active {
@@ -16033,5 +16060,16 @@ iframe.uk-cover {
 .uk-container.padded {
   padding-left: 40px;
   padding-right: 40px;
+}
+
+.uk-card.objective {
+  background-color: #f5f5f5;
+  padding: 20px 40px;
+  margin-bottom: 10px;
+}
+
+#quest .actions i.fas {
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 

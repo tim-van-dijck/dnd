@@ -1,7 +1,7 @@
 <template>
     <aside id="left-col" class="uk-light uk-visible@m">
         <div class="left-logo uk-flex uk-flex-middle">
-            KANKA HARD GAAN
+            DUNGEONS AND DRAFTS
         </div>
 
         <div class="left-nav-wrap">
@@ -25,6 +25,11 @@
                 <li>
                     <router-link :to="{name: 'notes'}">
                         <i class="fas fa-book-open fa-fw"></i> Notes
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :to="{name: 'inventory'}">
+                        <i class="fas fa-shopping-bag fa-fw"></i> Inventory
                     </router-link>
                 </li>
                 <li class="uk-nav-header">PLATFORM</li>

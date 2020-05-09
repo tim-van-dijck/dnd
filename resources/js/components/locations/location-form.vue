@@ -17,7 +17,7 @@
                             <div class="uk-margin">
                                 <label for="location" class="uk-form-label">Location</label>
                                 <v-select id="location" name="location" class="uk-select"
-                                          @search="onSearch"
+                                          @search="onSearch" :options="locations"
                                           v-model="location.location_id">
                                 </v-select>
                             </div>
@@ -34,7 +34,8 @@
                         </div>
                         <div class="uk-width-1-2">
                             <label for="description" class="uk-form-label">Description</label>
-                            <editor id="description" name="description" :init="init" v-model="location.description"></editor>
+                            <html-editor id="description" name="description" v-model="location.description" height="600">
+                            </html-editor>
                         </div>
                     </div>
                     <p class="uk-margin">
@@ -57,9 +58,10 @@
     import VSelect from 'vue-select';
     import _ from 'lodash';
     import {mapState} from 'vuex';
+    import HtmlEditor from "../partial/html-editor";
 
     export default {
-        name: "location-form",
+        name: "LocationForm",
         props: ['id'],
         created() {
             if (this.id) {
@@ -123,33 +125,24 @@
                 }
             },
             onSearch(query, loading) {
-                loading(true);
-                this.search(query, loading, this);
+                if (query.length > 2) {
+                    loading(true);
+                    this.search(query, loading, this);
+                }
             },
             search: _.debounce((query, loading, vm) => {
-                axios.get(`/campaign/${vm.campaignId || 1}/locations?filter[query]=${escape(query)}&page[number]=1&page[size]=10`)
+                axios.get(`/campaign/locations?filter[query]=${escape(query)}&page[number]=1&page[size]=10`)
                     .then((response) => {
-                        vm.locations = response.data.data;
+                        let locations = response.data.data.map((item) => {
+                            return {value: item.id, label: item.name};
+                        });
+                        vm.$set(vm, 'locations', locations);
                         loading(false);
                     });
             }, 1000)
         },
         computed: {
             ...mapState('Locations', ['errors']),
-            init() {
-                return {
-                    height: 400,
-                    plugins: [
-                        'link', 'template', 'hr', 'anchor', 'fullscreen',
-                        'searchreplace', 'autolink', 'table'
-                    ],
-                    toolbar1: 'formatselect | bold italic underline strikethrough forecolor backcolor | link table | alignleft aligncenter alignright  | numlist bullist outdent indent | removeformat',
-                    init_instance_callback: function(editor) {
-                        var freeTiny = document.querySelector('.tox-notifications-container');
-                        freeTiny.style.display = 'none';
-                    }
-                }
-            },
             title() {
                 if (this.id) {
                     return 'Edit ' + (this.location ? this.location.name : 'location');
@@ -159,6 +152,7 @@
             }
         },
         components: {
+            HtmlEditor,
             Editor, VSelect
         }
     }

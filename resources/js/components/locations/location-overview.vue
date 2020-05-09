@@ -39,7 +39,7 @@
                         </td>
                         <td>{{ location.name }}</td>
                         <td>{{ location.type }}</td>
-                        <td>{{ location.location }}</td>
+                        <td>{{ location.location || 'N/A' }}</td>
                         <td><a href=""><i class="fas fa-map"></i></a></td>
                     </tr>
                     </tbody>
