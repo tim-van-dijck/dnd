@@ -20,5 +20,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => '/campaign'], function () {
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
+        Route::resource('quests', 'Campaign\QuestController')->except(['create', 'edit']);
+        Route::post('quests/{questId}/objectives/{objectiveId}/toggle', 'Campaign\QuestController@toggleObjectiveStatus');
     });
 });

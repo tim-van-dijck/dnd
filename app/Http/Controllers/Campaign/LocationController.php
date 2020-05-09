@@ -17,6 +17,7 @@ class LocationController extends Controller
      */
     public function index(LocationRepository $locationRepository, Request $request)
     {
+        $page = $request->query('page');
         $campaignId = Session::get('campaign_id');
         $locations = $locationRepository
             ->get($campaignId, $request->query('filters', []), $page['number'] ?? 1, $page['size'] ?? 20);

@@ -15,12 +15,13 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('campaign_id', false, true)->nullable();
+            $table->bigInteger('campaign_id', false, true);
             $table->bigInteger('location_id', false, true)->nullable();
             $table->string('name');
             $table->string('type');
             $table->string('map');
             $table->text('description');
+            $table->boolean('private')->default(false);
             $table->timestamps();
 
             $table->foreign('campaign_id')

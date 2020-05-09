@@ -15,7 +15,15 @@ class CreateQuestsTable extends Migration
     {
         Schema::create('quests', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('campaign_id', false, true);
+            $table->bigInteger('location_id', false, true)->nullable();
+            $table->string('title');
+            $table->text('description');
+            $table->boolean('private')->default(false);
             $table->timestamps();
+
+            $table->foreign('campaign_id')->references('id')->on('campaigns');
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 

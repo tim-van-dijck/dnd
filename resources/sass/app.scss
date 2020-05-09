@@ -1,4 +1,5 @@
 $alert-success-background: #ceffed;
+$vs-border-radius: none;
 
 @import "~uikit/src/scss/variables-theme.scss";
 @import "~uikit/src/scss/mixins-theme.scss";
@@ -59,4 +60,25 @@ $alert-success-background: #ceffed;
 .uk-container.padded {
   padding-left: 40px;
   padding-right: 40px;
+}
+
+.uk-card.objective {
+  background-color: #f5f5f5;
+  padding: 20px 40px;
+  margin-bottom: 10px;
+}
+
+#quest {
+  .actions {
+    i.fas {
+      cursor: pointer;
+      transition: color .3s ease;
+      &.fa-check-circle:hover {
+        @extend .uk-text-success;
+      }
+      &.fa-times-circle:hover {
+        @extend .uk-text-danger;
+      }
+    }
+  }
 }

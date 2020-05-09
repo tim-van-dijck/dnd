@@ -7,6 +7,10 @@ import LocationOverview from './components/locations/location-overview';
 import LocationForm from './components/locations/location-form';
 import Location from './components/locations/location';
 
+import QuestOverview from './components/quests/quest-overview';
+import QuestForm from './components/quests/quest-form';
+import Quest from './components/quests/quest';
+
 import VueRouter from "vue-router";
 
 let routes = [
@@ -62,12 +66,37 @@ let routes = [
         path: '/quests',
         name: 'quests',
         props: true,
-        component: LocationOverview
+        component: QuestOverview
+    },
+    {
+        path: '/quests/create',
+        name: 'quest-create',
+        props: true,
+        component: QuestForm
+    },
+    {
+        path: '/quests/:id',
+        name: 'quest',
+        props: true,
+        component: Quest
+    },
+    {
+        path: '/quests/:id/edit',
+        name: 'quest-edit',
+        props: true,
+        component: QuestForm
     },
 
     {
         path: '/notes',
         name: 'notes',
+        props: true,
+        component: LocationOverview
+    },
+
+    {
+        path: '/inventory',
+        name: 'inventory',
         props: true,
         component: LocationOverview
     },

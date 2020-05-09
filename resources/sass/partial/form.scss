@@ -2,3 +2,26 @@
   color: #f0506e;
   border-color: #f0506e;
 }
+
+.uk-button-round {
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  line-height: 1em;
+  padding: 0;
+  text-align: center;
+  &>i[class^='fa'] {
+    font-size: 1.5em;
+  }
+}
+
+.v-select {
+  .vs__dropdown-toggle {
+    height: 40px;
+    border: 1px solid #e5e5e5;
+  }
+  .vs__dropdown-menu {
+    border: 1px solid #e5e5e5;
+    border-top-style: none;
+  }
+}
