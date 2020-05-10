@@ -37,6 +37,7 @@
                         </div>
                     </div>
                 </div>
+                <br><br>
                 <p class="uk-margin">
                     <router-link class="uk-button uk-button-text" :to="{name: 'quests'}">
                         <i class="fa fa-chevron-left fa-fw"></i> Back to quests

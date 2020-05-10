@@ -19,7 +19,9 @@
                     toolbar1: 'formatselect | bold italic underline strikethrough forecolor backcolor | link table | alignleft aligncenter alignright  | numlist bullist outdent indent | removeformat',
                     init_instance_callback: function() {
                         var freeTiny = document.querySelector('.tox-notifications-container');
-                        freeTiny.style.display = 'none';
+                        if (freeTiny) {
+                            freeTiny.style.display = 'none';
+                        }
                     }
                 },
             }
