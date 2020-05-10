@@ -11,7 +11,7 @@ export const Locations = {
                     commit('SET_LOCATIONS', response.data)
                 });
         },
-        find({commit}, id) {
+        find(id) {
             return axios.get(`/campaign/locations/${id}`)
                 .then((response) => {
                     return response.data;

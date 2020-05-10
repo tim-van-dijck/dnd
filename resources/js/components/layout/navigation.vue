@@ -1,7 +1,7 @@
 <template>
     <aside id="left-col" class="uk-light uk-visible@m">
         <div class="left-logo uk-flex uk-flex-middle">
-            DUNGEONS AND DRAFTS
+            DUNGEONS & DIARIES
         </div>
 
         <div class="left-nav-wrap">

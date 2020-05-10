@@ -11,6 +11,10 @@ import QuestOverview from './components/quests/quest-overview';
 import QuestForm from './components/quests/quest-form';
 import Quest from './components/quests/quest';
 
+import NoteOverview from './components/notes/note-overview';
+import NoteForm from './components/notes/note-form';
+import Note from './components/notes/note';
+
 import VueRouter from "vue-router";
 
 let routes = [
@@ -91,7 +95,25 @@ let routes = [
         path: '/notes',
         name: 'notes',
         props: true,
-        component: LocationOverview
+        component: NoteOverview
+    },
+    {
+        path: '/notes/create',
+        name: 'note-create',
+        props: true,
+        component: NoteForm
+    },
+    {
+        path: '/notes/:id',
+        name: 'note',
+        props: true,
+        component: Note
+    },
+    {
+        path: '/notes/:id/edit',
+        name: 'note-edit',
+        props: true,
+        component: NoteForm
     },
 
     {
