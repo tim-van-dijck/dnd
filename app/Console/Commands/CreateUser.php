@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class CreateUser extends Command
 {
@@ -46,6 +47,7 @@ class CreateUser extends Command
         $user->name = $name;
         $user->email = $email;
         $user->password = bcrypt($password);
+        $user->email_verified_at = Carbon::now();
         $user->save();
     }
 }
