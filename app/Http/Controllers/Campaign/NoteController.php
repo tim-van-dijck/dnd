@@ -18,7 +18,7 @@ class NoteController extends Controller
      */
     public function index(NoteRepository $noteRepository, Request $request)
     {
-        $page = $request->query('page');
+        $page = $request->query('page', []);
         $notes = $noteRepository->get(Session::get('campaign_id'), $page['number'] ?? 1, $page['size'] ?? 20);
         return NoteResource::collection($notes);
     }
@@ -43,7 +43,7 @@ class NoteController extends Controller
      * @param int $noteId
      * @return Note
      */
-    public function show(NoteRepository $noteRepository, int $noteId)
+    public function show(NoteRepository $noteRepository, int $noteId): Note
     {
         return $noteRepository->find(Session::get('campaign_id'), $noteId);
     }

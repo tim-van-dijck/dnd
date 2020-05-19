@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Campaign;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LocationResource;
+use App\Models\Campaign\Location;
 use App\Repositories\LocationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -17,7 +18,7 @@ class LocationController extends Controller
      */
     public function index(LocationRepository $locationRepository, Request $request)
     {
-        $page = $request->query('page');
+        $page = $request->query('page', []);
         $campaignId = Session::get('campaign_id');
         $locations = $locationRepository
             ->get($campaignId, $request->query('filters', []), $page['number'] ?? 1, $page['size'] ?? 20);
@@ -44,9 +45,9 @@ class LocationController extends Controller
     /**
      * @param LocationRepository $locationRepository
      * @param int $locationId
-     * @return \App\Models\Campaign\Location
+     * @return Location
      */
-    public function show(LocationRepository $locationRepository, int $locationId)
+    public function show(LocationRepository $locationRepository, int $locationId): Location
     {
         return $locationRepository->find(Session::get('campaign_id'), $locationId);
     }

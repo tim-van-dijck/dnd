@@ -7,6 +7,13 @@ use App\Models\Character\Character;
 
 class CharacterRepository
 {
+    /**
+     * @param int $campaignId
+     * @param array $filters
+     * @param int $page
+     * @param int $pageSize
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function get(int $campaignId, array $filters, $page = 1, $pageSize = 20)
     {
         $type = $filters['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
@@ -16,6 +23,10 @@ class CharacterRepository
             ->paginate($pageSize, ['*'], 'page[number]', $page);
     }
 
+    /**
+     * @param int $campaignId
+     * @param array $input
+     */
     public function store(int $campaignId, array $input)
     {
         $character = new Character();
@@ -28,5 +39,32 @@ class CharacterRepository
         $character->dead = !empty($input['dead']);
         $character->bio = $input['bio'];
         $character->save();
+    }
+
+    /**
+     * @param int $campaignId
+     * @param int $characterId
+     * @return Character
+     */
+    public function find(int $campaignId, int $characterId): Character
+    {
+        return Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->firstOrFail();
+    }
+
+    public function update(int $campaignId, int $characterId, array $data)
+    {
+
+    }
+
+    /**
+     * @param int $campaignId
+     * @param int $characterId
+     * @throws \Exception
+     */
+    public function destroy(int $campaignId, int $characterId)
+    {
+        /** @var Character $character */
+        $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->findOrFail();
+        $character->delete();
     }
 }

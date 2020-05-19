@@ -21,10 +21,18 @@
                 <div class="uk-navbar-right">
                     <ul class="uk-navbar-nav">
                         <li>
-                            <a href="/campaigns" class="uk-navbar-item uk-navbar-logo">My Campaigns</a>
+                            <a href="/campaigns" class="uk-navbar-item">My Campaigns</a>
                         </li>
                         <li>
-                            <a href="/profile" class="uk-navbar-item uk-navbar-logo">My Profile</a>
+                            <a href="/profile" class="uk-navbar-item">My Profile</a>
+                        </li>
+                        <li>
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button type="submit" class="uk-navbar-item uk-button uk-button-link uk-link-text">
+                                    <i class="fas fa-sign-out-alt fa-fw"></i>
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -37,11 +45,11 @@
             <footer class="uk-section uk-section-small uk-text-center">
                 <hr>
                 <p class="uk-text-small uk-text-center">
-                    Copyright {{ date('Y') }} - <a href="https://timvandijck.com">Created by ne spast</a>
+                    &copy; Copyright {{ date('Y') }} - <a href="https://timvandijck.com">Created by ne spast</a>
                 </p>
             </footer>
         </div>
     </div>
-    @yield('js')
+    <script src="/js/app.js"></script>
 </body>
 </html>

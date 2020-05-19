@@ -21,6 +21,7 @@ class CharacterController extends Controller
      */
     public function index(CharacterRepository $characterRepository, Request $request)
     {
+        $this->authorize('viewAny', Character::class);
         $filters = $request->query('filter', []);
         $page = $request->query('page', []);
         $characters = $characterRepository
@@ -39,6 +40,7 @@ class CharacterController extends Controller
      */
     public function store(CharacterRepository $characterRepository, Request $request)
     {
+        $this->authorize('create', Character::class);
         $this->validate($request, [
             'name' => 'required|string',
             'title' => 'string',
@@ -55,12 +57,14 @@ class CharacterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Character\Character  $character
-     * @return \Illuminate\Http\Response
+     * @param CharacterRepository $characterRepository
+     * @param int $characterId
+     * @return Character
      */
-    public function show(Character $character)
+    public function show(CharacterRepository $characterRepository, Character $character): Character
     {
-        //
+        $this->authorize('view', $character);
+        return $characterRepository->find(Session::get('campaign_id'), $character->id);
     }
 
     /**
@@ -72,7 +76,7 @@ class CharacterController extends Controller
      */
     public function update(Request $request, Character $character)
     {
-        //
+        $this->authorize('update', $character);
     }
 
     /**
@@ -83,6 +87,6 @@ class CharacterController extends Controller
      */
     public function destroy(Character $character)
     {
-        //
+        $this->authorize('delete', $character);
     }
 }
