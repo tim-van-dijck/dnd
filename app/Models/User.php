@@ -7,18 +7,18 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * @package App\Models
+ * @property int id
+ * @property string name
+ * @property string email
+ * @property string password
+ * @property string remember_token
+ */
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -39,6 +39,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
@@ -46,8 +55,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function grantRole(int $roleId)
+    public function grantRole(int $campaignId, int $roleId)
     {
+        if (!Role::where(['id' => $roleId, 'campaign_id' => $campaignId])->exists()) {
+            abort(403);
+        }
         $this->roles()->attach($roleId);
     }
 }

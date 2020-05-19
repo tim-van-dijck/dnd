@@ -3,7 +3,17 @@
 namespace App\Providers;
 
 use App\Models\Campaign\Campaign;
+use App\Models\Campaign\Location;
+use App\Models\Campaign\Note;
+use App\Models\Campaign\Quest;
+use App\Models\Campaign\Role;
+use App\Models\Character\Character;
 use App\Policies\CampaignPolicy;
+use App\Policies\CharacterPolicy;
+use App\Policies\LocationPolicy;
+use App\Policies\NotePolicy;
+use App\Policies\QuestPolicy;
+use App\Policies\RolePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,6 +26,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
          Campaign::class => CampaignPolicy::class,
+         Character::class => CharacterPolicy::class,
+         Location::class => LocationPolicy::class,
+         Note::class => NotePolicy::class,
+         Quest::class => QuestPolicy::class,
+         Role::class => RolePolicy::class,
     ];
 
     /**
@@ -26,7 +41,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
     }
 }

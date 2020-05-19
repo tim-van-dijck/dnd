@@ -2,9 +2,10 @@
   position: fixed;
   top: 62px;
   right: 0;
-  height: 500px;
+  height: 1px;
+  max-height: 500px;
   width: 300px;
-  overflow: visible;
+  overflow-y: visible;
 
   .message {
     z-index: 4;

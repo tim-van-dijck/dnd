@@ -15872,14 +15872,16 @@ iframe.uk-cover {
   border-top-style: none;
 }
 
-#login {
+#login,
+#register {
   background-image: url("/img/bg.png");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-#login .uk-form-icon {
+#login .uk-form-icon,
+#register .uk-form-icon {
   font-size: 20px;
   line-height: 40px;
   text-align: center;
@@ -15889,9 +15891,10 @@ iframe.uk-cover {
   position: fixed;
   top: 62px;
   right: 0;
-  height: 500px;
+  height: 1px;
+  max-height: 500px;
   width: 300px;
-  overflow: visible;
+  overflow-y: visible;
 }
 
 #messages .message {

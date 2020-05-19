@@ -7,13 +7,16 @@ import LocationOverview from './components/locations/location-overview';
 import LocationForm from './components/locations/location-form';
 import Location from './components/locations/location';
 
+import NoteOverview from './components/notes/note-overview';
+import NoteForm from './components/notes/note-form';
+import Note from './components/notes/note';
+
 import QuestOverview from './components/quests/quest-overview';
 import QuestForm from './components/quests/quest-form';
 import Quest from './components/quests/quest';
 
-import NoteOverview from './components/notes/note-overview';
-import NoteForm from './components/notes/note-form';
-import Note from './components/notes/note';
+import RoleOverview from './components/roles/role-overview';
+import RoleForm from './components/roles/role-form';
 
 import VueRouter from "vue-router";
 
@@ -134,7 +137,19 @@ let routes = [
         path: '/roles',
         name: 'roles',
         props: true,
-        component: LocationOverview
+        component: RoleOverview
+    },
+    {
+        path: '/roles/create',
+        name: 'role-create',
+        props: true,
+        component: RoleForm
+    },
+    {
+        path: '/roles/:id/edit',
+        name: 'role-edit',
+        props: true,
+        component: RoleForm
     },
 ];
 

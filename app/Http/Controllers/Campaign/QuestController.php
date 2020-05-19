@@ -22,7 +22,7 @@ class QuestController extends Controller
      */
     public function index(QuestRepository $questRepository, Request $request)
     {
-        $page = $request->query('page');
+        $page = $request->query('page', []);
         $quests = $questRepository
             ->get(Session::get('campaign_id'), $request->query('filters', []), $page['number'] ?? 1, $page['size'] ?? 20);
         return QuestResource::collection($quests);
@@ -56,7 +56,7 @@ class QuestController extends Controller
      * @param int $questId
      * @return Quest
      */
-    public function show(QuestRepository $questRepository, int $questId)
+    public function show(QuestRepository $questRepository, int $questId): Quest
     {
         return $questRepository->find(Session::get('campaign_id'), $questId);
     }
