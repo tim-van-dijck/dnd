@@ -6,6 +6,7 @@ use App\Models\Campaign\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 /**
  * Class User
@@ -15,6 +16,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string email
  * @property string password
  * @property string remember_token
+ * @property string invite_code
+ * @property Carbon|string email_verified_at
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -26,7 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'invite_code'
     ];
 
     /**

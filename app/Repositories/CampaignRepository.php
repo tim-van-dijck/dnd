@@ -20,7 +20,7 @@ class CampaignRepository
         return Campaign::join('roles', 'roles.campaign_id', '=', 'campaigns.id')
             ->join('role_user', 'role_user.role_id', '=', 'roles.id')
             ->where('role_user.user_id', $userId)
-            ->get(['campaigns.*']);
+            ->get(['campaigns.*', 'roles.name AS role']);
     }
 
     /**
