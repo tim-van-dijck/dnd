@@ -12,6 +12,9 @@
 */
 Auth::routes(['verify' => true]);
 
+Route::get('{token}/register', 'InviteController@invitation')->name('invitation');
+Route::post('{token}/register', 'InviteController@registerInvitation')->name('register-invite');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', 'PageController@index');
     Route::get('/races', 'Character\RaceController@index');
@@ -25,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('quests/{questId}/objectives/{objectiveId}/toggle', 'Campaign\QuestController@toggleObjectiveStatus');
         Route::resource('notes', 'Campaign\NoteController')->except(['create', 'edit']);
         Route::resource('roles', 'Campaign\RoleController')->except(['create', 'edit']);
-        Route::resource('users', 'Campaign\UserController')->except(['create', 'edit']);
+        Route::resource('users', 'Campaign\UserController')->except(['create', 'store', 'edit']);
+        Route::post('users/invite', 'Campaign\UserController@invite')->name('users.invite');
     });
 });

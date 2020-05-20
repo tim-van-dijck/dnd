@@ -14,7 +14,7 @@
 
     <div class="uk-width-large uk-position-z-index" uk-scrollspy="cls: uk-animation-fade">
         <div class="uk-section uk-section-default uk-padding-small">
-            <form action="/register" method="post">
+            <form action="{{ $token ? route('register-invite', ['token' => $token]) : route('register') }}" method="post">
                 @csrf
                 <fieldset class="uk-fieldset">
                     <div class="uk-margin-small">
@@ -29,6 +29,7 @@
                             </span>
                         @enderror
                     </div>
+                    @if (!$token)
                     <div class="uk-margin-small">
                         <div class="uk-inline uk-width-1-1">
                             <input class="uk-input {{ $errors->has('email') ? 'uk-form-danger' : '' }}"
@@ -41,6 +42,7 @@
                             </span>
                         @enderror
                     </div>
+                    @endif
                     <div class="uk-alert-primary" uk-alert>
                         <p>Passwords must be at least 16 characters long and contain at least <b>one lowercase, one uppercase and one numeric character</b>.</p>
                     </div>

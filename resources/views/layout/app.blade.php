@@ -15,17 +15,13 @@
             <nav class="uk-navbar uk-light" data-uk-navbar="mode:click; duration: 250">
                 <div class="uk-navbar-left">
                     <ul class="uk-navbar-nav">
-                        <li><a href="/" class="uk-navbar-item uk-navbar-logo">KANKA HARD GAAN</a></li>
+                        <li><a href="/" class="uk-navbar-item uk-navbar-logo">DUNGEONS & DIARIES</a></li>
                     </ul>
                 </div>
                 <div class="uk-navbar-right">
                     <ul class="uk-navbar-nav">
-                        <li>
-                            <a href="/campaigns" class="uk-navbar-item">My Campaigns</a>
-                        </li>
-                        <li>
-                            <a href="/profile" class="uk-navbar-item">My Profile</a>
-                        </li>
+                        <li><a href="/campaigns" class="uk-navbar-item">My Campaigns</a></li>
+                        <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
                         <li>
                             <form action="/logout" method="post">
                                 @csrf

@@ -18,6 +18,9 @@ import Quest from './components/quests/quest';
 import RoleOverview from './components/roles/role-overview';
 import RoleForm from './components/roles/role-form';
 
+import UserOverview from './components/users/user-overview';
+import UserForm from './components/users/user-form';
+
 import VueRouter from "vue-router";
 
 let routes = [
@@ -130,7 +133,19 @@ let routes = [
         path: '/users',
         name: 'users',
         props: true,
-        component: LocationOverview
+        component: UserOverview
+    },
+    {
+        path: '/users/invite',
+        name: 'user-invite',
+        props: true,
+        component: UserForm
+    },
+    {
+        path: '/users/:id/edit',
+        name: 'user-edit',
+        props: true,
+        component: UserForm
     },
 
     {

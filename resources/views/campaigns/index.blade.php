@@ -14,9 +14,7 @@
                     <tr>
                         <th class="uk-table-shrink"></th>
                         <th>Name</th>
-                        <th>Class</th>
-                        <th>Level</th>
-                        <th></th>
+                        <th>Role</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -31,7 +29,6 @@
                         </td>
                         <td><a href="{{ route('campaigns.show', ['campaign' => $campaign]) }}">{{ $campaign->name }}</a></td>
                         <td>{{ $campaign->role }}</td>
-                        <td></td>
                     </tr>
                     @endforeach
                     </tbody>
