@@ -30,5 +30,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('roles', 'Campaign\RoleController')->except(['create', 'edit']);
         Route::resource('users', 'Campaign\UserController')->except(['create', 'store', 'edit']);
         Route::post('users/invite', 'Campaign\UserController@invite')->name('users.invite');
+        Route::get('me', 'Campaign\UserController@me')->name('users.me');
     });
 });

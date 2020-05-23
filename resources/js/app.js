@@ -17,10 +17,13 @@ import Messages from './components/layout/messages';
 import Navigation from './components/layout/navigation';
 
 if (document.getElementById('app')) {
-    const vm = new Vue({
-        el: '#app',
-        router,
-        store,
-        components: {Messages, Navigation}
-    });
+    store.dispatch('loadUser')
+        .then(() => {
+            const vm = new Vue({
+                el: '#app',
+                router,
+                store,
+                components: {Messages, Navigation}
+            });
+        })
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Campaign\Role;
+use App\Models\Campaign\UserPermission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,6 +57,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(UserPermission::class);
     }
 
     public function grantRole(int $campaignId, int $roleId)

@@ -4,25 +4,25 @@
             DUNGEONS & DIARIES
         </div>
 
-        <div class="left-nav-wrap">
+        <div class="left-nav-wrap" v-if="user && user.hasOwnProperty('permissions')">
             <ul class="uk-nav uk-nav-default" data-uk-nav>
                 <li class="uk-nav-header">CAMPAIGN</li>
-                <li>
+                <li v-if="user.permissions.hasOwnProperty('character') && user.permissions.character.view">
                     <router-link :to="{name: 'player-characters'}">
                         <i class="fas fa-users fa-fw"></i> Characters
                     </router-link>
                 </li>
-                <li>
+                <li v-if="user.permissions.hasOwnProperty('location') && user.permissions.location.view">
                     <router-link :to="{name: 'locations'}">
                         <i class="fas fa-map-marked-alt fa-fw"></i> Locations
                     </router-link>
                 </li>
-                <li>
+                <li v-if="user.permissions.hasOwnProperty('quest') && user.permissions.quest.view">
                     <router-link :to="{name: 'quests'}">
                         <i class="fas fa-exclamation fa-fw"></i> Quests
                     </router-link>
                 </li>
-                <li>
+                <li v-if="user.permissions.hasOwnProperty('note') && user.permissions.note.view">
                     <router-link :to="{name: 'notes'}">
                         <i class="fas fa-book-open fa-fw"></i> Notes
                     </router-link>
@@ -33,12 +33,12 @@
                     </router-link>
                 </li>
                 <li class="uk-nav-header">PLATFORM</li>
-                <li>
+                <li v-if="user.permissions.hasOwnProperty('user') && user.permissions.user.view">
                     <router-link :to="{name: 'users'}">
                         <i class="fas fa-users-cog fa-fw"></i> Users
                     </router-link>
                 </li>
-                <li>
+                <li v-if="user.permissions.hasOwnProperty('role') && user.permissions.role.view">
                     <router-link :to="{name: 'roles'}">
                         <i class="fas fa-user-lock fa-fw"></i> Campaign roles
                     </router-link>
@@ -57,7 +57,12 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex';
+
     export default {
-        name: "Navigation"
+        name: "Navigation",
+        computed: {
+            ...mapState(['user'])
+        }
     }
 </script>

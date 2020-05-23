@@ -12,7 +12,7 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach (['campaign', 'character', 'location', 'quests', 'notes', 'users'] as $type) {
+        foreach (['campaign', 'character', 'location', 'quest', 'note', 'user', 'role'] as $type) {
             Permission::create(['name' => $type]);
         }
     }

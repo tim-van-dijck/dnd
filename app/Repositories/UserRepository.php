@@ -49,9 +49,9 @@ class UserRepository
         $user->notify(new InviteUser($campaignId, Auth::user()->name, $link, $newUser));
     }
 
-    public function find()
+    public function find(int $userId)
     {
-
+        return User::findOrFail($userId);
     }
 
     public function update()
