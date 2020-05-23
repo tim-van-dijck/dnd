@@ -19,11 +19,14 @@ class CreateCampaignUserPermissionsTable extends Migration
             $table->bigInteger('user_id', false, true);
             $table->string('entity');
             $table->bigInteger('entity_id', false, true);
+            $table->boolean('view');
+            $table->boolean('create');
+            $table->boolean('edit');
+            $table->boolean('delete');
             $table->timestamps();
 
             $table->foreign('campaign_id')->references('id')->on('campaigns');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->index(['campaign_id', 'user_id', 'entity', 'entity_id']);
         });
     }
 

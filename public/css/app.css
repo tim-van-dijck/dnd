@@ -15796,7 +15796,7 @@ iframe.uk-cover {
   opacity: 1;
 }
 
-header.uk-container.uk-container-expand.uk-background-primary {
+header.uk-position-fixed {
   z-index: 2;
 }
 

@@ -18,9 +18,9 @@
                     <tr v-for="user in users.data">
                         <td class="uk-width-small">
                             <ul class="uk-iconnav">
-                                <li>
+                                <li v-if="$store.getters.can('delete', 'user')">
                                     <a href="/" class="uk-text-danger" @click.prevent="destroy(user)">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-ban"></i>
                                     </a>
                                 </li>
                                 <li>
@@ -110,6 +110,9 @@
                     .catch((error) => {
                         this.errors = error.response.data.errors;
                     });
+            },
+            destroy(user) {
+                this.$store.dispatch('Users/')
             }
         },
         computed: {

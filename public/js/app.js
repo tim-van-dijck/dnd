@@ -2669,6 +2669,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2727,8 +2734,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Navigation"
+  name: "Navigation",
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['user']))
 });
 
 /***/ }),
@@ -4340,6 +4349,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })["catch"](function (error) {
         _this.errors = error.response.data.errors;
       });
+    },
+    destroy: function destroy(user) {
+      this.$store.dispatch('Users/');
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Users', ['users']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Roles', ['roles']))
@@ -35180,101 +35192,153 @@ var render = function() {
         _vm._v("\n        DUNGEONS & DIARIES\n    ")
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "left-nav-wrap" }, [
-        _c(
-          "ul",
-          {
-            staticClass: "uk-nav uk-nav-default",
-            attrs: { "data-uk-nav": "" }
-          },
-          [
-            _c("li", { staticClass: "uk-nav-header" }, [_vm._v("CAMPAIGN")]),
-            _vm._v(" "),
+      _vm.user && _vm.user.hasOwnProperty("permissions")
+        ? _c("div", { staticClass: "left-nav-wrap" }, [
             _c(
-              "li",
+              "ul",
+              {
+                staticClass: "uk-nav uk-nav-default",
+                attrs: { "data-uk-nav": "" }
+              },
               [
+                _c("li", { staticClass: "uk-nav-header" }, [
+                  _vm._v("CAMPAIGN")
+                ]),
+                _vm._v(" "),
+                _vm.user.permissions.hasOwnProperty("character") &&
+                _vm.user.permissions.character.view
+                  ? _c(
+                      "li",
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "player-characters" } } },
+                          [
+                            _c("i", { staticClass: "fas fa-users fa-fw" }),
+                            _vm._v(" Characters\n                ")
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.user.permissions.hasOwnProperty("location") &&
+                _vm.user.permissions.location.view
+                  ? _c(
+                      "li",
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "locations" } } },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-map-marked-alt fa-fw"
+                            }),
+                            _vm._v(" Locations\n                ")
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.user.permissions.hasOwnProperty("quest") &&
+                _vm.user.permissions.quest.view
+                  ? _c(
+                      "li",
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "quests" } } },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-exclamation fa-fw"
+                            }),
+                            _vm._v(" Quests\n                ")
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.user.permissions.hasOwnProperty("note") &&
+                _vm.user.permissions.note.view
+                  ? _c(
+                      "li",
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "notes" } } },
+                          [
+                            _c("i", { staticClass: "fas fa-book-open fa-fw" }),
+                            _vm._v(" Notes\n                ")
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
                 _c(
-                  "router-link",
-                  { attrs: { to: { name: "player-characters" } } },
+                  "li",
                   [
-                    _c("i", { staticClass: "fas fa-users fa-fw" }),
-                    _vm._v(" Characters\n                ")
-                  ]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c("router-link", { attrs: { to: { name: "locations" } } }, [
-                  _c("i", { staticClass: "fas fa-map-marked-alt fa-fw" }),
-                  _vm._v(" Locations\n                ")
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c("router-link", { attrs: { to: { name: "quests" } } }, [
-                  _c("i", { staticClass: "fas fa-exclamation fa-fw" }),
-                  _vm._v(" Quests\n                ")
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c("router-link", { attrs: { to: { name: "notes" } } }, [
-                  _c("i", { staticClass: "fas fa-book-open fa-fw" }),
-                  _vm._v(" Notes\n                ")
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c("router-link", { attrs: { to: { name: "inventory" } } }, [
-                  _c("i", { staticClass: "fas fa-shopping-bag fa-fw" }),
-                  _vm._v(" Inventory\n                ")
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("li", { staticClass: "uk-nav-header" }, [_vm._v("PLATFORM")]),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c("router-link", { attrs: { to: { name: "users" } } }, [
-                  _c("i", { staticClass: "fas fa-users-cog fa-fw" }),
-                  _vm._v(" Users\n                ")
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c("router-link", { attrs: { to: { name: "roles" } } }, [
-                  _c("i", { staticClass: "fas fa-user-lock fa-fw" }),
-                  _vm._v(" Campaign roles\n                ")
-                ])
-              ],
-              1
+                    _c(
+                      "router-link",
+                      { attrs: { to: { name: "inventory" } } },
+                      [
+                        _c("i", { staticClass: "fas fa-shopping-bag fa-fw" }),
+                        _vm._v(" Inventory\n                ")
+                      ]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("li", { staticClass: "uk-nav-header" }, [
+                  _vm._v("PLATFORM")
+                ]),
+                _vm._v(" "),
+                _vm.user.permissions.hasOwnProperty("user") &&
+                _vm.user.permissions.user.view
+                  ? _c(
+                      "li",
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "users" } } },
+                          [
+                            _c("i", { staticClass: "fas fa-users-cog fa-fw" }),
+                            _vm._v(" Users\n                ")
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.user.permissions.hasOwnProperty("role") &&
+                _vm.user.permissions.role.view
+                  ? _c(
+                      "li",
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "roles" } } },
+                          [
+                            _c("i", { staticClass: "fas fa-user-lock fa-fw" }),
+                            _vm._v(" Campaign roles\n                ")
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e()
+              ]
             )
-          ]
-        )
-      ]),
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _vm._m(0)
     ]
@@ -37703,22 +37767,24 @@ var render = function() {
                   return _c("tr", [
                     _c("td", { staticClass: "uk-width-small" }, [
                       _c("ul", { staticClass: "uk-iconnav" }, [
-                        _c("li", [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "uk-text-danger",
-                              attrs: { href: "/" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.destroy(user)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fas fa-trash" })]
-                          )
-                        ]),
+                        _vm.$store.getters.can("delete", "user")
+                          ? _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "uk-text-danger",
+                                  attrs: { href: "/" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.destroy(user)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fas fa-ban" })]
+                              )
+                            ])
+                          : _vm._e(),
                         _vm._v(" "),
                         _c(
                           "li",
@@ -54169,14 +54235,16 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_4__
 
 
 if (document.getElementById('app')) {
-  var vm = new vue__WEBPACK_IMPORTED_MODULE_2___default.a({
-    el: '#app',
-    router: _router__WEBPACK_IMPORTED_MODULE_5__["default"],
-    store: _store__WEBPACK_IMPORTED_MODULE_6__["default"],
-    components: {
-      Messages: _components_layout_messages__WEBPACK_IMPORTED_MODULE_7__["default"],
-      Navigation: _components_layout_navigation__WEBPACK_IMPORTED_MODULE_8__["default"]
-    }
+  _store__WEBPACK_IMPORTED_MODULE_6__["default"].dispatch('loadUser').then(function () {
+    var vm = new vue__WEBPACK_IMPORTED_MODULE_2___default.a({
+      el: '#app',
+      router: _router__WEBPACK_IMPORTED_MODULE_5__["default"],
+      store: _store__WEBPACK_IMPORTED_MODULE_6__["default"],
+      components: {
+        Messages: _components_layout_messages__WEBPACK_IMPORTED_MODULE_7__["default"],
+        Navigation: _components_layout_navigation__WEBPACK_IMPORTED_MODULE_8__["default"]
+      }
+    });
   });
 }
 
@@ -56204,7 +56272,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_roles_role_overview__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/roles/role-overview */ "./resources/js/components/roles/role-overview.vue");
 /* harmony import */ var _components_roles_role_form__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/roles/role-form */ "./resources/js/components/roles/role-form.vue");
 /* harmony import */ var _components_users_user_overview__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/users/user-overview */ "./resources/js/components/users/user-overview.vue");
-/* harmony import */ var _components_users_user_form__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./components/users/user-form */ "./resources/js/components/users/user-form.vue");
+/* harmony import */ var _components_users_user_form__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./components/users/user-form */ "./resources/js/components/users/user-form.vue");
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 
 
@@ -56324,12 +56392,12 @@ var routes = [{
   path: '/users/invite',
   name: 'user-invite',
   props: true,
-  component: _components_users_user_form__WEBPACK_IMPORTED_MODULE_18__["default"]
+  component: _components_users_user_form__WEBPACK_IMPORTED_MODULE_16__["default"]
 }, {
   path: '/users/:id/edit',
   name: 'user-edit',
   props: true,
-  component: _components_users_user_form__WEBPACK_IMPORTED_MODULE_18__["default"]
+  component: _components_users_user_form__WEBPACK_IMPORTED_MODULE_16__["default"]
 }, {
   path: '/roles',
   name: 'roles',
@@ -56400,9 +56468,50 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_8__["default"].Store({
     Users: _modules_users__WEBPACK_IMPORTED_MODULE_6__["Users"]
   },
   state: {
-    user: {}
+    user: {
+      permissions: {}
+    }
   },
-  mutations: {}
+  actions: {
+    loadUser: function loadUser(_ref) {
+      var commit = _ref.commit;
+      return axios.get('/campaign/me').then(function (response) {
+        commit('SET_USER', response.data);
+      });
+    }
+  },
+  mutations: {
+    SET_USER: function SET_USER(state, user) {
+      state.user = user;
+    }
+  },
+  getters: {
+    can: function can(state) {
+      return function (permission, entity) {
+        var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+        if (!state.user.permissions.hasOwnProperty(entity)) {
+          return false;
+        }
+
+        var permissions = state.user.permissions[entity];
+
+        if (permissions[permission]) {
+          return true;
+        }
+
+        if (permissions.exceptions) {
+          if (id > 0) {
+            return permissions.exceptions.hasOwnProperty(id) && permissions.exceptions[id][permission];
+          } else {
+            return Object.keys(permissions.exceptions).length > 0;
+          }
+        }
+
+        return false;
+      };
+    }
+  }
 });
 /* harmony default export */ __webpack_exports__["default"] = (store);
 

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Campaign\Role;
 use App\Repositories\UserRepository;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
@@ -33,5 +35,16 @@ class UserController extends Controller
         ]);
 
         $userRepository->invite($campaignId, $request->input('email'), $request->input('role'));
+    }
+
+    public function me()
+    {
+        $permissions = AuthService::campaignPermissions(Session::get('campaign_id'));
+        return response()->json([
+            'id' => Auth::user()->id,
+            'name' => Auth::user()->name,
+            'email' => Auth::user()->email,
+            'permissions' => $permissions
+        ]);
     }
 }
