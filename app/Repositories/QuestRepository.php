@@ -9,6 +9,17 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class QuestRepository
 {
     /**
+     * QuestRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->logRepository = app(LogRepository::class);
+    }
+
+    /** @var LogRepository */
+    private $logRepository;
+
+    /**
      * @param int $campaignId
      * @param array $filters
      * @param int $page
@@ -57,6 +68,8 @@ class QuestRepository
             $questObjective->status = 0;
             $questObjective->save();
         }
+
+        $this->logRepository->store($campaignId, 'quest', $quest->id, $quest->title, 'created');
     }
 
     /**
@@ -76,6 +89,7 @@ class QuestRepository
      */
     public function update(int $campaignId, int $questId, array $data)
     {
+        /** @var Quest $quest */
         $quest = Quest::where(['campaign_id' => $campaignId, 'id' => $questId])->firstOrFail();
         $quest->location_id = $data['location_id'] ?? null;
         $quest->title = $data['title'];
@@ -95,6 +109,8 @@ class QuestRepository
             $questObjective->optional = $objective['optional'];
             $questObjective->save();
         }
+
+        $this->logRepository->store($campaignId, 'location', $quest->id, $quest->title, 'updated');
     }
 
     /**
@@ -108,5 +124,7 @@ class QuestRepository
         $quest = Quest::where(['campaign_id' => $campaignId, 'id' => $questId])->firstOrFail();
         $quest->objectives()->delete();
         $quest->delete();
+
+        $this->logRepository->store($campaignId, 'location', $quest->id, $quest->title, 'deleted');
     }
 }

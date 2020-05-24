@@ -7,6 +7,17 @@ use App\Models\Character\Character;
 
 class CharacterRepository
 {
+    /** @var LogRepository */
+    private $logRepository;
+
+    /**
+     * CharacterRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->logRepository = app(LogRepository::class);
+    }
+
     /**
      * @param int $campaignId
      * @param array $filters
@@ -39,6 +50,8 @@ class CharacterRepository
         $character->dead = !empty($input['dead']);
         $character->bio = $input['bio'];
         $character->save();
+
+        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'created');
     }
 
     /**
@@ -54,6 +67,7 @@ class CharacterRepository
     public function update(int $campaignId, int $characterId, array $data)
     {
 
+//        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'updated');
     }
 
     /**
@@ -66,5 +80,6 @@ class CharacterRepository
         /** @var Character $character */
         $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->findOrFail();
         $character->delete();
+        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
     }
 }

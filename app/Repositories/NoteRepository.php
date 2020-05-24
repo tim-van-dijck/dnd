@@ -7,6 +7,17 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class NoteRepository
 {
+    /** @var LogRepository */
+    private $logRepository;
+
+    /**
+     * NoteRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->logRepository = app(LogRepository::class);
+    }
+
     /**
      * @param int $campaignId
      * @param int $page
@@ -30,6 +41,8 @@ class NoteRepository
         $note->content = $data['content'];
         $note->private = $data['private'] ?? false;
         $note->save();
+
+        $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'created');
     }
 
     /**
@@ -57,6 +70,8 @@ class NoteRepository
         $note->content = $data['content'];
         $note->private = $data['private'] ?? false;
         $note->save();
+
+        $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'updated');
     }
 
     /**
@@ -65,6 +80,9 @@ class NoteRepository
      */
     public function destroy(int $campaignId, int $noteId)
     {
-        Note::where(['campaign_id' => $campaignId, 'id' => $noteId])->delete();
+        $note = Note::where(['campaign_id' => $campaignId, 'id' => $noteId])->firstOrFail();
+        $note->delete();
+
+        $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'deleted');
     }
 }

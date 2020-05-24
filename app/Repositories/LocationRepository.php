@@ -10,6 +10,17 @@ use Illuminate\Support\Str;
 
 class LocationRepository
 {
+    /** @var LogRepository */
+    private $logRepository;
+
+    /**
+     * LocationRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->logRepository = app(LogRepository::class);
+    }
+
     /**
      * @param int $campaignId
      * @param array $filters
@@ -47,6 +58,8 @@ class LocationRepository
             $location->map = '';
         }
         $location->save();
+
+        $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'created');
     }
 
     /**
@@ -83,6 +96,8 @@ class LocationRepository
             $location->map = $this->saveImage($map, $location);
         }
         $location->save();
+
+        $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'updated');
     }
 
     /**
@@ -103,6 +118,8 @@ class LocationRepository
             Storage::disk('public')->delete($location->map);
         }
         $location->delete();
+
+        $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'deleted');
     }
 
     /**

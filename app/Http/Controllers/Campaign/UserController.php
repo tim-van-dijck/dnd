@@ -37,6 +37,17 @@ class UserController extends Controller
         $userRepository->invite($campaignId, $request->input('email'), $request->input('role'));
     }
 
+    public function update(UserRepository $userRepository, Request $request, int $userId)
+    {
+        $campaignId = Session::get('campaign_id');
+        $roles = implode(',', Role::where('campaign_id', $campaignId)->get('id')->pluck('id')->toArray());
+        $this->validate($request, [
+            'role' => "required|integer|in:$roles"
+        ]);
+
+        $userRepository->updateRole($campaignId, $userId, $request->input('role'));
+    }
+
     public function me()
     {
         $permissions = AuthService::campaignPermissions(Session::get('campaign_id'));
