@@ -120,6 +120,7 @@
                 }
                 promise.then(() => {
                     if (Object.keys(this.errors).length === 0) {
+                        this.$store.dispatch('Quests/load');
                         this.$router.push({name: 'quests'});
                     }
                 });

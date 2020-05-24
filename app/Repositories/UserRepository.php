@@ -26,7 +26,7 @@ class UserRepository
                 $join->on('roles.id', '=', 'role_user.role_id')
                     ->where('campaign_id', $campaignId);
             })
-            ->paginate($pageSize, ['users.*', 'roles.name AS role'], 'page[number]', $page);
+            ->paginate($pageSize, ['users.*', 'roles.name AS role', 'roles.id AS role_id'], 'page[number]', $page);
     }
 
     public function invite(int $campaignId, string $email, int $roleId)
@@ -54,9 +54,12 @@ class UserRepository
         return User::findOrFail($userId);
     }
 
-    public function update()
+    public function updateRole(int $campaignId, int $userId, int $roleId)
     {
-
+        /** @var User $user */
+        $user = User::findOrFail($userId);
+        $user->revokeRoles($campaignId);
+        $user->grantRole($campaignId, $roleId);
     }
 
     public function register(string $token, array $data)

@@ -21,6 +21,7 @@ class UserResource extends JsonResource
         ];
         if ($this->resource->role) {
             $user['role'] = $this->resource->role;
+            $user['role_id'] = $this->resource->role_id;
         }
         return $user;
     }

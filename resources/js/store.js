@@ -13,19 +13,40 @@ Vue.use(Vuex);
 let store = new Vuex.Store({
     modules: {Characters, Locations, Messages, Notes, Quests, Roles, Users},
     state: {
+        campaign: {},
+        errors: {},
+        logs: [],
         user: {
             permissions: {}
         }
     },
     actions: {
+        loadCampaign({commit}) {
+            return axios.get('/campaign')
+                .then((response) => {
+                    commit('SET_CAMPAIGN', response.data);
+                });
+        },
+        loadLogs({commit}) {
+            return axios.get('/campaign/logs')
+                .then((response) => {
+                    commit('SET_LOGS', response.data.data);
+                })
+        },
         loadUser({commit}) {
             return axios.get('/campaign/me')
                 .then((response) => {
                     commit('SET_USER', response.data);
-                })
+                });
         }
     },
     mutations: {
+        SET_CAMPAIGN(state, campaign) {
+            state.campaign = campaign;
+        },
+        SET_LOGS(state, logs) {
+            state.logs = logs;
+        },
         SET_USER(state, user) {
             state.user = user;
         }

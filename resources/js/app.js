@@ -17,6 +17,12 @@ import Messages from './components/layout/messages';
 import Navigation from './components/layout/navigation';
 
 if (document.getElementById('app')) {
+    store.dispatch('loadCampaign')
+        .catch((error) => {
+            if (error.response.status === 403) {
+                document.location.href = '/';
+            }
+        });
     store.dispatch('loadUser')
         .then(() => {
             const vm = new Vue({
@@ -26,4 +32,9 @@ if (document.getElementById('app')) {
                 components: {Messages, Navigation}
             });
         })
+        .catch((error) => {
+            if (error.response.status === 403) {
+                document.location.href = '/';
+            }
+        });
 }

@@ -50,7 +50,11 @@
                 <li><a href="/campaigns" title="Home"><i class="fas fa-home fa-fw"></i></a></li>
                 <li><a href="/settings" title="Settings"><i class="fas fa-sliders-h fa-fw"></i></a></li>
                 <li><a href="/dice" title="Roll dice"><i class="fas fa-dice-d20 fa-fw"></i></a></li>
-                <li><a href="/logout" title="Sign out"><i class="fas fa-sign-out-alt fa-fw"></i></a></li>
+                <li>
+                    <a href="/logout" title="Sign out" @click.prevent="logout">
+                        <i class="fas fa-sign-out-alt fa-fw"></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>
@@ -61,6 +65,14 @@
 
     export default {
         name: "Navigation",
+        methods: {
+            logout() {
+                axios.post('/logout')
+                    .then(() => {
+                        document.location.href = '/';
+                    });
+            }
+        },
         computed: {
             ...mapState(['user'])
         }

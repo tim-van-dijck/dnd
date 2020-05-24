@@ -17,17 +17,17 @@ export const Users = {
                     return response.data;
                 });
         },
-        store({commit,dispatch}, user) {
-            return axios.post('/campaign/users', user)
+        invite({commit, dispatch}, user) {
+            axios.post('/campaign/users/invite', user)
                 .then(() => {
-                    dispatch('Messages/success', 'User successfully saved!', {root: true});
-                    commit('SET_ERRORS', {});
+                    dispatch('Messages/success', 'Invite sent!', {root: true});
                 })
                 .catch((error) => {
                     dispatch('Messages/error', error.response.data.message, {root: true});
                     commit('SET_ERRORS', error.response.data.errors);
                 });
         },
+
         update({commit,dispatch}, data) {
             let payload = data.user;
             payload._method = 'put';

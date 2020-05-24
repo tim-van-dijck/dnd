@@ -71,4 +71,9 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         $this->roles()->attach($roleId);
     }
+
+    public function revokeRoles(int $campaignId)
+    {
+        $this->roles()->detach($this->roles()->where(['campaign_id' => $campaignId])->get(['roles.id']));
+    }
 }

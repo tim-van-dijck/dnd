@@ -1,3 +1,5 @@
+import Dashboard from './components/dashboard';
+
 import CharacterForm from './components/characters/character-form';
 import CharacterOverview from './components/characters/character-overview';
 import PlayerCharacterOverview from './components/characters/player-character-overview';
@@ -24,7 +26,11 @@ import UserForm from './components/users/user-form';
 import VueRouter from "vue-router";
 
 let routes = [
-    {path: '/', redirect: '/characters'},
+    {
+        path: '/',
+        name: 'dashboard',
+        component: Dashboard
+    },
     {
         path: '/characters',
         name: 'characters',

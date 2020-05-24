@@ -22,6 +22,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/permissions', 'Campaign\RoleController@permissions');
     Route::resource('/campaigns', 'Campaign\CampaignController');
     Route::group(['prefix' => '/campaign'], function () {
+        Route::get('/', 'Campaign\CampaignController@currentCampaign');
+        Route::get('/logs', 'Campaign\CampaignController@logs');
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
         Route::resource('quests', 'Campaign\QuestController')->except(['create', 'edit']);
