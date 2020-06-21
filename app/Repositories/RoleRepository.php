@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Campaign\Role;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RoleRepository
 {
@@ -28,48 +29,46 @@ class RoleRepository
         $role->campaign_id = $campaignId;
         $role->name = $data['name'];
         $role->save();
-
-        $permissions = [];
-        foreach ($data['permissions'] as $permission) {
-            $permissions[$permission['id']] = [
-                'view' => $permission['view'] ?? false,
-                'create' => $permission['create'] ?? false,
-                'edit' => $permission['edit'] ?? false,
-                'delete' => $permission['delete'] ?? false
-            ];
-        }
-        $role->permissions()->sync($permissions);
+        $this->syncPermissions($data['permissions'], $role);
     }
 
     /**
      * @param int $campaignId
-     * @param int $roleId
-     * @return Role
-     */
-    public function find(int $campaignId, int $roleId): Role
-    {
-        return Role::where([
-            'campaign_id' => $campaignId,
-            'id' => $roleId
-        ])
-            ->with('permissions')
-            ->firstOrFail();
-    }
-
-    /**
-     * @param int $campaignId
-     * @param int $roleId
+     * @param Role $role
      * @param array $data
      */
-    public function update(int $campaignId, int $roleId, array $data)
+    public function update(int $campaignId, Role $role, array $data)
     {
-        /** @var Role $role */
-        $role = Role::where(['campaign_id' => $campaignId, 'id' => $roleId])->firstOrFail();
+        if ($campaignId != $role->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $role->name = $data['name'];
         $role->save();
+        $this->syncPermissions($data['permissions'], $role);
+    }
 
+    /**
+     * @param int $campaignId
+     * @param Role $role
+     * @throws \Exception
+     */
+    public function destroy(int $campaignId, Role $role)
+    {
+        if ($campaignId != $role->campaign_id) {
+            throw new ModelNotFoundException();
+        }
+        $role->permissions()->sync([]);
+        $role->delete();
+    }
+
+    /**
+     * @param array $input
+     * @param Role $role
+     */
+    public function syncPermissions(array $input, Role $role): void
+    {
         $permissions = [];
-        foreach ($data['permissions'] as $permission) {
+        foreach ($input as $permission) {
             $permissions[$permission['id']] = [
                 'view' => $permission['view'] ?? false,
                 'create' => $permission['create'] ?? false,
@@ -78,18 +77,5 @@ class RoleRepository
             ];
         }
         $role->permissions()->sync($permissions);
-    }
-
-    /**
-     * @param int $campaignId
-     * @param int $roleId
-     * @throws \Exception
-     */
-    public function destroy(int $campaignId, int $roleId)
-    {
-        /** @var Role $role */
-        $role = Role::where(['campaign_id' => $campaignId, 'id' => $roleId])->firstOrFail();
-        $role->permissions()->sync([]);
-        $role->delete();
     }
 }

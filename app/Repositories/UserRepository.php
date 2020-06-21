@@ -8,7 +8,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserRepository
@@ -24,11 +23,16 @@ class UserRepository
         return User::join('role_user', 'role_user.user_id', '=', 'users.id')
             ->join('roles', function ($join) use ($campaignId) {
                 $join->on('roles.id', '=', 'role_user.role_id')
-                    ->where('campaign_id', $campaignId);
+                    ->where('roles.campaign_id', $campaignId);
             })
             ->paginate($pageSize, ['users.*', 'roles.name AS role', 'roles.id AS role_id'], 'page[number]', $page);
     }
 
+    /**
+     * @param int $campaignId
+     * @param string $email
+     * @param int $roleId
+     */
     public function invite(int $campaignId, string $email, int $roleId)
     {
         $user = User::where('email', $email)->first();
@@ -49,19 +53,21 @@ class UserRepository
         $user->notify(new InviteUser($campaignId, Auth::user()->name, $link, $newUser));
     }
 
-    public function find(int $userId)
+    /**
+     * @param int $campaignId
+     * @param User $user
+     * @param int $roleId
+     */
+    public function updateRole(int $campaignId, User $user, int $roleId)
     {
-        return User::findOrFail($userId);
-    }
-
-    public function updateRole(int $campaignId, int $userId, int $roleId)
-    {
-        /** @var User $user */
-        $user = User::findOrFail($userId);
         $user->revokeRoles($campaignId);
         $user->grantRole($campaignId, $roleId);
     }
 
+    /**
+     * @param string $token
+     * @param array $data
+     */
     public function register(string $token, array $data)
     {
         /** @var User $user */

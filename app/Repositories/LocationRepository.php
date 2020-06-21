@@ -3,8 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\Campaign\Location;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -30,19 +33,36 @@ class LocationRepository
      */
     public function get(int $campaignId, array $filters, int $page = 1, int $pageSize = 20): LengthAwarePaginator
     {
-        $query = Location::query()->where([
-            'campaign_id' => $campaignId
-        ]);
+        $query = Location::query()
+            ->where('locations.campaign_id', $campaignId)
+            ->leftJoin('user_permissions', function ($join) {
+                $join->on('locations.id', '=', 'user_permissions.entity_id')
+                    ->where([
+                        'user_permissions.entity' => 'quest',
+                        'user_permissions.user_id' => Auth::user()->id
+                    ]);
+            });
+
+        if (Auth::user()->can('viewAny', Location::class)) {
+            $query->where(function ($query) {
+                $query->where('private', 0)
+                    ->orWhere('user_permissions.view', 1);
+            });
+        } else {
+            $query->where('user_permissions.view', 1);
+        }
+
         if (!empty($filters['query'])) {
             $query->where('name', 'LIKE', "%{$filters['query']}%");
         }
-        return $query->paginate($pageSize, ['*'], 'page[number]', $page);
+        return $query->paginate($pageSize, ['locations.*'], 'page[number]', $page);
     }
 
     /**
      * @param int $campaignId
      * @param array $input
      * @param UploadedFile|null $map
+     * @throws FileNotFoundException
      */
     public function store(int $campaignId, array $input, ?UploadedFile $map)
     {
@@ -64,30 +84,16 @@ class LocationRepository
 
     /**
      * @param int $campaignId
-     * @param int $locationId
-     * @return Location
-     */
-    public function find(int $campaignId, int $locationId): Location
-    {
-        return Location::where([
-            'campaign_id' => $campaignId,
-            'id' => $locationId
-        ])->first();
-    }
-
-    /**
-     * @param int $campaignId
-     * @param int $locationId
+     * @param Location $location
      * @param array $input
      * @param UploadedFile|null $map
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
-    public function update(int $campaignId, int $locationId, array $input, ?UploadedFile $map)
+    public function update(int $campaignId, Location $location, array $input, ?UploadedFile $map)
     {
-        $location = Location::where([
-            'campaign_id' => $campaignId,
-            'id' => $locationId
-        ])->firstOrFail();
+        if ($campaignId != $location->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $location->location_id = $input['location_id'] ?? null;
         $location->name = $input['name'];
         $location->type = $input['type'];
@@ -101,24 +107,21 @@ class LocationRepository
     }
 
     /**
-     * @param int $locationId
+     * @param int $campaignId
+     * @param Location $location
      * @throws \Exception
      */
-    public function destroy(int $campaignId, int $locationId)
+    public function destroy(int $campaignId, Location $location)
     {
-        /** @var Location $location */
-        $location = Location::where([
-            'id' => $locationId,
-            'campaign_id' => $campaignId
-        ])
-            ->firstOrFail();
+        if ($campaignId != $location->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $location->locations()->update(['location_id' => null]);
 
         if ($location && !empty($location->map)) {
             Storage::disk('public')->delete($location->map);
         }
         $location->delete();
-
         $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'deleted');
     }
 
@@ -126,7 +129,7 @@ class LocationRepository
      * @param UploadedFile $map
      * @param Location|null $location
      * @return string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     private function saveImage(UploadedFile $map, Location $location = null)
     {

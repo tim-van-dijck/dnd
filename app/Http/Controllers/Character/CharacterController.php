@@ -61,32 +61,36 @@ class CharacterController extends Controller
      * @param int $characterId
      * @return Character
      */
-    public function show(CharacterRepository $characterRepository, Character $character): Character
+    public function show(CharacterRepository $characterRepository, int $characterId): Character
     {
-        $this->authorize('view', $character);
-        return $characterRepository->find(Session::get('campaign_id'), $character->id);
+        $this->authorize('view', [Character::class, $characterId]);
+        return $characterRepository->find(Session::get('campaign_id'), $characterId);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Character\Character  $character
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param int $characterId
+     * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Character $character)
+    public function update(Request $request, int $characterId)
     {
-        $this->authorize('update', $character);
+        $this->authorize('update', [Character::class, $characterId]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Character\Character  $character
-     * @return \Illuminate\Http\Response
+     * @param CharacterRepository $characterRepository
+     * @param int $characterId
+     * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Character $character)
+    public function destroy(CharacterRepository $characterRepository, int $characterId)
     {
-        $this->authorize('delete', $character);
+        $this->authorize('delete', [Character::class, $characterId]);
+        $characterRepository->destroy(Session::get('campaign_id'), $characterId);
     }
 }

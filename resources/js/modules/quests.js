@@ -5,6 +5,29 @@ export const Quests = {
         quests: null
     },
     actions: {
+        previous({commit,state}) {
+            if (state.quests != null && state.quests.meta.current_page > 1) {
+                axios.get(`/campaign/quests?page[number]=${state.quests.meta.current_page - 1}`)
+                    .then((response) => {
+                        commit('SET_QUESTS', response.data);
+                    })
+            }
+        },
+        page({commit,state}, number) {
+            if (state.quests != null && number > 0 && number <= state.quests.meta.last_page)
+            axios.get(`/campaign/quests?page[number]=${number}`)
+                .then((response) => {
+                    commit('SET_QUESTS', response.data);
+                })
+        },
+        next({commit,state}) {
+            if (state.quests != null && state.quests.meta.current_page < state.quests.meta.last_page) {
+                axios.get(`/campaign/quests?page[number]=${state.quests.meta.current_page + 1}`)
+                    .then((response) => {
+                        commit('SET_QUESTS', response.data);
+                    })
+            }
+        },
         load({commit}) {
             axios.get('/campaign/quests')
                 .then((response) => {

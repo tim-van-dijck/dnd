@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Enums\CharacterTypes;
+use App\Models\Campaign\Quest;
 use App\Models\Character\Character;
+use Illuminate\Support\Facades\Auth;
 
 class CharacterRepository
 {
@@ -28,10 +30,26 @@ class CharacterRepository
     public function get(int $campaignId, array $filters, $page = 1, $pageSize = 20)
     {
         $type = $filters['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
-        return Character::query()->where([
-            'campaign_id' => $campaignId, 'type' => $type
+        $query = Character::query()->where([
+            'characters.campaign_id' => $campaignId,
+            'type' => $type
         ])
-            ->paginate($pageSize, ['*'], 'page[number]', $page);
+            ->leftJoin('user_permissions', function ($join) {
+                $join->on('characters.id', '=', 'user_permissions.entity_id')
+                    ->where([
+                        'user_permissions.entity' => 'quest',
+                        'user_permissions.user_id' => Auth::user()->id
+                    ]);
+            });
+        if (Auth::user()->can('viewAny', Quest::class)) {
+            $query->where(function ($query) {
+                $query->where('private', 0)
+                    ->orWhere('user_permissions.view', 1);
+            });
+        } else {
+            $query->where('user_permissions.view', 1);
+        }
+        return $query->paginate($pageSize, ['characters.*'], 'page[number]', $page);
     }
 
     /**
@@ -66,7 +84,6 @@ class CharacterRepository
 
     public function update(int $campaignId, int $characterId, array $data)
     {
-
 //        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'updated');
     }
 

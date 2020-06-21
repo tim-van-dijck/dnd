@@ -6,38 +6,14 @@
                 <router-link class="uk-button uk-button-primary" :to="{name: 'note-create'}">
                     <i class="fas fa-plus"></i> Add note
                 </router-link>
-                <table class="uk-table uk-table-divider" v-if="notes != null && notes.data.length > 0">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="note in notes.data">
-                        <td class="uk-width-small">
-                            <ul class="uk-iconnav">
-                                <li>
-                                    <a href="/" class="uk-text-danger" @click.prevent="destroy(note)">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <router-link :to="{name: 'note-edit', params: {id: note.id}}">
-                                        <i class="fas fa-edit"></i>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link :to="{name: 'note', params: {id: note.id}}">
-                                        <i class="fas fa-eye"></i>
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </td>
-                        <td>{{ note.name }}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <paginated-table v-if="quests != null && quests.data.length > 0"
+                                 :actions="actions"
+                                 :columns="columns"
+                                 module="Notes"
+                                 :records="notes"
+                                 @edit="$router.push({name: 'note-edit', params: {id: $event.id}})"
+                                 @view="$router.push({name: 'note', params: {id: $event.id}})"
+                                 @destroy="destroy" />
                 <p v-else class="uk-text-center">
                     <i v-if="notes == null" class="fas fa-sync fa-spin fa-2x"></i>
                     <span v-else>
@@ -52,11 +28,28 @@
 <script>
     import {mapState} from "vuex";
     import * as UIKit from "uikit";
+    import PaginatedTable from "../partial/paginated-table";
 
     export default {
         name: "NoteOverview",
+        components: {PaginatedTable},
         created() {
             this.$store.dispatch('Notes/load');
+        },
+        data() {
+            return {
+                actions: [
+                    {name: 'destroy', icon: 'trash', classes: 'uk-text-danger'},
+                    {name: 'edit', icon: 'edit'},
+                    {name: 'view', icon: 'eye'}
+                ],
+                columns: [
+                    {
+                        title: 'Name',
+                        name: 'name',
+                    }
+                ]
+            }
         },
         methods: {
             destroy(note) {

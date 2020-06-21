@@ -5,6 +5,29 @@ export const Notes = {
         notes: null
     },
     actions: {
+        previous({commit,state}) {
+            if (state.notes != null && state.notes.meta.current_page > 1) {
+                axios.get(`/campaign/notes?page[number]=${state.notes.meta.current_page - 1}`)
+                    .then((response) => {
+                        commit('SET_NOTES', response.data);
+                    })
+            }
+        },
+        page({commit,state}, number) {
+            if (state.notes != null && number > 0 && number <= state.notes.meta.last_page)
+                axios.get(`/campaign/notes?page[number]=${number}`)
+                    .then((response) => {
+                        commit('SET_NOTES', response.data);
+                    })
+        },
+        next({commit,state}) {
+            if (state.notes != null && state.notes.meta.current_page < state.notes.meta.last_page) {
+                axios.get(`/campaign/notes?page[number]=${state.notes.meta.current_page + 1}`)
+                    .then((response) => {
+                        commit('SET_NOTES', response.data);
+                    })
+            }
+        },
         load({commit}) {
             axios.get('/campaign/notes')
                 .then((response) => {

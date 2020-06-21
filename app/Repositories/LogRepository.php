@@ -26,9 +26,27 @@ class LogRepository
      */
     public function recentActivity(int $campaignId): Collection
     {
-        return Log::where('campaign_id', $campaignId)
-            ->orderBy('created_at', 'DESC')
+        return Log::where('logs.campaign_id', $campaignId)
+            ->leftJoin('permissions', 'logs.type', '=', 'permissions.name')
+            ->leftJoin('permission_role', 'permission_role.permission_id', '=', 'permissions.id')
+            ->leftJoin('role_user', 'permission_role.role_id', '=', 'role_user.role_id')
+            ->leftJoin('user_permissions', function ($join) {
+                $join->on('user_permissions.entity', '=', 'logs.type')
+                     ->on('user_permissions.entity_id', '=', 'logs.entity_id');
+            })
+            ->where(function ($query) {
+                $query->where('logs.user_id', Auth::user()->id)
+                    ->orWhere(function ($query) {
+                        $query->where(['role_user.user_id' => Auth::user()->id, 'permission_role.view' => 1]);
+                    })
+                    ->orWhere(function ($query) {
+                        $query->where(['user_permissions.user_id' => Auth::user()->id, 'user_permissions.view' => 1]);
+                    });
+            })
+            ->with('user')
+            ->groupBy('logs.id')
+            ->orderBy('logs.created_at', 'DESC')
             ->limit(10)
-            ->get();
+            ->get(['logs.*']);
     }
 }

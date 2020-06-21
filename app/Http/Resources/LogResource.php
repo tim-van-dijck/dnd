@@ -16,6 +16,7 @@ class LogResource extends JsonResource
     {
         $log = $this->resource->toArray();
         $log['message'] = $this->resource->message();
+        unset($log['user']);
         return $log;
     }
 }

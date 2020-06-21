@@ -3051,42 +3051,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "location-overview",
   created: function created() {
     this.$store.dispatch('Locations/loadLocations');
+  },
+  data: function data() {
+    return {
+      actions: [{
+        name: 'destroy',
+        icon: 'trash',
+        classes: 'uk-text-danger'
+      }, {
+        name: 'edit',
+        icon: 'edit'
+      }, {
+        name: 'view',
+        icon: 'eye'
+      }],
+      columns: [{
+        name: 'name',
+        title: 'Name'
+      }, {
+        name: 'type',
+        title: 'Type'
+      }, {
+        name: 'location',
+        title: 'Location',
+        format: function format(location) {
+          return location || 'N/A';
+        }
+      }]
+    };
   },
   methods: {
     destroy: function destroy(location) {
@@ -3304,6 +3302,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var uikit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uikit */ "./node_modules/uikit/dist/js/uikit.js");
 /* harmony import */ var uikit__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(uikit__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _partial_paginated_table__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partial/paginated-table */ "./resources/js/components/partial/paginated-table.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3337,36 +3336,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "NoteOverview",
+  components: {
+    PaginatedTable: _partial_paginated_table__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
   created: function created() {
     this.$store.dispatch('Notes/load');
+  },
+  data: function data() {
+    return {
+      actions: [{
+        name: 'destroy',
+        icon: 'trash',
+        classes: 'uk-text-danger'
+      }, {
+        name: 'edit',
+        icon: 'edit'
+      }, {
+        name: 'view',
+        icon: 'eye'
+      }],
+      columns: [{
+        title: 'Name',
+        name: 'name'
+      }]
+    };
   },
   methods: {
     destroy: function destroy(note) {
@@ -3482,6 +3480,277 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/paginated-table.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/partial/paginated-table.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "paginated-table",
+  props: ['actions', 'columns', 'module', 'records'],
+  methods: {
+    previous: function previous() {
+      if (this.records.meta.current_page > 1) {
+        this.$store.dispatch("".concat(this.module, "/previous"));
+      }
+    },
+    go: function go(number) {
+      if (number != this.records.meta.current_page) {
+        this.$store.dispatch("".concat(this.module, "/page"), number);
+      }
+    },
+    next: function next() {
+      if (this.records.meta.current_page < this.records.meta.last_page) {
+        this.$store.dispatch("".concat(this.module, "/next"));
+      }
+    }
+  },
+  computed: {
+    pages: function pages() {
+      var last = this.records.meta.last_page;
+      var current = this.records.meta.current_page;
+      var pages = [{
+        number: 1,
+        active: current == 1
+      }];
+
+      if (current - 1 > 2) {
+        pages.push({
+          number: '...',
+          active: false
+        });
+      }
+
+      for (var i = -2; i <= 2; i++) {
+        if (current + i > 1 && current + i <= last) {
+          pages.push({
+            number: current + i,
+            active: i === 0
+          });
+        }
+      }
+
+      if (last - current > 2) {
+        pages.push({
+          number: '...',
+          active: false
+        });
+        pages.push({
+          number: last,
+          active: false
+        });
+      }
+
+      return pages;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/permissions-form.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/partial/permissions-form.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "permissions-form",
+  props: ['value'],
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$store.dispatch('Users/load').then(function () {
+      var permissions = {};
+
+      var _iterator = _createForOfIteratorHelper(_this.users.data),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var user = _step.value;
+          permissions[user.id] = _this.value[user.id] || {
+            view: false,
+            edit: false,
+            create: false,
+            "delete": false
+          };
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      _this.$set(_this, 'permissions', permissions);
+    });
+    this.override = Object.keys(this.value || {}).length > 0;
+  },
+  data: function data() {
+    return {
+      override: false,
+      permissions: null,
+      selected: {
+        view: false,
+        create: false,
+        edit: false,
+        "delete": false
+      }
+    };
+  },
+  methods: {
+    selectAll: function selectAll(type) {
+      this.selected[type] = !this.selected[type];
+
+      for (var index in this.value) {
+        var permission = this.value[index];
+        permission[type] = this.selected[type];
+      }
+    }
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Users', ['users'])),
+  watch: {
+    permissions: {
+      deep: true,
+      handler: function handler() {
+        if (this.override) {
+          this.$emit('input', this.permissions);
+        }
+      }
+    },
+    override: function override(value) {
+      this.$emit('input', value ? this.permissions : {});
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/quests/quest-form.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/quests/quest-form.vue?vue&type=script&lang=js& ***!
@@ -3497,6 +3766,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _partial_permissions_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../partial/permissions-form */ "./resources/js/components/partial/permissions-form.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3573,6 +3843,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -3586,18 +3867,24 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (this.id) {
       this.$store.dispatch('Quests/find', this.id).then(function (quest) {
         _this.quest = JSON.parse(JSON.stringify(quest));
+
+        if (!_this.quest.hasOwnProperty('permissions')) {
+          _this.quest.permissions = {};
+        }
       });
     } else {
       this.quest = {
-        objectives: []
+        objectives: [],
+        permissions: {}
       };
       this.addObjective();
     }
   },
   data: function data() {
     return {
-      quest: null,
-      locations: []
+      locations: [],
+      tab: 'details',
+      quest: null
     };
   },
   methods: {
@@ -3689,6 +3976,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   }),
   components: {
+    PermissionsForm: _partial_permissions_form__WEBPACK_IMPORTED_MODULE_4__["default"],
     HtmlEditor: _partial_html_editor__WEBPACK_IMPORTED_MODULE_1__["default"],
     VSelect: vue_select__WEBPACK_IMPORTED_MODULE_2___default.a
   }
@@ -3708,6 +3996,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var uikit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uikit */ "./node_modules/uikit/dist/js/uikit.js");
 /* harmony import */ var uikit__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(uikit__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _partial_paginated_table__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partial/paginated-table */ "./resources/js/components/partial/paginated-table.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3740,43 +4029,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "QuestOverview",
   created: function created() {
     this.$store.dispatch('Quests/load');
+  },
+  data: function data() {
+    return {
+      actions: [{
+        name: 'destroy',
+        icon: 'trash',
+        classes: 'uk-text-danger'
+      }, {
+        name: 'edit',
+        icon: 'edit'
+      }, {
+        name: 'view',
+        icon: 'eye'
+      }],
+      columns: [{
+        title: 'Title',
+        name: 'title'
+      }, {
+        title: 'Completion',
+        name: 'objectives',
+        format: function format(objectives) {
+          return "".concat(objectives.filter(function (item) {
+            item.completed == 1;
+          }).length, "/").concat(objectives.length);
+        }
+      }, {
+        title: 'Location',
+        name: 'location',
+        format: function format(location) {
+          return location || 'Not specified';
+        }
+      }]
+    };
   },
   methods: {
     destroy: function destroy(quest) {
@@ -3794,7 +4086,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Quests', ['quests']))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Quests', ['quests'])),
+  components: {
+    PaginatedTable: _partial_paginated_table__WEBPACK_IMPORTED_MODULE_2__["default"]
+  }
 });
 
 /***/ }),
@@ -35377,8 +35672,7 @@ var render = function() {
                   _vm._v("CAMPAIGN")
                 ]),
                 _vm._v(" "),
-                _vm.user.permissions.hasOwnProperty("character") &&
-                _vm.user.permissions.character.view
+                _vm.$store.getters.can("view", "character")
                   ? _c(
                       "li",
                       [
@@ -35395,8 +35689,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.user.permissions.hasOwnProperty("location") &&
-                _vm.user.permissions.location.view
+                _vm.$store.getters.can("view", "location")
                   ? _c(
                       "li",
                       [
@@ -35415,8 +35708,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.user.permissions.hasOwnProperty("quest") &&
-                _vm.user.permissions.quest.view
+                _vm.$store.getters.can("view", "quest")
                   ? _c(
                       "li",
                       [
@@ -35435,8 +35727,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.user.permissions.hasOwnProperty("note") &&
-                _vm.user.permissions.note.view
+                _vm.$store.getters.can("view", "note")
                   ? _c(
                       "li",
                       [
@@ -35472,8 +35763,7 @@ var render = function() {
                   _vm._v("PLATFORM")
                 ]),
                 _vm._v(" "),
-                _vm.user.permissions.hasOwnProperty("user") &&
-                _vm.user.permissions.user.view
+                _vm.$store.getters.can("view", "user")
                   ? _c(
                       "li",
                       [
@@ -35490,8 +35780,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.user.permissions.hasOwnProperty("role") &&
-                _vm.user.permissions.role.view
+                _vm.$store.getters.can("view", "role")
                   ? _c(
                       "li",
                       [
@@ -35915,84 +36204,29 @@ var render = function() {
           ),
           _vm._v(" "),
           _vm.locations != null && _vm.locations.data.length > 0
-            ? _c("table", { staticClass: "uk-table uk-table-divider" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.locations.data, function(location) {
-                    return _c("tr", [
-                      _c("td", { staticClass: "uk-width-small" }, [
-                        _c("ul", { staticClass: "uk-iconnav" }, [
-                          _c("li", [
-                            _c(
-                              "a",
-                              {
-                                staticClass: "uk-text-danger",
-                                attrs: { href: "/" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.destroy(location)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fas fa-trash" })]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "location-edit",
-                                      params: { id: location.id }
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-edit" })]
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "location",
-                                      params: { id: location.id }
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-eye" })]
-                              )
-                            ],
-                            1
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(location.name))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(location.type))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(location.location || "N/A"))]),
-                      _vm._v(" "),
-                      _vm._m(1, true)
-                    ])
-                  }),
-                  0
-                )
-              ])
+            ? _c("paginated-table", {
+                attrs: {
+                  actions: _vm.actions,
+                  columns: _vm.columns,
+                  module: "Locations",
+                  records: _vm.locations
+                },
+                on: {
+                  edit: function($event) {
+                    return _vm.$router.push({
+                      name: "location-edit",
+                      params: { id: $event.id }
+                    })
+                  },
+                  view: function($event) {
+                    return _vm.$router.push({
+                      name: "location",
+                      params: { id: $event.id }
+                    })
+                  },
+                  destroy: _vm.destroy
+                }
+              })
             : _c("p", { staticClass: "uk-text-center" }, [
                 _vm.locations == null
                   ? _c("i", { staticClass: "fas fa-sync fa-spin fa-2x" })
@@ -36008,34 +36242,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th"),
-        _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Type")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Location")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "uk-table-shrink" }, [_vm._v("Map")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("a", { attrs: { href: "" } }, [_c("i", { staticClass: "fas fa-map" })])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -36423,79 +36630,30 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.notes != null && _vm.notes.data.length > 0
-            ? _c("table", { staticClass: "uk-table uk-table-divider" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.notes.data, function(note) {
-                    return _c("tr", [
-                      _c("td", { staticClass: "uk-width-small" }, [
-                        _c("ul", { staticClass: "uk-iconnav" }, [
-                          _c("li", [
-                            _c(
-                              "a",
-                              {
-                                staticClass: "uk-text-danger",
-                                attrs: { href: "/" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.destroy(note)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fas fa-trash" })]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "note-edit",
-                                      params: { id: note.id }
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-edit" })]
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "note",
-                                      params: { id: note.id }
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-eye" })]
-                              )
-                            ],
-                            1
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(note.name))])
-                    ])
-                  }),
-                  0
-                )
-              ])
+          _vm.quests != null && _vm.quests.data.length > 0
+            ? _c("paginated-table", {
+                attrs: {
+                  actions: _vm.actions,
+                  columns: _vm.columns,
+                  module: "Notes",
+                  records: _vm.notes
+                },
+                on: {
+                  edit: function($event) {
+                    return _vm.$router.push({
+                      name: "note-edit",
+                      params: { id: $event.id }
+                    })
+                  },
+                  view: function($event) {
+                    return _vm.$router.push({
+                      name: "note",
+                      params: { id: $event.id }
+                    })
+                  },
+                  destroy: _vm.destroy
+                }
+              })
             : _c("p", { staticClass: "uk-text-center" }, [
                 _vm.notes == null
                   ? _c("i", { staticClass: "fas fa-sync fa-spin fa-2x" })
@@ -36511,16 +36669,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [_c("th"), _vm._v(" "), _c("th", [_vm._v("Name")])])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -36618,6 +36767,528 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/paginated-table.vue?vue&type=template&id=7dbebfc5&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/partial/paginated-table.vue?vue&type=template&id=7dbebfc5& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "table-paginated" }, [
+    _c("table", { staticClass: "uk-table uk-table-divider" }, [
+      _c("thead", [
+        _c(
+          "tr",
+          [
+            _c("th"),
+            _vm._v(" "),
+            _vm._l(_vm.columns, function(column) {
+              return _c("th", [_vm._v(_vm._s(column.title))])
+            })
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.records.data, function(row) {
+          return _c(
+            "tr",
+            [
+              _c("td", { staticClass: "uk-width-small" }, [
+                _c(
+                  "ul",
+                  { staticClass: "uk-iconnav" },
+                  _vm._l(_vm.actions, function(action) {
+                    return _c("li", [
+                      _c(
+                        "a",
+                        {
+                          class: action.classes || "",
+                          attrs: { href: "/" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.$emit(action.name, row)
+                            }
+                          }
+                        },
+                        [_c("i", { class: "fas fa-" + action.icon })]
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.columns, function(column) {
+                return _c("td", [
+                  _vm._v(
+                    _vm._s(
+                      column.format
+                        ? column.format(row[column.name], row)
+                        : row[column.name]
+                    )
+                  )
+                ])
+              })
+            ],
+            2
+          )
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _vm.pages.length > 1
+      ? _c(
+          "ul",
+          {
+            staticClass: "uk-pagination uk-flex-right uk-margin-medium-top",
+            attrs: { "uk-margin": "" }
+          },
+          [
+            _c("li", [
+              _vm.records.meta.current_page > 1
+                ? _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.previous($event)
+                        }
+                      }
+                    },
+                    [_c("span", { attrs: { "uk-pagination-previous": "" } })]
+                  )
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.pages, function(page) {
+              return _c("li", { class: { "uk-active": page.active } }, [
+                page.number == "..."
+                  ? _c("span", [_vm._v("...")])
+                  : !page.active
+                  ? _c(
+                      "a",
+                      {
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.go(page.number)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                " +
+                            _vm._s(page.number) +
+                            "\n            "
+                        )
+                      ]
+                    )
+                  : _c("span", [_vm._v(_vm._s(page.number))])
+              ])
+            }),
+            _vm._v(" "),
+            _c("li", [
+              _vm.records.meta.current_page != _vm.records.meta.last_page
+                ? _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.next($event)
+                        }
+                      }
+                    },
+                    [_c("span", { attrs: { "uk-pagination-next": "" } })]
+                  )
+                : _vm._e()
+            ])
+          ],
+          2
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/permissions-form.vue?vue&type=template&id=4fb25d06&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/partial/permissions-form.vue?vue&type=template&id=4fb25d06& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "permissions" }, [
+    _c("div", { staticClass: "uk-margin" }, [
+      _c("p", [
+        _vm._v("Do you want to override the standard permissions per user?")
+      ]),
+      _vm._v(" "),
+      _c("label", [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.override,
+              expression: "override"
+            }
+          ],
+          staticClass: "uk-radio",
+          attrs: { type: "radio" },
+          domProps: { value: true, checked: _vm._q(_vm.override, true) },
+          on: {
+            change: function($event) {
+              _vm.override = true
+            }
+          }
+        }),
+        _vm._v(" Yes")
+      ]),
+      _vm._v(" "),
+      _c("label", [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.override,
+              expression: "override"
+            }
+          ],
+          staticClass: "uk-radio",
+          attrs: { type: "radio" },
+          domProps: { value: false, checked: _vm._q(_vm.override, false) },
+          on: {
+            change: function($event) {
+              _vm.override = false
+            }
+          }
+        }),
+        _vm._v(" No")
+      ])
+    ]),
+    _vm._v(" "),
+    _vm.override && _vm.permissions != null && _vm.users != null
+      ? _c("table", { staticClass: "uk-table" }, [
+          _c("thead", [
+            _c("tr", [
+              _c("th", [_vm._v("User")]),
+              _vm._v(" "),
+              _c("th", [
+                _c("label", [
+                  _c("input", {
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: { checked: _vm.selected.view },
+                    on: {
+                      change: function($event) {
+                        $event.preventDefault()
+                        return _vm.selectAll("view")
+                      }
+                    }
+                  }),
+                  _vm._v(" View\n                ")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("th", [
+                _c("label", [
+                  _c("input", {
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: { checked: _vm.selected.create },
+                    on: {
+                      change: function($event) {
+                        $event.preventDefault()
+                        return _vm.selectAll("create")
+                      }
+                    }
+                  }),
+                  _vm._v(" Create\n                ")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("th", [
+                _c("label", [
+                  _c("input", {
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: { checked: _vm.selected.edit },
+                    on: {
+                      change: function($event) {
+                        $event.preventDefault()
+                        return _vm.selectAll("edit")
+                      }
+                    }
+                  }),
+                  _vm._v(" Edit\n                ")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("th", [
+                _c("label", [
+                  _c("input", {
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: { checked: _vm.selected.delete },
+                    on: {
+                      change: function($event) {
+                        $event.preventDefault()
+                        return _vm.selectAll("delete")
+                      }
+                    }
+                  }),
+                  _vm._v(" Delete\n                ")
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.users.data, function(user) {
+              return _c("tr", [
+                _c("td", { staticStyle: { "text-transform": "capitalize" } }, [
+                  _vm._v(_vm._s(user.name))
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissions[user.id].view,
+                        expression: "permissions[user.id].view"
+                      }
+                    ],
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.permissions[user.id].view)
+                        ? _vm._i(_vm.permissions[user.id].view, null) > -1
+                        : _vm.permissions[user.id].view
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.permissions[user.id].view,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "view",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "view",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.permissions[user.id], "view", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissions[user.id].create,
+                        expression: "permissions[user.id].create"
+                      }
+                    ],
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.permissions[user.id].create)
+                        ? _vm._i(_vm.permissions[user.id].create, null) > -1
+                        : _vm.permissions[user.id].create
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.permissions[user.id].create,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "create",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "create",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.permissions[user.id], "create", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissions[user.id].edit,
+                        expression: "permissions[user.id].edit"
+                      }
+                    ],
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.permissions[user.id].edit)
+                        ? _vm._i(_vm.permissions[user.id].edit, null) > -1
+                        : _vm.permissions[user.id].edit
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.permissions[user.id].edit,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "edit",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "edit",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.permissions[user.id], "edit", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissions[user.id].delete,
+                        expression: "permissions[user.id].delete"
+                      }
+                    ],
+                    staticClass: "uk-checkbox",
+                    attrs: { type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.permissions[user.id].delete)
+                        ? _vm._i(_vm.permissions[user.id].delete, null) > -1
+                        : _vm.permissions[user.id].delete
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.permissions[user.id].delete,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "delete",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.permissions[user.id],
+                                "delete",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.permissions[user.id], "delete", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ])
+            }),
+            0
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/quests/quest-form.vue?vue&type=template&id=33cd1292&":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/quests/quest-form.vue?vue&type=template&id=33cd1292& ***!
@@ -36639,275 +37310,368 @@ var render = function() {
     _c("div", { staticClass: "uk-section uk-section-default" }, [
       _c("div", { staticClass: "uk-container padded" }, [
         _vm.quest
-          ? _c("form", { attrs: { action: "" } }, [
-              _c("div", { attrs: { "uk-grid": "" } }, [
-                _c("div", { staticClass: "uk-width-1-2" }, [
-                  _c("h2", [_vm._v("Details")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "uk-margin" }, [
-                    _c(
-                      "label",
-                      { staticClass: "uk-form-label", attrs: { for: "title" } },
-                      [_vm._v("Title")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.quest.title,
-                          expression: "quest.title"
-                        }
-                      ],
-                      staticClass: "uk-input",
-                      attrs: { id: "title", name: "title", type: "text" },
-                      domProps: { value: _vm.quest.title },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.quest, "title", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "uk-margin" },
-                    [
+          ? _c(
+              "form",
+              { attrs: { action: "" } },
+              [
+                _vm.$store.getters.can("edit", "role")
+                  ? _c("ul", { attrs: { "uk-tab": "" } }, [
                       _c(
-                        "label",
-                        {
-                          staticClass: "uk-form-label",
-                          attrs: { for: "location" }
-                        },
-                        [_vm._v("Location")]
+                        "li",
+                        { class: { "uk-active": _vm.tab === "details" } },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.tab = "details"
+                                }
+                              }
+                            },
+                            [_vm._v("Details")]
+                          )
+                        ]
                       ),
                       _vm._v(" "),
-                      _c("v-select", {
-                        attrs: {
-                          id: "location",
-                          name: "location",
-                          options: _vm.locations
-                        },
-                        on: { search: _vm.onSearch },
-                        model: {
-                          value: _vm.quest.location_id,
-                          callback: function($$v) {
-                            _vm.$set(_vm.quest, "location_id", $$v)
-                          },
-                          expression: "quest.location_id"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "uk-margin" },
-                    [
                       _c(
-                        "label",
-                        {
-                          staticClass: "uk-form-label",
-                          attrs: { for: "description" }
-                        },
-                        [_vm._v("Description")]
-                      ),
-                      _vm._v(" "),
-                      _c("html-editor", {
-                        attrs: { id: "description", name: "description" },
-                        model: {
-                          value: _vm.quest.description,
-                          callback: function($$v) {
-                            _vm.$set(_vm.quest, "description", $$v)
-                          },
-                          expression: "quest.description"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]),
+                        "li",
+                        { class: { "uk-active": _vm.tab === "permissions" } },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.tab = "permissions"
+                                }
+                              }
+                            },
+                            [_vm._v("Permissions")]
+                          )
+                        ]
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "uk-width-1-2" },
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.tab === "details",
+                        expression: "tab === 'details'"
+                      }
+                    ],
+                    attrs: { "uk-grid": "" }
+                  },
                   [
-                    _c("h2", [_vm._v("Objectives")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.quest.objectives, function(objective, index) {
-                      return _c(
-                        "div",
-                        { staticClass: "uk-card uk-card-body objective" },
-                        [
-                          _c("div", { staticClass: "uk-margin" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: objective.name,
-                                  expression: "objective.name"
-                                }
-                              ],
-                              staticClass: "uk-input",
-                              attrs: { type: "text" },
-                              domProps: { value: objective.name },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    objective,
-                                    "name",
-                                    $event.target.value
-                                  )
-                                }
+                    _c("div", { staticClass: "uk-width-1-2" }, [
+                      _c("h2", [_vm._v("Details")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "uk-margin" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "uk-form-label",
+                            attrs: { for: "title" }
+                          },
+                          [_vm._v("Title")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.quest.title,
+                              expression: "quest.title"
+                            }
+                          ],
+                          staticClass: "uk-input",
+                          attrs: { id: "title", name: "title", type: "text" },
+                          domProps: { value: _vm.quest.title },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
                               }
-                            })
-                          ]),
+                              _vm.$set(_vm.quest, "title", $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "uk-margin" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "uk-form-label",
+                              attrs: { for: "location" }
+                            },
+                            [_vm._v("Location")]
+                          ),
                           _vm._v(" "),
-                          _c("div", { staticClass: "uk-margin" }, [
-                            _c(
-                              "label",
-                              { attrs: { for: "optional_" + index } },
-                              [
+                          _c("v-select", {
+                            attrs: {
+                              id: "location",
+                              name: "location",
+                              options: _vm.locations
+                            },
+                            on: { search: _vm.onSearch },
+                            model: {
+                              value: _vm.quest.location_id,
+                              callback: function($$v) {
+                                _vm.$set(_vm.quest, "location_id", $$v)
+                              },
+                              expression: "quest.location_id"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "uk-margin" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "uk-form-label",
+                              attrs: { for: "description" }
+                            },
+                            [_vm._v("Description")]
+                          ),
+                          _vm._v(" "),
+                          _c("html-editor", {
+                            attrs: { id: "description", name: "description" },
+                            model: {
+                              value: _vm.quest.description,
+                              callback: function($$v) {
+                                _vm.$set(_vm.quest, "description", $$v)
+                              },
+                              expression: "quest.description"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "uk-width-1-2" },
+                      [
+                        _c("h2", [_vm._v("Objectives")]),
+                        _vm._v(" "),
+                        _vm._l(_vm.quest.objectives, function(
+                          objective,
+                          index
+                        ) {
+                          return _c(
+                            "div",
+                            { staticClass: "uk-card uk-card-body objective" },
+                            [
+                              _c("div", { staticClass: "uk-margin" }, [
                                 _c("input", {
                                   directives: [
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value: objective.optional,
-                                      expression: "objective.optional"
+                                      value: objective.name,
+                                      expression: "objective.name"
                                     }
                                   ],
-                                  staticClass: "uk-checkbox",
-                                  attrs: {
-                                    id: "optional_" + index,
-                                    type: "checkbox"
-                                  },
-                                  domProps: {
-                                    checked: Array.isArray(objective.optional)
-                                      ? _vm._i(objective.optional, null) > -1
-                                      : objective.optional
-                                  },
+                                  staticClass: "uk-input",
+                                  attrs: { type: "text" },
+                                  domProps: { value: objective.name },
                                   on: {
-                                    change: function($event) {
-                                      var $$a = objective.optional,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = null,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            _vm.$set(
-                                              objective,
-                                              "optional",
-                                              $$a.concat([$$v])
-                                            )
-                                        } else {
-                                          $$i > -1 &&
-                                            _vm.$set(
-                                              objective,
-                                              "optional",
-                                              $$a
-                                                .slice(0, $$i)
-                                                .concat($$a.slice($$i + 1))
-                                            )
-                                        }
-                                      } else {
-                                        _vm.$set(objective, "optional", $$c)
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
                                       }
+                                      _vm.$set(
+                                        objective,
+                                        "name",
+                                        $event.target.value
+                                      )
                                     }
                                   }
-                                }),
-                                _vm._v(
-                                  "\n                                    Optional\n                                "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.quest.objectives.length > 1
-                              ? _c(
-                                  "a",
-                                  {
-                                    staticClass:
-                                      "uk-text-danger uk-float-right",
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        return _vm.removeObjective(index)
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "uk-margin" }, [
+                                _c(
+                                  "label",
+                                  { attrs: { for: "optional_" + index } },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: objective.optional,
+                                          expression: "objective.optional"
+                                        }
+                                      ],
+                                      staticClass: "uk-checkbox",
+                                      attrs: {
+                                        id: "optional_" + index,
+                                        type: "checkbox"
+                                      },
+                                      domProps: {
+                                        checked: Array.isArray(
+                                          objective.optional
+                                        )
+                                          ? _vm._i(objective.optional, null) >
+                                            -1
+                                          : objective.optional
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          var $$a = objective.optional,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = null,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                _vm.$set(
+                                                  objective,
+                                                  "optional",
+                                                  $$a.concat([$$v])
+                                                )
+                                            } else {
+                                              $$i > -1 &&
+                                                _vm.$set(
+                                                  objective,
+                                                  "optional",
+                                                  $$a
+                                                    .slice(0, $$i)
+                                                    .concat($$a.slice($$i + 1))
+                                                )
+                                            }
+                                          } else {
+                                            _vm.$set(objective, "optional", $$c)
+                                          }
+                                        }
                                       }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "fa fa-trash" })]
-                                )
-                              : _vm._e()
-                          ])
-                        ]
-                      )
-                    }),
-                    _vm._v(" "),
+                                    }),
+                                    _vm._v(
+                                      "\n                                    Optional\n                                "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _vm.quest.objectives.length > 1
+                                  ? _c(
+                                      "a",
+                                      {
+                                        staticClass:
+                                          "uk-text-danger uk-float-right",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.removeObjective(index)
+                                          }
+                                        }
+                                      },
+                                      [_c("i", { staticClass: "fa fa-trash" })]
+                                    )
+                                  : _vm._e()
+                              ])
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "uk-align-center uk-button uk-button-primary uk-button-round",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.addObjective($event)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-plus fa-fw" })]
+                        )
+                      ],
+                      2
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("permissions-form", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.tab === "permissions" &&
+                        _vm.$store.getters.can("edit", "role"),
+                      expression:
+                        "tab === 'permissions' && $store.getters.can('edit', 'role')"
+                    }
+                  ],
+                  model: {
+                    value: _vm.quest.permissions,
+                    callback: function($$v) {
+                      _vm.$set(_vm.quest, "permissions", $$v)
+                    },
+                    expression: "quest.permissions"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "p",
+                  { staticClass: "uk-margin" },
+                  [
                     _c(
                       "button",
                       {
-                        staticClass:
-                          "uk-align-center uk-button uk-button-primary uk-button-round",
+                        staticClass: "uk-button uk-button-primary",
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            return _vm.addObjective($event)
+                            return _vm.save($event)
                           }
                         }
                       },
-                      [_c("i", { staticClass: "fas fa-plus fa-fw" })]
+                      [_vm._v("Save")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "uk-button uk-button-danger",
+                        attrs: { to: { name: "quests" } }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Cancel\n                    "
+                        )
+                      ]
                     )
                   ],
-                  2
+                  1
                 )
-              ]),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "uk-margin" },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "uk-button uk-button-primary",
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.save($event)
-                        }
-                      }
-                    },
-                    [_vm._v("Save")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "uk-button uk-button-danger",
-                      attrs: { to: { name: "quests" } }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Cancel\n                    "
-                      )
-                    ]
-                  )
-                ],
-                1
-              )
-            ])
+              ],
+              1
+            )
           : _c("p", { staticClass: "uk-text-center" }, [
               _c("i", { staticClass: "fas fa-2x fa-sync fa-spin" })
             ])
@@ -36945,117 +37709,48 @@ var render = function() {
         "div",
         { staticClass: "uk-container padded" },
         [
-          _c(
-            "router-link",
-            {
-              staticClass: "uk-button uk-button-primary",
-              attrs: { to: { name: "quest-create" } }
-            },
-            [
-              _c("i", { staticClass: "fas fa-plus" }),
-              _vm._v(" Add quest\n            ")
-            ]
-          ),
+          _vm.$store.getters.can("create", "quest")
+            ? _c(
+                "router-link",
+                {
+                  staticClass: "uk-button uk-button-primary",
+                  attrs: { to: { name: "quest-create" } }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-plus" }),
+                  _vm._v(" Add quest\n            ")
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _vm.quests != null && _vm.quests.data.length > 0
-            ? _c("table", { staticClass: "uk-table uk-table-divider" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.quests.data, function(quest) {
-                    return _c("tr", [
-                      _c("td", { staticClass: "uk-width-small" }, [
-                        _c("ul", { staticClass: "uk-iconnav" }, [
-                          _c("li", [
-                            _c(
-                              "a",
-                              {
-                                staticClass: "uk-text-danger",
-                                attrs: { href: "/" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.destroy(quest)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fas fa-trash" })]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "quest-edit",
-                                      params: { id: quest.id }
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-edit" })]
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "quest",
-                                      params: { id: quest.id }
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-eye" })]
-                              )
-                            ],
-                            1
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(quest.title))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(
-                              quest.objectives.filter(function(item) {
-                                item.completed == 1
-                              }).length +
-                                "/" +
-                                quest.objectives.length
-                            ) +
-                            "\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(_vm._s(quest.location || "Not specified"))
-                      ])
-                    ])
-                  }),
-                  0
-                )
-              ])
+            ? _c("paginated-table", {
+                attrs: {
+                  actions: _vm.actions,
+                  columns: _vm.columns,
+                  module: "Quests",
+                  records: _vm.quests
+                },
+                on: {
+                  edit: function($event) {
+                    return _vm.$router.push({
+                      name: "quest-edit",
+                      params: { id: $event.id }
+                    })
+                  },
+                  view: function($event) {
+                    return _vm.$router.push({
+                      name: "quest",
+                      params: { id: $event.id }
+                    })
+                  },
+                  destroy: _vm.destroy
+                }
+              })
             : _c("p", { staticClass: "uk-text-center" }, [
                 _vm.quests == null
                   ? _c("i", { staticClass: "fas fa-sync fa-spin fa-2x" })
-                  : _c("span", [
-                      _vm._v(
-                        "\n                    Your quest log is empty!\n                "
-                      )
-                    ])
+                  : _c("span", [_vm._v("Your quest log is empty!")])
               ])
         ],
         1
@@ -37063,24 +37758,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th"),
-        _vm._v(" "),
-        _c("th", [_vm._v("Title")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Completion")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Location")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -55454,6 +56132,144 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/partial/paginated-table.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/partial/paginated-table.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _paginated_table_vue_vue_type_template_id_7dbebfc5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./paginated-table.vue?vue&type=template&id=7dbebfc5& */ "./resources/js/components/partial/paginated-table.vue?vue&type=template&id=7dbebfc5&");
+/* harmony import */ var _paginated_table_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./paginated-table.vue?vue&type=script&lang=js& */ "./resources/js/components/partial/paginated-table.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _paginated_table_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _paginated_table_vue_vue_type_template_id_7dbebfc5___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _paginated_table_vue_vue_type_template_id_7dbebfc5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/partial/paginated-table.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/partial/paginated-table.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/partial/paginated-table.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_paginated_table_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./paginated-table.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/paginated-table.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_paginated_table_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/partial/paginated-table.vue?vue&type=template&id=7dbebfc5&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/partial/paginated-table.vue?vue&type=template&id=7dbebfc5& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_paginated_table_vue_vue_type_template_id_7dbebfc5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./paginated-table.vue?vue&type=template&id=7dbebfc5& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/paginated-table.vue?vue&type=template&id=7dbebfc5&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_paginated_table_vue_vue_type_template_id_7dbebfc5___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_paginated_table_vue_vue_type_template_id_7dbebfc5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/partial/permissions-form.vue":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/partial/permissions-form.vue ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _permissions_form_vue_vue_type_template_id_4fb25d06___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./permissions-form.vue?vue&type=template&id=4fb25d06& */ "./resources/js/components/partial/permissions-form.vue?vue&type=template&id=4fb25d06&");
+/* harmony import */ var _permissions_form_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./permissions-form.vue?vue&type=script&lang=js& */ "./resources/js/components/partial/permissions-form.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _permissions_form_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _permissions_form_vue_vue_type_template_id_4fb25d06___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _permissions_form_vue_vue_type_template_id_4fb25d06___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/partial/permissions-form.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/partial/permissions-form.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/partial/permissions-form.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_permissions_form_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./permissions-form.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/permissions-form.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_permissions_form_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/partial/permissions-form.vue?vue&type=template&id=4fb25d06&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/partial/permissions-form.vue?vue&type=template&id=4fb25d06& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_permissions_form_vue_vue_type_template_id_4fb25d06___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./permissions-form.vue?vue&type=template&id=4fb25d06& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/partial/permissions-form.vue?vue&type=template&id=4fb25d06&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_permissions_form_vue_vue_type_template_id_4fb25d06___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_permissions_form_vue_vue_type_template_id_4fb25d06___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/quests/quest-form.vue":
 /*!*******************************************************!*\
   !*** ./resources/js/components/quests/quest-form.vue ***!
@@ -56047,8 +56863,35 @@ var Locations = {
     locations: null
   },
   actions: {
-    loadLocations: function loadLocations(_ref) {
-      var commit = _ref.commit;
+    previous: function previous(_ref) {
+      var commit = _ref.commit,
+          state = _ref.state;
+
+      if (state.locations != null && state.locations.meta.current_page > 1) {
+        axios.get("/campaign/locations?page[number]=".concat(state.locations.meta.current_page - 1)).then(function (response) {
+          commit('SET_LOCATIONS', response.data);
+        });
+      }
+    },
+    page: function page(_ref2, number) {
+      var commit = _ref2.commit,
+          state = _ref2.state;
+      if (state.locations != null && number > 0 && number <= state.locations.meta.last_page) axios.get("/campaign/locations?page[number]=".concat(number)).then(function (response) {
+        commit('SET_LOCATIONS', response.data);
+      });
+    },
+    next: function next(_ref3) {
+      var commit = _ref3.commit,
+          state = _ref3.state;
+
+      if (state.locations != null && state.locations.meta.current_page < state.locations.meta.last_page) {
+        axios.get("/campaign/locations?page[number]=".concat(state.locations.meta.current_page + 1)).then(function (response) {
+          commit('SET_LOCATIONS', response.data);
+        });
+      }
+    },
+    loadLocations: function loadLocations(_ref4) {
+      var commit = _ref4.commit;
       return axios.get("/campaign/locations").then(function (response) {
         commit('SET_LOCATIONS', response.data);
       });
@@ -56058,9 +56901,9 @@ var Locations = {
         return response.data;
       });
     },
-    store: function store(_ref2, data) {
-      var dispatch = _ref2.dispatch,
-          commit = _ref2.commit;
+    store: function store(_ref5, data) {
+      var dispatch = _ref5.dispatch,
+          commit = _ref5.commit;
       return axios.post("/campaign/locations", data.location, {
         headers: {
           'content-type': 'multipart/form-data'
@@ -56077,9 +56920,9 @@ var Locations = {
         });
       });
     },
-    update: function update(_ref3, data) {
-      var dispatch = _ref3.dispatch,
-          commit = _ref3.commit;
+    update: function update(_ref6, data) {
+      var dispatch = _ref6.dispatch,
+          commit = _ref6.commit;
       data.location.append('_method', 'put');
       return axios.post("/campaign/locations/".concat(data.id), data.location, {
         headers: {
@@ -56097,8 +56940,8 @@ var Locations = {
         });
       });
     },
-    destroy: function destroy(_ref4, location) {
-      var dispatch = _ref4.dispatch;
+    destroy: function destroy(_ref7, location) {
+      var dispatch = _ref7.dispatch;
       axios["delete"]("/campaign/locations/".concat(location.id)).then(function () {
         dispatch('loadLocations').then(function () {
           dispatch('Messages/success', 'Location successfully deleted!', {
@@ -56197,22 +57040,49 @@ var Notes = {
     notes: null
   },
   actions: {
-    load: function load(_ref) {
-      var commit = _ref.commit;
+    previous: function previous(_ref) {
+      var commit = _ref.commit,
+          state = _ref.state;
+
+      if (state.notes != null && state.notes.meta.current_page > 1) {
+        axios.get("/campaign/notes?page[number]=".concat(state.notes.meta.current_page - 1)).then(function (response) {
+          commit('SET_NOTES', response.data);
+        });
+      }
+    },
+    page: function page(_ref2, number) {
+      var commit = _ref2.commit,
+          state = _ref2.state;
+      if (state.notes != null && number > 0 && number <= state.notes.meta.last_page) axios.get("/campaign/notes?page[number]=".concat(number)).then(function (response) {
+        commit('SET_NOTES', response.data);
+      });
+    },
+    next: function next(_ref3) {
+      var commit = _ref3.commit,
+          state = _ref3.state;
+
+      if (state.notes != null && state.notes.meta.current_page < state.notes.meta.last_page) {
+        axios.get("/campaign/notes?page[number]=".concat(state.notes.meta.current_page + 1)).then(function (response) {
+          commit('SET_NOTES', response.data);
+        });
+      }
+    },
+    load: function load(_ref4) {
+      var commit = _ref4.commit;
       axios.get('/campaign/notes').then(function (response) {
         commit('SET_NOTES', response.data);
       });
     },
-    find: function find(_ref2, id) {
-      _objectDestructuringEmpty(_ref2);
+    find: function find(_ref5, id) {
+      _objectDestructuringEmpty(_ref5);
 
       return axios.get("/campaign/notes/".concat(id)).then(function (response) {
         return response.data;
       });
     },
-    store: function store(_ref3, note) {
-      var commit = _ref3.commit,
-          dispatch = _ref3.dispatch;
+    store: function store(_ref6, note) {
+      var commit = _ref6.commit,
+          dispatch = _ref6.dispatch;
       axios.post('/campaign/notes', note).then(function () {
         commit('SET_ERRORS', {});
         dispatch('Messages/success', 'Note saved!', {
@@ -56225,9 +57095,9 @@ var Notes = {
         });
       });
     },
-    update: function update(_ref4, data) {
-      var commit = _ref4.commit,
-          dispatch = _ref4.dispatch;
+    update: function update(_ref7, data) {
+      var commit = _ref7.commit,
+          dispatch = _ref7.dispatch;
       var payload = data.note;
       payload._method = 'put';
       axios.post("/campaign/notes/".concat(data.id), payload).then(function () {
@@ -56242,8 +57112,8 @@ var Notes = {
         });
       });
     },
-    destroy: function destroy(_ref5, note) {
-      var dispatch = _ref5.dispatch;
+    destroy: function destroy(_ref8, note) {
+      var dispatch = _ref8.dispatch;
       axios["delete"]("/campaign/notes/".concat(note.id)).then(function () {
         dispatch('Messages/success', 'Note successfully deleted!', {
           root: true
@@ -56280,21 +57150,48 @@ var Quests = {
     quests: null
   },
   actions: {
-    load: function load(_ref) {
-      var commit = _ref.commit;
+    previous: function previous(_ref) {
+      var commit = _ref.commit,
+          state = _ref.state;
+
+      if (state.quests != null && state.quests.meta.current_page > 1) {
+        axios.get("/campaign/quests?page[number]=".concat(state.quests.meta.current_page - 1)).then(function (response) {
+          commit('SET_QUESTS', response.data);
+        });
+      }
+    },
+    page: function page(_ref2, number) {
+      var commit = _ref2.commit,
+          state = _ref2.state;
+      if (state.quests != null && number > 0 && number <= state.quests.meta.last_page) axios.get("/campaign/quests?page[number]=".concat(number)).then(function (response) {
+        commit('SET_QUESTS', response.data);
+      });
+    },
+    next: function next(_ref3) {
+      var commit = _ref3.commit,
+          state = _ref3.state;
+
+      if (state.quests != null && state.quests.meta.current_page < state.quests.meta.last_page) {
+        axios.get("/campaign/quests?page[number]=".concat(state.quests.meta.current_page + 1)).then(function (response) {
+          commit('SET_QUESTS', response.data);
+        });
+      }
+    },
+    load: function load(_ref4) {
+      var commit = _ref4.commit;
       axios.get('/campaign/quests').then(function (response) {
         commit('SET_QUESTS', response.data);
       });
     },
-    find: function find(_ref2, questId) {
-      var commit = _ref2.commit;
+    find: function find(_ref5, questId) {
+      var commit = _ref5.commit;
       return axios.get("/campaign/quests/".concat(questId)).then(function (response) {
         return response.data;
       });
     },
-    store: function store(_ref3, quest) {
-      var commit = _ref3.commit,
-          dispatch = _ref3.dispatch;
+    store: function store(_ref6, quest) {
+      var commit = _ref6.commit,
+          dispatch = _ref6.dispatch;
       axios.post('/campaign/quests', quest).then(function () {
         commit('SET_ERRORS', {});
         dispatch('Messages/success', 'Quest saved!', {
@@ -56307,9 +57204,9 @@ var Quests = {
         });
       });
     },
-    update: function update(_ref4, data) {
-      var commit = _ref4.commit,
-          dispatch = _ref4.dispatch;
+    update: function update(_ref7, data) {
+      var commit = _ref7.commit,
+          dispatch = _ref7.dispatch;
       var payload = data.quest;
       payload._method = 'put';
       axios.post("/campaign/quests/".concat(data.id), payload).then(function () {
@@ -56324,8 +57221,8 @@ var Quests = {
         });
       });
     },
-    destroy: function destroy(_ref5, quest) {
-      var dispatch = _ref5.dispatch;
+    destroy: function destroy(_ref8, quest) {
+      var dispatch = _ref8.dispatch;
       axios["delete"]("/campaign/quests/".concat(quest.id)).then(function () {
         dispatch('Messages/success', 'Location successfully deleted!', {
           root: true

@@ -4,7 +4,15 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="quest" action="">
-                    <div uk-grid>
+                    <ul v-if="$store.getters.can('edit', 'role')" uk-tab>
+                        <li :class="{'uk-active': tab === 'details'}">
+                            <a href="" @click.prevent="tab = 'details'">Details</a>
+                        </li>
+                        <li :class="{'uk-active': tab === 'permissions'}">
+                            <a href="" @click.prevent="tab = 'permissions'">Permissions</a>
+                        </li>
+                    </ul>
+                    <div v-show="tab === 'details'" uk-grid>
                         <div class="uk-width-1-2">
                             <h2>Details</h2>
                             <div class="uk-margin">
@@ -47,6 +55,8 @@
                             </button>
                         </div>
                     </div>
+                    <permissions-form v-show="tab === 'permissions' && $store.getters.can('edit', 'role')"
+                                      v-model="quest.permissions" />
                     <p class="uk-margin">
                         <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
                         <router-link class="uk-button uk-button-danger" :to="{name: 'quests'}">
@@ -67,6 +77,7 @@
     import HtmlEditor from "../partial/html-editor";
     import VSelect from 'vue-select';
     import _ from 'lodash';
+    import PermissionsForm from "../partial/permissions-form";
 
     export default {
         name: "QuestForm",
@@ -76,18 +87,23 @@
                 this.$store.dispatch('Quests/find', this.id)
                     .then((quest) => {
                         this.quest = JSON.parse(JSON.stringify(quest));
+                        if (!this.quest.hasOwnProperty('permissions')) {
+                            this.quest.permissions = {};
+                        }
                     });
             } else {
                 this.quest = {
                     objectives: [],
+                    permissions: {}
                 };
                 this.addObjective();
             }
         },
         data() {
             return {
+                locations: [],
+                tab: 'details',
                 quest: null,
-                locations: []
             }
         },
         methods: {
@@ -152,6 +168,6 @@
                 }
             }
         },
-        components: {HtmlEditor, VSelect}
+        components: {PermissionsForm, HtmlEditor, VSelect}
     }
 </script>
