@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Models\Campaign\Quest;
 use App\Models\Campaign\QuestObjective;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class QuestRepository
 {
@@ -28,8 +30,24 @@ class QuestRepository
      */
     public function get(int $campaignId, array $filters = [], int $page = 1, int $pageSize = 20): LengthAwarePaginator
     {
-        $query = Quest::query()->where('campaign_id', $campaignId)
-            ->with('objectives');
+        $query = Quest::query()
+            ->where('quests.campaign_id', $campaignId)
+            ->leftJoin('user_permissions', function ($join) {
+                $join->on('quests.id', '=', 'user_permissions.entity_id')
+                    ->where([
+                        'user_permissions.entity' => 'quest',
+                        'user_permissions.user_id' => Auth::user()->id
+                    ]);
+            });
+        if (Auth::user()->can('viewAny', Quest::class)) {
+            $query->where(function ($query) {
+                $query->where('private', 0)
+                    ->orWhere('user_permissions.view', 1);
+            });
+        } else {
+            $query->where('user_permissions.view', 1);
+        }
+        $query->with('objectives');
 
         if (array_key_exists('completed', $filters)) {
             $query->whereDoesntHave('objectives', function ($query) use ($filters) {
@@ -44,7 +62,7 @@ class QuestRepository
             });
         }
 
-        return $query->paginate($pageSize, ['*'], 'page[number]', $page);
+        return $query->paginate($pageSize, ['quests.*'], 'page[number]', $page);
     }
 
     /**
@@ -74,23 +92,14 @@ class QuestRepository
 
     /**
      * @param int $campaignId
-     * @param int $questId
-     * @return Quest
-     */
-    public function find(int $campaignId, int $questId)
-    {
-        return Quest::where(['campaign_id' => $campaignId, 'id' => $questId])->with('objectives')->firstOrFail();
-    }
-
-    /**
-     * @param int $campaignId
-     * @param int $questId
+     * @param Quest $quest
      * @param array $data
      */
-    public function update(int $campaignId, int $questId, array $data)
+    public function update(int $campaignId, Quest $quest, array $data)
     {
-        /** @var Quest $quest */
-        $quest = Quest::where(['campaign_id' => $campaignId, 'id' => $questId])->firstOrFail();
+        if ($campaignId != $quest->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $quest->location_id = $data['location_id'] ?? null;
         $quest->title = $data['title'];
         $quest->description = $data['description'];
@@ -98,7 +107,7 @@ class QuestRepository
 
         foreach ($data['objectives'] as $objective) {
             if (array_key_exists('id', $objective)) {
-                $questObjective = QuestObjective::where(['quest_id' => $questId, 'id' => $objective['id']])
+                $questObjective = QuestObjective::where(['quest_id' => $quest->id, 'id' => $objective['id']])
                     ->firstOrFail();
             } else {
                 $questObjective = new QuestObjective();
@@ -115,13 +124,14 @@ class QuestRepository
 
     /**
      * @param int $campaignId
-     * @param int $questId
+     * @param Quest $quest
      * @throws \Exception
      */
-    public function destroy(int $campaignId, int $questId)
+    public function destroy(int $campaignId, Quest $quest)
     {
-        /** @var Quest $quest */
-        $quest = Quest::where(['campaign_id' => $campaignId, 'id' => $questId])->firstOrFail();
+        if ($campaignId != $quest->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $quest->objectives()->delete();
         $quest->delete();
 

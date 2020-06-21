@@ -7,6 +7,7 @@ use App\Http\Resources\QuestResource;
 use App\Models\Campaign\Quest;
 use App\Models\Campaign\QuestObjective;
 use App\Repositories\QuestRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
@@ -23,8 +24,9 @@ class QuestController extends Controller
     public function index(QuestRepository $questRepository, Request $request)
     {
         $page = $request->query('page', []);
-        $quests = $questRepository
-            ->get(Session::get('campaign_id'), $request->query('filters', []), $page['number'] ?? 1, $page['size'] ?? 20);
+        $campaignId = Session::get('campaign_id');
+        $filters = $request->query('filters', []);
+        $quests = $questRepository->get($campaignId, $filters, $page['number'] ?? 1, $page['size'] ?? 20);
         return QuestResource::collection($quests);
     }
 
@@ -32,12 +34,14 @@ class QuestController extends Controller
      * Store a newly created resource in storage.
      *
      * @param QuestRepository $questRepository
-     * @param  Request $request
+     * @param Request $request
      * @return void
      * @throws \Illuminate\Validation\ValidationException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(QuestRepository $questRepository, Request $request)
     {
+        $this->authorize('create', Quest::class);
         $this->validate($request, [
             'title' => 'required|string|max:191',
             'description' => 'string',
@@ -52,13 +56,18 @@ class QuestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param QuestRepository $questRepository
-     * @param int $questId
+     * @param Quest $quest
      * @return Quest
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(QuestRepository $questRepository, int $questId): Quest
+    public function show(Quest $quest): Quest
     {
-        return $questRepository->find(Session::get('campaign_id'), $questId);
+        $this->authorize('view', $quest);
+        $quest->load('objectives');
+        if (Session::get('campaign_id') != $quest->campaign_id) {
+            throw new ModelNotFoundException();
+        }
+        return $quest;
     }
 
     /**
@@ -66,12 +75,14 @@ class QuestController extends Controller
      *
      * @param QuestRepository $questRepository
      * @param Request $request
-     * @param int $questId
+     * @param Quest $quest
      * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(QuestRepository $questRepository, Request $request, int $questId)
+    public function update(QuestRepository $questRepository, Request $request, Quest $quest)
     {
+        $this->authorize('edit', $quest);
         $this->validate($request, [
             'title' => 'required|string|max:191',
             'description' => 'string',
@@ -80,27 +91,37 @@ class QuestController extends Controller
             'objectives.*.name' => 'required|string|max:191',
             'objectives.*.optional' => 'required|boolean'
         ]);
-        $questRepository->update(Session::get('campaign_id'), $questId, $request->input());
+        $questRepository->update(Session::get('campaign_id'), $quest, $request->input());
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param QuestRepository $questRepository
-     * @param int $questId
+     * @param Quest $quest
      * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(QuestRepository $questRepository, int $questId)
+    public function destroy(QuestRepository $questRepository, Quest $quest)
     {
-        $questRepository->destroy(Session::get('campaign_id'), $questId);
+        $this->authorize('destroy', $quest);
+        $questRepository->destroy(Session::get('campaign_id'), $quest);
     }
 
+    /**
+     * @param Request $request
+     * @param int $questId
+     * @param int $objectiveId
+     * @return QuestObjective
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function toggleObjectiveStatus(Request $request, int $questId, int $objectiveId)
     {
         $this->validate($request, [
             'status' => 'required|int|in:0,1,2'
         ]);
 
+        /** @var QuestObjective $objective */
         $objective = QuestObjective::where([
             'quest_objectives.quest_id' => $questId,
             'quest_objectives.id' => $objectiveId

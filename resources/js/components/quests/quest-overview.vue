@@ -3,52 +3,21 @@
         <h1>Quests</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <router-link class="uk-button uk-button-primary" :to="{name: 'quest-create'}">
+                <router-link v-if="$store.getters.can('create', 'quest')"
+                             class="uk-button uk-button-primary" :to="{name: 'quest-create'}">
                     <i class="fas fa-plus"></i> Add quest
                 </router-link>
-                <table class="uk-table uk-table-divider" v-if="quests != null && quests.data.length > 0">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Completion</th>
-                        <th>Location</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="quest in quests.data">
-                        <td class="uk-width-small">
-                            <ul class="uk-iconnav">
-                                <li>
-                                    <a href="/" class="uk-text-danger" @click.prevent="destroy(quest)">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <router-link :to="{name: 'quest-edit', params: {id: quest.id}}">
-                                        <i class="fas fa-edit"></i>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link :to="{name: 'quest', params: {id: quest.id}}">
-                                        <i class="fas fa-eye"></i>
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </td>
-                        <td>{{ quest.title }}</td>
-                        <td>
-                            {{ `${quest.objectives.filter((item) => {item.completed == 1}).length}/${quest.objectives.length}` }}
-                        </td>
-                        <td>{{ quest.location || 'Not specified' }}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <paginated-table v-if="quests != null && quests.data.length > 0"
+                                 :actions="actions"
+                                 :columns="columns"
+                                 module="Quests"
+                                 :records="quests"
+                                 @edit="$router.push({name: 'quest-edit', params: {id: $event.id}})"
+                                 @view="$router.push({name: 'quest', params: {id: $event.id}})"
+                                 @destroy="destroy"/>
                 <p v-else class="uk-text-center">
                     <i v-if="quests == null" class="fas fa-sync fa-spin fa-2x"></i>
-                    <span v-else>
-                        Your quest log is empty!
-                    </span>
+                    <span v-else>Your quest log is empty!</span>
                 </p>
             </div>
         </div>
@@ -58,11 +27,38 @@
 <script>
     import {mapState} from 'vuex';
     import UIKit from 'uikit';
+    import PaginatedTable from "../partial/paginated-table";
 
     export default {
         name: "QuestOverview",
         created() {
             this.$store.dispatch('Quests/load');
+        },
+        data() {
+            return {
+                actions: [
+                    {name: 'destroy', icon: 'trash', classes: 'uk-text-danger'},
+                    {name: 'edit', icon: 'edit'},
+                    {name: 'view', icon: 'eye'}
+                ],
+                columns: [
+                    {title: 'Title', name: 'title'},
+                    {
+                        title: 'Completion',
+                        name: 'objectives',
+                        format(objectives) {
+                            return `${objectives.filter((item) => {item.completed == 1}).length}/${objectives.length}`
+                        }
+                    },
+                    {
+                        title: 'Location',
+                        name: 'location',
+                        format(location) {
+                            return location || 'Not specified';
+                        }
+                    },
+                ]
+            }
         },
         methods: {
             destroy(quest) {
@@ -82,6 +78,7 @@
         },
         computed: {
             ...mapState('Quests', ['quests'])
-        }
+        },
+        components: {PaginatedTable}
     }
 </script>

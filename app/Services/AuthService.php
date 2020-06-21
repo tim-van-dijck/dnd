@@ -14,7 +14,7 @@ class AuthService
 {
     /**
      * @param User $user
-     * @param Model|null model
+     * @param Model|null $model
      * @param string $entity
      * @param string $permission
      * @return bool
@@ -45,6 +45,14 @@ class AuthService
         return false;
     }
 
+    /**
+     * @param int $campaignId
+     * @param int $userId
+     * @param string $entity
+     * @param int $entityId
+     * @param string $permission
+     * @return bool
+     */
     public static function hasOverridePermission(
         int $campaignId,
         int $userId,
@@ -62,6 +70,10 @@ class AuthService
                 ])->count() > 0;
     }
 
+    /**
+     * @param int $campaignId
+     * @return array
+     */
     public static function campaignPermissions(int $campaignId)
     {
         $permissions = [];
@@ -79,7 +91,7 @@ class AuthService
 
         /** @var UserPermission $exception */
         foreach ($exceptions as $exception) {
-            $permissions[$exception->entity][$exception->entity_id] = [
+            $permissions[$exception->entity]['exceptions'][$exception->entity_id] = [
                 'view' => $exception->view,
                 'create' => $exception->create,
                 'edit' => $exception->edit,

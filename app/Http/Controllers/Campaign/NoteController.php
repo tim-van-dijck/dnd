@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\NoteResource;
 use App\Models\Campaign\Note;
 use App\Repositories\NoteRepository;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class NoteController extends Controller
 {
@@ -26,10 +29,12 @@ class NoteController extends Controller
     /**
      * @param NoteRepository $noteRepository
      * @param Request $request
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function store(NoteRepository $noteRepository, Request $request)
     {
+        $this->authorize('create', Note::class);
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'content' => 'required|string',
@@ -40,36 +45,45 @@ class NoteController extends Controller
 
     /**
      * @param NoteRepository $noteRepository
-     * @param int $noteId
+     * @param Note $note
      * @return Note
+     * @throws AuthorizationException
      */
-    public function show(NoteRepository $noteRepository, int $noteId): Note
+    public function show(Note $note): Note
     {
-        return $noteRepository->find(Session::get('campaign_id'), $noteId);
+        $this->authorize('view', $note);
+        if (Session::get('campaign_id') != $note->campaign_id) {
+            throw new ModelNotFoundException();
+        }
+        return $note;
     }
 
     /**
      * @param NoteRepository $noteRepository
      * @param Request $request
-     * @param int $noteId
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Note $note
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
-    public function update(NoteRepository $noteRepository, Request $request, int $noteId)
+    public function update(NoteRepository $noteRepository, Request $request, Note $note)
     {
+        $this->authorize('edit', $note);
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'content' => 'required|string',
             'private' => 'boolean'
         ]);
-        $noteRepository->update(Session::get('campaign_id'), $noteId, $request->input());
+        $noteRepository->update(Session::get('campaign_id'), $note, $request->input());
     }
 
     /**
      * @param NoteRepository $noteRepository
-     * @param int $noteId
+     * @param Note $note
+     * @throws AuthorizationException
      */
-    public function destroy(NoteRepository $noteRepository, int $noteId)
+    public function destroy(NoteRepository $noteRepository, Note $note)
     {
-        $noteRepository->destroy(Session::get('campaign_id'), $noteId);
+        $this->authorize('destroy', $note);
+        $noteRepository->destroy(Session::get('campaign_id'), $note);
     }
 }

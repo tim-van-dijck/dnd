@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Campaign;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Campaign\Role;
+use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
@@ -25,6 +26,11 @@ class UserController extends Controller
         return UserResource::collection($users);
     }
 
+    /**
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function invite(UserRepository $userRepository, Request $request)
     {
         $campaignId = Session::get('campaign_id');
@@ -37,15 +43,23 @@ class UserController extends Controller
         $userRepository->invite($campaignId, $request->input('email'), $request->input('role'));
     }
 
-    public function update(UserRepository $userRepository, Request $request, int $userId)
+    /**
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @param User $user
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function update(UserRepository $userRepository, Request $request, User $user)
     {
+        $this->authorize('edit', $user);
         $campaignId = Session::get('campaign_id');
         $roles = implode(',', Role::where('campaign_id', $campaignId)->get('id')->pluck('id')->toArray());
         $this->validate($request, [
             'role' => "required|integer|in:$roles"
         ]);
 
-        $userRepository->updateRole($campaignId, $userId, $request->input('role'));
+        $userRepository->updateRole($campaignId, $user, $request->input('role'));
     }
 
     public function me()

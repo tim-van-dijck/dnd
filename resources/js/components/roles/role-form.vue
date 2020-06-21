@@ -10,48 +10,48 @@
                     </div>
                     <h2>Permissions</h2>
                     <table class="uk-table" v-if="permissions != null">
-                            <thead>
-                            <tr>
-                                <th>Entity</th>
-                                <th>View</th>
-                                <th>Create</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('view')" :checked="selected.view">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('create')" :checked="selected.create">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('edit')" :checked="selected.edit">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('delete')" :checked="selected.delete">
-                                </td>
-                            </tr>
-                            <tr v-for="permission in permissions">
-                                <td style="text-transform: capitalize;">{{ permission.name }}</td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].view">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].create">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].edit">
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].delete">
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <thead>
+                        <tr>
+                            <th>Entity</th>
+                            <th>View</th>
+                            <th>Create</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('view')" :checked="selected.view">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('create')" :checked="selected.create">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('edit')" :checked="selected.edit">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" @change.prevent="selectAll('delete')" :checked="selected.delete">
+                            </td>
+                        </tr>
+                        <tr v-for="permission in permissions">
+                            <td style="text-transform: capitalize;">{{ permission.name }}</td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].view">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].create">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].edit">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="uk-checkbox" v-model="role.permissions[permission.id].delete">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <p v-else class="uk-text-center">
                         <i class="fas fa-2x fa-sync fa-spin"></i>
                     </p>

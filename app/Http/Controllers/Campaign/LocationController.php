@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\LocationResource;
 use App\Models\Campaign\Location;
 use App\Repositories\LocationRepository;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class LocationController extends Controller
 {
@@ -28,10 +32,12 @@ class LocationController extends Controller
     /**
      * @param LocationRepository $locationRepository
      * @param Request $request
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function store(LocationRepository $locationRepository, Request $request)
     {
+        $this->authorize('create', Location::class);
         $this->validate($request, [
             'name' => 'required|string',
             'type' => 'required|string',
@@ -43,24 +49,30 @@ class LocationController extends Controller
     }
 
     /**
-     * @param LocationRepository $locationRepository
-     * @param int $locationId
+     * @param Location $location
      * @return Location
+     * @throws AuthorizationException
      */
-    public function show(LocationRepository $locationRepository, int $locationId): Location
+    public function show(Location $location): Location
     {
-        return $locationRepository->find(Session::get('campaign_id'), $locationId);
+        $this->authorize('view', $location);
+        if (Session::get('campaign_id') != $location->campaign_id) {
+            throw new ModelNotFoundException();
+        }
+        return $location;
     }
 
     /**
      * @param LocationRepository $locationRepository
      * @param Request $request
-     * @param int $locationId
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Location $location
+     * @throws AuthorizationException
+     * @throws FileNotFoundException
+     * @throws ValidationException
      */
-    public function update(LocationRepository $locationRepository, Request $request, int $locationId)
+    public function update(LocationRepository $locationRepository, Request $request, Location $location)
     {
+        $this->authorize('edit', $location);
         $this->validate($request, [
             'name' => 'required|string',
             'type' => 'required|string',
@@ -68,16 +80,17 @@ class LocationController extends Controller
             'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192'
         ]);
         $locationRepository
-            ->update(Session::get('campaign_id'), $locationId, $request->input(), $request->file('map', null));
+            ->update(Session::get('campaign_id'), $location, $request->input(), $request->file('map', null));
     }
 
     /**
      * @param LocationRepository $locationRepository
-     * @param int $locationId
-     * @throws \Exception
+     * @param Location $location
+     * @throws AuthorizationException
      */
-    public function destroy(LocationRepository $locationRepository, int $locationId)
+    public function destroy(LocationRepository $locationRepository, Location $location)
     {
-        $locationRepository->destroy(Session::get('campaign_id'), $locationId);
+        $this->authorize('destroy', $location);
+        $locationRepository->destroy(Session::get('campaign_id'), $location);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Resources\RoleResource;
 use App\Models\Campaign\Permission;
 use App\Models\Campaign\Role;
 use App\Repositories\RoleRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -31,6 +32,7 @@ class RoleController extends Controller
      */
     public function store(RoleRepository $roleRepository, Request $request)
     {
+        $this->authorize('create', Role::class);
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'permissions' => 'required|array|min:1',
@@ -46,21 +48,27 @@ class RoleController extends Controller
 
     /**
      * @param RoleRepository $roleRepository
-     * @param int $roleId
-     * @return Role
+     * @param Role $role
+     * @return RoleResource
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(RoleRepository $roleRepository, int $roleId): RoleResource
+    public function show(Role $role): RoleResource
     {
-        return new RoleResource($roleRepository->find(Session::get('campaign_id'), $roleId));
+        $this->authorize('view', $role);
+        if (Session::get('campaign_id') != $role->campaign_id) {
+            throw new ModelNotFoundException();
+        }
+        $role->load('permissions');
+        return new RoleResource($role);
     }
 
     /**
      * @param RoleRepository $roleRepository
      * @param Request $request
-     * @param int $roleId
+     * @param Role $role
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update(RoleRepository $roleRepository, Request $request, int $roleId)
+    public function update(RoleRepository $roleRepository, Request $request, Role $role)
     {
         $this->validate($request, [
             'name' => 'required|string|max:191',
@@ -71,18 +79,17 @@ class RoleController extends Controller
             'permissions.*.edit' => 'required|boolean',
             'permissions.*.delete' => 'required|boolean'
         ]);
-
-        $roleRepository->update(Session::get('campaign_id'), $roleId, $request->input());
+        $roleRepository->update(Session::get('campaign_id'), $role, $request->input());
     }
 
     /**
      * @param RoleRepository $roleRepository
-     * @param int $roleId
+     * @param Role $role
      * @throws \Exception
      */
-    public function destroy(RoleRepository $roleRepository, int $roleId)
+    public function destroy(RoleRepository $roleRepository, Role $role)
     {
-        $roleRepository->destroy(Session::get('campaign_id'), $roleId);
+        $roleRepository->destroy(Session::get('campaign_id'), $role);
     }
 
 

@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Campaign\Note;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class NoteRepository
 {
@@ -26,7 +28,25 @@ class NoteRepository
      */
     public function get(int $campaignId, int $page = 1, int $pageSize = 20): LengthAwarePaginator
     {
-        return Note::where('campaign_id', $campaignId)->paginate($pageSize, ['*'], 'page[number]', $page);
+        $query = Note::query()
+            ->where('notes.campaign_id', $campaignId)
+            ->leftJoin('user_permissions', function ($join) {
+                $join->on('notes.id', '=', 'user_permissions.entity_id')
+                    ->where([
+                        'user_permissions.entity' => 'quest',
+                        'user_permissions.user_id' => Auth::user()->id
+                    ]);
+            });
+
+        if (Auth::user()->can('viewAny', Note::class)) {
+            $query->where(function ($query) {
+                $query->where('private', 0)
+                    ->orWhere('user_permissions.view', 1);
+            });
+        } else {
+            $query->where('user_permissions.view', 1);
+        }
+        return $query->paginate($pageSize, ['notes.*'], 'page[number]', $page);
     }
 
     /**
@@ -47,25 +67,14 @@ class NoteRepository
 
     /**
      * @param int $campaignId
-     * @param int $noteId
-     * @return Note
-     */
-    public function find(int $campaignId, int $noteId): Note
-    {
-        return Note::where(['campaign_id' => $campaignId, 'id' => $noteId])->firstOrFail();
-    }
-
-    /**
-     * @param int $campaignId
-     * @param int $noteId
+     * @param Note $note
      * @param array $data
      */
-    public function update(int $campaignId, int $noteId, array $data)
+    public function update(int $campaignId, Note $note, array $data)
     {
-        $note = Note::where([
-            'campaign_id' => $campaignId,
-            'id' => $noteId
-        ])->firstOrFail();
+        if ($campaignId != $note->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $note->name = $data['name'];
         $note->content = $data['content'];
         $note->private = $data['private'] ?? false;
@@ -76,13 +85,14 @@ class NoteRepository
 
     /**
      * @param int $campaignId
-     * @param int $noteId
+     * @param Note $note
      */
-    public function destroy(int $campaignId, int $noteId)
+    public function destroy(int $campaignId, Note $note)
     {
-        $note = Note::where(['campaign_id' => $campaignId, 'id' => $noteId])->firstOrFail();
+        if ($campaignId != $note->campaign_id) {
+            throw new ModelNotFoundException();
+        }
         $note->delete();
-
         $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'deleted');
     }
 }

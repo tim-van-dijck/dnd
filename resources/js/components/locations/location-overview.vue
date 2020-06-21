@@ -6,44 +6,14 @@
                 <router-link class="uk-button uk-button-primary" :to="{name: 'location-create'}">
                     <i class="fas fa-plus"></i> Add location
                 </router-link>
-                <table class="uk-table uk-table-divider" v-if="locations != null && locations.data.length > 0">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th class="uk-table-shrink">Map</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="location in locations.data">
-                        <td class="uk-width-small">
-                            <ul class="uk-iconnav">
-                                <li>
-                                    <a href="/" class="uk-text-danger" @click.prevent="destroy(location)">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <router-link :to="{name: 'location-edit', params: {id: location.id}}">
-                                        <i class="fas fa-edit"></i>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link :to="{name: 'location', params: {id: location.id}}">
-                                        <i class="fas fa-eye"></i>
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </td>
-                        <td>{{ location.name }}</td>
-                        <td>{{ location.type }}</td>
-                        <td>{{ location.location || 'N/A' }}</td>
-                        <td><a href=""><i class="fas fa-map"></i></a></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <paginated-table v-if="locations != null && locations.data.length > 0"
+                                 :actions="actions"
+                                 :columns="columns"
+                                 module="Locations"
+                                 :records="locations"
+                                 @edit="$router.push({name: 'location-edit', params: {id: $event.id}})"
+                                 @view="$router.push({name: 'location', params: {id: $event.id}})"
+                                 @destroy="destroy" />
                 <p v-else class="uk-text-center">
                     <i v-if="locations == null" class="fas fa-sync fa-spin fa-2x"></i>
                     <span v-else>
@@ -63,6 +33,32 @@
         name: "location-overview",
         created() {
             this.$store.dispatch('Locations/loadLocations');
+        },
+        data() {
+            return {
+                actions: [
+                    {name: 'destroy', icon: 'trash', classes: 'uk-text-danger'},
+                    {name: 'edit', icon: 'edit'},
+                    {name: 'view', icon: 'eye'}
+                ],
+                columns: [
+                    {
+                        name: 'name',
+                        title: 'Name'
+                    },
+                    {
+                        name: 'type',
+                        title: 'Type'
+                    },
+                    {
+                        name: 'location',
+                        title: 'Location',
+                        format(location) {
+                            return location || 'N/A';
+                        }
+                    }
+                ]
+            }
         },
         methods: {
             destroy(location) {

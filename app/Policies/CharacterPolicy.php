@@ -11,16 +11,6 @@ class CharacterPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     public function viewAny(User $user)
     {
         return AuthService::userHasCampaignPermission($user, null, 'character', 'view');
