@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Campaign\Role;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\UnauthorizedException;
 
 class RoleRepository
 {
@@ -28,6 +29,7 @@ class RoleRepository
         $role = new Role();
         $role->campaign_id = $campaignId;
         $role->name = $data['name'];
+        $role->system = 0;
         $role->save();
         $this->syncPermissions($data['permissions'], $role);
     }
@@ -56,6 +58,9 @@ class RoleRepository
     {
         if ($campaignId != $role->campaign_id) {
             throw new ModelNotFoundException();
+        }
+        if ($role->system) {
+            throw new UnauthorizedException();
         }
         $role->permissions()->sync([]);
         $role->delete();

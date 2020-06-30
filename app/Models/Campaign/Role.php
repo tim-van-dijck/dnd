@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
  * @property int id
  * @property int campaign_id
  * @property string name
+ * @property bool system
  * @property Carbon created_at
  * @property Carbon updated_at
  *

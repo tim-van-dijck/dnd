@@ -16,7 +16,7 @@
                     <tbody>
                     <tr v-for="role in roles.data">
                         <td class="uk-width-small">
-                            <ul class="uk-iconnav">
+                            <ul v-if="!role.system" class="uk-iconnav">
                                 <li>
                                     <a href="/" class="uk-text-danger" @click.prevent="destroy(role)">
                                         <i class="fas fa-trash"></i>

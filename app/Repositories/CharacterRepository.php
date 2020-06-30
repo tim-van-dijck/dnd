@@ -27,7 +27,7 @@ class CharacterRepository
      * @param int $pageSize
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function get(int $campaignId, array $filters, $page = 1, $pageSize = 20)
+    public function get(int $campaignId, array $filters, int $page = 1, int $pageSize = 20)
     {
         $type = $filters['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
         $query = Character::query()->where([

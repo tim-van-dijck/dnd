@@ -28,6 +28,7 @@ class CampaignManager
         $adminRole = new Role();
         $adminRole->campaign_id = $campaign->id;
         $adminRole->name = 'Admin';
+        $adminRole->system = 1;
         $adminRole->save();
 
         $permissions = Permission::whereIn('name', ['campaign', 'character', 'location', 'quest', 'note', 'user', 'role'])
