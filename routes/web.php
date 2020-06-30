@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('quests/{questId}/objectives/{objectiveId}/toggle', 'Campaign\QuestController@toggleObjectiveStatus');
         Route::resource('notes', 'Campaign\NoteController')->except(['create', 'edit']);
         Route::resource('roles', 'Campaign\RoleController')->except(['create', 'edit']);
+        Route::get('permissions/{entity}/{entityId}', 'Campaign\RoleController@customEntityPermissions')
+            ->middleware('can:create,App\Models\Campaign\Role');
         Route::resource('users', 'Campaign\UserController')->except(['create', 'store', 'edit']);
         Route::post('users/invite', 'Campaign\UserController@invite')->name('users.invite');
         Route::get('me', 'Campaign\UserController@me')->name('users.me');

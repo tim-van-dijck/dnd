@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function update(UserRepository $userRepository, Request $request, User $user)
     {
-        $this->authorize('edit', $user);
+        $this->authorize('update', $user);
         $campaignId = Session::get('campaign_id');
         $roles = implode(',', Role::where('campaign_id', $campaignId)->get('id')->pluck('id')->toArray());
         $this->validate($request, [

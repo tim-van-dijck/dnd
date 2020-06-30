@@ -30,6 +30,12 @@
                                 <label for="description" class="uk-form-label">Description</label>
                                 <html-editor id="description" name="description" v-model="quest.description"></html-editor>
                             </div>
+                            <div class="uk-margin">
+                                <label for="private" class="uk-form-label">
+                                    <input id="private" name="private" type="checkbox" class="uk-checkbox" v-model="quest.private">
+                                    Private
+                                </label>
+                            </div>
                         </div>
                         <div class="uk-width-1-2">
                             <h2>Objectives</h2>
@@ -56,6 +62,7 @@
                         </div>
                     </div>
                     <permissions-form v-show="tab === 'permissions' && $store.getters.can('edit', 'role')"
+                                      entity="quest" :id="id"
                                       v-model="quest.permissions" />
                     <p class="uk-margin">
                         <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
@@ -118,8 +125,12 @@
                 let quest = {
                     title: this.quest.title,
                     description: this.quest.description,
-                    objectives: []
+                    objectives: [],
+                    private: this.quest.private
                 };
+                if (this.$store.getters.can('edit', 'role')) {
+                    quest.permissions = this.quest.permissions || {};
+                }
                 if (this.quest.location_id > 0) {
                     quest.location_id = this.quest.location_id;
                 }
@@ -135,7 +146,7 @@
                     promise = this.$store.dispatch('Quests/store', quest)
                 }
                 promise.then(() => {
-                    if (Object.keys(this.errors).length === 0) {
+                    if (!this.errors || Object.keys(this.errors).length === 0) {
                         this.$store.dispatch('Quests/load');
                         this.$router.push({name: 'quests'});
                     }

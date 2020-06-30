@@ -18,7 +18,7 @@ export const Users = {
                 });
         },
         invite({commit, dispatch}, user) {
-            axios.post('/campaign/users/invite', user)
+            return axios.post('/campaign/users/invite', user)
                 .then(() => {
                     dispatch('Messages/success', 'Invite sent!', {root: true});
                 })

@@ -42,7 +42,12 @@ class LocationController extends Controller
             'name' => 'required|string',
             'type' => 'required|string',
             'description' => 'string',
-            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192'
+            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192',
+            'permissions' => 'sometimes|nullable|array',
+            'permissions.*.view' => 'required|boolean',
+            'permissions.*.create' => 'required|boolean',
+            'permissions.*.edit' => 'required|boolean',
+            'permissions.*.delete' => 'required|boolean',
         ]);
 
         $locationRepository->store(Session::get('campaign_id'), $request->input(), $request->file('map', null));
@@ -72,12 +77,17 @@ class LocationController extends Controller
      */
     public function update(LocationRepository $locationRepository, Request $request, Location $location)
     {
-        $this->authorize('edit', $location);
+        $this->authorize('update', $location);
         $this->validate($request, [
             'name' => 'required|string',
             'type' => 'required|string',
             'description' => 'string',
-            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192'
+            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192',
+            'permissions' => 'sometimes|nullable|array',
+            'permissions.*.view' => 'required|boolean',
+            'permissions.*.create' => 'required|boolean',
+            'permissions.*.edit' => 'required|boolean',
+            'permissions.*.delete' => 'required|boolean',
         ]);
         $locationRepository
             ->update(Session::get('campaign_id'), $location, $request->input(), $request->file('map', null));

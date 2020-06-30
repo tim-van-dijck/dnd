@@ -6,7 +6,7 @@
                 <router-link class="uk-button uk-button-primary" :to="{name: 'note-create'}">
                     <i class="fas fa-plus"></i> Add note
                 </router-link>
-                <paginated-table v-if="quests != null && quests.data.length > 0"
+                <paginated-table v-if="notes != null && notes.data.length > 0"
                                  :actions="actions"
                                  :columns="columns"
                                  module="Notes"

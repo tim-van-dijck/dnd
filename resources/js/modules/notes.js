@@ -41,7 +41,7 @@ export const Notes = {
                 })
         },
         store({commit, dispatch}, note) {
-            axios.post('/campaign/notes', note)
+            return axios.post('/campaign/notes', note)
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Note saved!', {root: true});
@@ -54,7 +54,7 @@ export const Notes = {
         update({commit, dispatch}, data) {
             let payload = data.note;
             payload._method = 'put';
-            axios.post(`/campaign/notes/${data.id}`, payload)
+            return axios.post(`/campaign/notes/${data.id}`, payload)
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Note saved!', {root: true});
@@ -65,7 +65,7 @@ export const Notes = {
                 });
         },
         destroy({dispatch}, note) {
-            axios.delete(`/campaign/notes/${note.id}`)
+            return axios.delete(`/campaign/notes/${note.id}`)
                 .then(() => {
                     dispatch('Messages/success', 'Note successfully deleted!', {root: true});
                 })

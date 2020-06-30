@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Campaign\Location;
+use App\Services\AuthService;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -79,6 +80,10 @@ class LocationRepository
         }
         $location->save();
 
+        if (array_key_exists('permissions', $input)) {
+            AuthService::setCustomPermissions($campaignId, 'location', $location->id, $input['permissions']);
+        }
+
         $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'created');
     }
 
@@ -98,10 +103,15 @@ class LocationRepository
         $location->name = $input['name'];
         $location->type = $input['type'];
         $location->description = $input['description'];
+        $location->private = !empty($input['private']);
         if ($map) {
             $location->map = $this->saveImage($map, $location);
         }
         $location->save();
+
+        if (array_key_exists('permissions', $input)) {
+            AuthService::setCustomPermissions($campaignId, 'location', $location->id, $input['permissions']);
+        }
 
         $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'updated');
     }

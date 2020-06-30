@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Models\Campaign\Permission;
+use App\Models\Campaign\Role;
 use App\Models\Campaign\UserPermission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\UnauthorizedException;
 
 class AuthService
 {
@@ -99,5 +101,78 @@ class AuthService
             ];
         }
         return $permissions;
+    }
+
+    /**
+     * @param int $campaignId
+     * @param string $entity
+     * @param int $entityId
+     * @param array $permissions
+     *
+     * @throws UnauthorizedException
+     */
+    public static function setCustomPermissions(int $campaignId, string $entity, int $entityId, array $permissions)
+    {
+        if (Auth::user()->can('create', Role::class)) {
+            if (empty($permissions)) {
+                self::removeUserPermissions($campaignId, $entity, $entityId);
+            } else {
+                self::updateUserPermissions($campaignId, $entity, $entityId, $permissions);
+            }
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
+
+    /**
+     * @param int $campaignId
+     * @param string $entity
+     * @param int $entityId
+     */
+    private static function removeUserPermissions(int $campaignId, string $entity, int $entityId): void
+    {
+        UserPermission::where([
+            'campaign_id' => $campaignId,
+            'entity' => $entity,
+            'entity_id' => $entityId
+        ])->delete();
+    }
+
+    /**
+     * @param int $campaignId
+     * @param string $entity
+     * @param int $entityId
+     * @param array $permissions
+     *
+     * @throws UnauthorizedException
+     */
+    private static function updateUserPermissions(
+        int $campaignId,
+        string $entity,
+        int $entityId,
+        array $permissions
+    ): void {
+        $users = User::whereIn('id', array_keys($permissions))
+            ->whereHas('roles', function ($query) use ($campaignId) {
+                $query->where('campaign_id', $campaignId);
+            })
+            ->get();
+        if ($users->count() != count($permissions)) {
+            throw new UnauthorizedException();
+        }
+        foreach ($permissions as $userId => $permissionSet) {
+            $userPermission = UserPermission::firstOrNew([
+                'campaign_id' => $campaignId,
+                'entity' => $entity,
+                'entity_id' => $entityId,
+                'user_id' => $userId
+            ]);
+            $userPermission->view = $permissionSet['view'];
+            $userPermission->create = $permissionSet['create'];
+            $userPermission->edit = $permissionSet['edit'];
+            $userPermission->delete = $permissionSet['delete'];
+            $userPermission->save();
+        }
     }
 }

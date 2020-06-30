@@ -74,7 +74,7 @@ export const Locations = {
                 });
         },
         destroy({dispatch}, location) {
-            axios.delete(`/campaign/locations/${location.id}`)
+            return axios.delete(`/campaign/locations/${location.id}`)
                 .then(() => {
                     dispatch('loadLocations')
                         .then(() => {

@@ -28,9 +28,11 @@
 <script>
     import {mapState} from 'vuex';
     import UIKit from 'uikit';
+    import PaginatedTable from "../partial/paginated-table";
 
     export default {
         name: "location-overview",
+        components: {PaginatedTable},
         created() {
             this.$store.dispatch('Locations/loadLocations');
         },

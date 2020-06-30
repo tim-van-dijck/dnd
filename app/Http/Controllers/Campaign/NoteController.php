@@ -38,7 +38,12 @@ class NoteController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'content' => 'required|string',
-            'private' => 'boolean'
+            'private' => 'boolean',
+            'permissions' => 'sometimes|nullable|array',
+            'permissions.*.view' => 'required|boolean',
+            'permissions.*.create' => 'required|boolean',
+            'permissions.*.edit' => 'required|boolean',
+            'permissions.*.delete' => 'required|boolean',
         ]);
         $noteRepository->store(Session::get('campaign_id'), $request->input());
     }
@@ -67,11 +72,16 @@ class NoteController extends Controller
      */
     public function update(NoteRepository $noteRepository, Request $request, Note $note)
     {
-        $this->authorize('edit', $note);
+        $this->authorize('update', $note);
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'content' => 'required|string',
-            'private' => 'boolean'
+            'private' => 'boolean',
+            'permissions' => 'sometimes|nullable|array',
+            'permissions.*.view' => 'required|boolean',
+            'permissions.*.create' => 'required|boolean',
+            'permissions.*.edit' => 'required|boolean',
+            'permissions.*.delete' => 'required|boolean',
         ]);
         $noteRepository->update(Session::get('campaign_id'), $note, $request->input());
     }

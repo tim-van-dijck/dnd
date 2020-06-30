@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\RoleResource;
 use App\Models\Campaign\Permission;
 use App\Models\Campaign\Role;
+use App\Models\Campaign\UserPermission;
 use App\Repositories\RoleRepository;
+use App\Services\AuthService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -99,5 +101,29 @@ class RoleController extends Controller
     public function permissions()
     {
         return response()->json(Permission::get());
+    }
+
+    /**
+     * @param string $entity
+     * @param int $entityId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function customEntityPermissions(string $entity, int $entityId)
+    {
+        $permissions = UserPermission::where([
+            'campaign_id' => Session::get('campaign_id'),
+            'entity' => $entity,
+            'entity_id' => $entityId
+        ])->get()
+            ->map(function ($permission) {
+                return [
+                    'view' => $permission->view,
+                    'create' => $permission->create,
+                    'edit' => $permission->edit,
+                    'delete' => $permission->delete
+                ];
+            })
+            ->keyBy('user_id');
+        return response()->json($permissions);
     }
 }
