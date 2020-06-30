@@ -38839,43 +38839,45 @@ var render = function() {
                   _vm._l(_vm.roles.data, function(role) {
                     return _c("tr", [
                       _c("td", { staticClass: "uk-width-small" }, [
-                        _c("ul", { staticClass: "uk-iconnav" }, [
-                          _c("li", [
-                            _c(
-                              "a",
-                              {
-                                staticClass: "uk-text-danger",
-                                attrs: { href: "/" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.destroy(role)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fas fa-trash" })]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  attrs: {
-                                    to: {
-                                      name: "role-edit",
-                                      params: { id: role.id }
+                        !role.system
+                          ? _c("ul", { staticClass: "uk-iconnav" }, [
+                              _c("li", [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "uk-text-danger",
+                                    attrs: { href: "/" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.destroy(role)
+                                      }
                                     }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-edit" })]
+                                  },
+                                  [_c("i", { staticClass: "fas fa-trash" })]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "li",
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      attrs: {
+                                        to: {
+                                          name: "role-edit",
+                                          params: { id: role.id }
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fas fa-edit" })]
+                                  )
+                                ],
+                                1
                               )
-                            ],
-                            1
-                          )
-                        ])
+                            ])
+                          : _vm._e()
                       ]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(role.name))])
@@ -57728,6 +57730,10 @@ var Roles = {
       var dispatch = _ref6.dispatch;
       return axios["delete"]("/campaign/roles/".concat(role.id)).then(function () {
         dispatch('Messages/success', 'Role successfully deleted!', {
+          root: true
+        });
+      })["catch"](function (error) {
+        dispatch('Messages/error', error.response.data.message, {
           root: true
         });
       });

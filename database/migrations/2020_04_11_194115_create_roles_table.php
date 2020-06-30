@@ -17,6 +17,7 @@ class CreateRolesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('campaign_id', false, true)->nullable();
             $table->string('name');
+            $table->boolean('system')->default(false);
             $table->timestamps();
 
             $table->foreign('campaign_id')

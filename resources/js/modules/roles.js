@@ -54,6 +54,9 @@ export const Roles = {
             return axios.delete(`/campaign/roles/${role.id}`)
                 .then(() => {
                     dispatch('Messages/success', 'Role successfully deleted!', {root: true});
+                })
+                .catch((error) => {
+                    dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         }
     },
