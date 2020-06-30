@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserPermission extends Model
 {
+    protected $fillable = ['campaign_id', 'entity', 'entity_id', 'user_id'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

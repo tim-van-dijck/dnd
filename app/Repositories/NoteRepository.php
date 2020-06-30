@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Campaign\Note;
+use App\Services\AuthService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +63,10 @@ class NoteRepository
         $note->private = $data['private'] ?? false;
         $note->save();
 
+        if (array_key_exists('permissions', $data)) {
+            AuthService::setCustomPermissions($campaignId, 'note', $note->id, $data['permissions']);
+        }
+
         $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'created');
     }
 
@@ -79,6 +84,10 @@ class NoteRepository
         $note->content = $data['content'];
         $note->private = $data['private'] ?? false;
         $note->save();
+
+        if (array_key_exists('permissions', $data)) {
+            AuthService::setCustomPermissions($campaignId, 'note', $note->id, $data['permissions']);
+        }
 
         $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'updated');
     }

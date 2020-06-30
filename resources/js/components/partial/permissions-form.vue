@@ -57,26 +57,32 @@
 </template>
 
 <script>
-    import {mapState} from "vuex";
+    import {mapGetters, mapState} from "vuex";
 
     export default {
         name: "permissions-form",
-        props: ['value'],
+        props: ['value', 'entity', 'id'],
         mounted() {
-            this.$store.dispatch('Users/load')
+            let promises = [
+                this.$store.dispatch('Permissions/fetch', {entity: this.entity, id: this.id}),
+                this.$store.dispatch('Users/load')
+            ];
+            Promise.all(promises)
                 .then(() => {
-                    let permissions = {};
+                    this.override = Object.keys(this.permission(this.entity, this.id)).length > 0;
+                    this.$set(this, 'permissions', this.permission(this.entity, this.id));
+
                     for (let user of this.users.data) {
-                        permissions[user.id] = this.value[user.id] || {
-                            view: false,
-                            edit: false,
-                            create: false,
-                            delete: false,
-                        };
+                        if (!this.permissions.hasOwnProperty(user.id)) {
+                            this.$set(this.permissions, user.id, {
+                                view: false,
+                                edit: false,
+                                create: false,
+                                delete: false,
+                            });
+                        }
                     }
-                    this.$set(this, 'permissions', permissions);
                 });
-            this.override = Object.keys(this.value || {}).length > 0;
         },
         data() {
             return {
@@ -93,14 +99,14 @@
         methods: {
             selectAll(type) {
                 this.selected[type] = !this.selected[type];
-                for (let index in this.value) {
-                    let permission = this.value[index];
-                    permission[type] = this.selected[type];
+                for (let index in this.permissions) {
+                    this.$set(this.permissions[index], type, this.selected[type]);
                 }
             }
         },
         computed: {
-            ...mapState('Users',['users'])
+            ...mapState('Users', ['users']),
+            ...mapGetters('Permissions', ['permission']),
         },
         watch: {
             permissions: {

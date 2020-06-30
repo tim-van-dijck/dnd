@@ -48,7 +48,12 @@ class QuestController extends Controller
             'location_id' => 'int|in:locations,id',
             'objectives' => 'required|array|min:1',
             'objectives.*.name' => 'required|string|max:191',
-            'objectives.*.optional' => 'required|boolean'
+            'objectives.*.optional' => 'required|boolean',
+            'permissions' => 'sometimes|nullable|array',
+            'permissions.*.view' => 'required|boolean',
+            'permissions.*.create' => 'required|boolean',
+            'permissions.*.edit' => 'required|boolean',
+            'permissions.*.delete' => 'required|boolean',
         ]);
         $questRepository->store(Session::get('campaign_id'), $request->input());
     }
@@ -82,14 +87,19 @@ class QuestController extends Controller
      */
     public function update(QuestRepository $questRepository, Request $request, Quest $quest)
     {
-        $this->authorize('edit', $quest);
+        $this->authorize('update', $quest);
         $this->validate($request, [
             'title' => 'required|string|max:191',
             'description' => 'string',
             'location_id' => 'int|in:locations,id',
             'objectives' => 'required|array|min:1',
             'objectives.*.name' => 'required|string|max:191',
-            'objectives.*.optional' => 'required|boolean'
+            'objectives.*.optional' => 'required|boolean',
+            'permissions' => 'sometimes|nullable|array',
+            'permissions.*.view' => 'required|boolean',
+            'permissions.*.create' => 'required|boolean',
+            'permissions.*.edit' => 'required|boolean',
+            'permissions.*.delete' => 'required|boolean',
         ]);
         $questRepository->update(Session::get('campaign_id'), $quest, $request->input());
     }

@@ -4,7 +4,15 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="location" id="location-form" class="uk-form-stacked">
-                    <div uk-grid>
+                    <ul v-if="$store.getters.can('edit', 'role')" uk-tab>
+                        <li :class="{'uk-active': tab === 'details'}">
+                            <a href="" @click.prevent="tab = 'details'">Details</a>
+                        </li>
+                        <li :class="{'uk-active': tab === 'permissions'}">
+                            <a href="" @click.prevent="tab = 'permissions'">Permissions</a>
+                        </li>
+                    </ul>
+                    <div v-show="tab === 'details'" uk-grid>
                         <div class="uk-width-1-2">
                             <div class="uk-margin">
                                 <label for="name" class="uk-form-label">Name</label>
@@ -38,6 +46,9 @@
                             </html-editor>
                         </div>
                     </div>
+                    <permissions-form v-show="tab === 'permissions' && $store.getters.can('edit', 'role')"
+                                      entity="location" :id="id"
+                                      v-model="location.permissions" />
                     <p class="uk-margin">
                         <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
                         <router-link class="uk-button uk-button-danger" :to="{name: 'locations'}">
@@ -59,6 +70,7 @@
     import _ from 'lodash';
     import {mapState} from 'vuex';
     import HtmlEditor from "../partial/html-editor";
+    import PermissionsForm from "../partial/permissions-form";
 
     export default {
         name: "LocationForm",
@@ -80,7 +92,8 @@
             return {
                 location: null,
                 locations: [],
-                map: null
+                map: null,
+                tab: 'details'
             }
         },
         methods: {
@@ -105,24 +118,29 @@
                         location.append(prop, this.location[prop]);
                     }
                 }
-
-                let data = {location};
-                if (this.id > 0) {
-                    data.id = this.id;
-                    this.$store.dispatch('Locations/update', data)
-                        .then(() => {
-                            if (Object.keys(this.errors) == 0) {
-                                this.$router.push({name: 'locations'});
-                            }
-                        });
-                } else {
-                    this.$store.dispatch('Locations/store', data)
-                        .then(() => {
-                            if (Object.keys(this.errors) == 0) {
-                                this.$router.push({name: 'locations'});
-                            }
-                        });
+                location.append('private', this.location.private ? 1 : 0);
+                if (this.$store.getters.can('edit', 'role')) {
+                    for (let userId in this.location.permissions) {
+                        let permission = this.location.permissions[userId];
+                        location.append(`permissions[${userId}][view]`, permission.view ? 1 : 0);
+                        location.append(`permissions[${userId}][create]`, permission.create ? 1 : 0);
+                        location.append(`permissions[${userId}][edit]`, permission.edit ? 1 : 0);
+                        location.append(`permissions[${userId}][delete]`, permission.delete ? 1 : 0);
+                    }
                 }
+
+                let promise;
+                if (this.id > 0) {
+                    promise = this.$store.dispatch('Locations/update', {id: this.id, location});
+                } else {
+                    promise = this.$store.dispatch('Locations/store', {location})
+                }
+
+                promise.then(() => {
+                    if (this.errors == null || Object.keys(this.errors).length === 0) {
+                        this.$router.push({name: 'locations'});
+                    }
+                });
             },
             onSearch(query, loading) {
                 if (query.length > 2) {
@@ -152,6 +170,7 @@
             }
         },
         components: {
+            PermissionsForm,
             HtmlEditor,
             Editor, VSelect
         }

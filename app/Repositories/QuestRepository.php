@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Campaign\Quest;
 use App\Models\Campaign\QuestObjective;
+use App\Services\AuthService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,9 @@ class QuestRepository
             $questObjective->save();
         }
 
+        if (array_key_exists('permissions', $data)) {
+            AuthService::setCustomPermissions($campaignId, 'quest', $quest->id, $data['permissions']);
+        }
         $this->logRepository->store($campaignId, 'quest', $quest->id, $quest->title, 'created');
     }
 
@@ -117,6 +121,10 @@ class QuestRepository
             $questObjective->name = $objective['name'];
             $questObjective->optional = $objective['optional'];
             $questObjective->save();
+        }
+
+        if (array_key_exists('permissions', $data)) {
+            AuthService::setCustomPermissions($campaignId, 'quest', $quest->id, $data['permissions']);
         }
 
         $this->logRepository->store($campaignId, 'location', $quest->id, $quest->title, 'updated');

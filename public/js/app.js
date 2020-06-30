@@ -2822,6 +2822,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _partial_html_editor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../partial/html-editor */ "./resources/js/components/partial/html-editor.vue");
+/* harmony import */ var _partial_permissions_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../partial/permissions-form */ "./resources/js/components/partial/permissions-form.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2883,6 +2884,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2910,7 +2923,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       location: null,
       locations: [],
-      map: null
+      map: null,
+      tab: 'details'
     };
   },
   methods: {
@@ -2946,28 +2960,38 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }
 
-      var data = {
-        location: location
-      };
+      location.append('private', this.location["private"] ? 1 : 0);
+
+      if (this.$store.getters.can('edit', 'role')) {
+        for (var userId in this.location.permissions) {
+          var permission = this.location.permissions[userId];
+          location.append("permissions[".concat(userId, "][view]"), permission.view ? 1 : 0);
+          location.append("permissions[".concat(userId, "][create]"), permission.create ? 1 : 0);
+          location.append("permissions[".concat(userId, "][edit]"), permission.edit ? 1 : 0);
+          location.append("permissions[".concat(userId, "][delete]"), permission["delete"] ? 1 : 0);
+        }
+      }
+
+      var promise;
 
       if (this.id > 0) {
-        data.id = this.id;
-        this.$store.dispatch('Locations/update', data).then(function () {
-          if (Object.keys(_this3.errors) == 0) {
-            _this3.$router.push({
-              name: 'locations'
-            });
-          }
+        promise = this.$store.dispatch('Locations/update', {
+          id: this.id,
+          location: location
         });
       } else {
-        this.$store.dispatch('Locations/store', data).then(function () {
-          if (Object.keys(_this3.errors) == 0) {
-            _this3.$router.push({
-              name: 'locations'
-            });
-          }
+        promise = this.$store.dispatch('Locations/store', {
+          location: location
         });
       }
+
+      promise.then(function () {
+        if (_this3.errors == null || Object.keys(_this3.errors).length === 0) {
+          _this3.$router.push({
+            name: 'locations'
+          });
+        }
+      });
     },
     onSearch: function onSearch(query, loading) {
       if (query.length > 2) {
@@ -2998,6 +3022,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   components: {
+    PermissionsForm: _partial_permissions_form__WEBPACK_IMPORTED_MODULE_5__["default"],
     HtmlEditor: _partial_html_editor__WEBPACK_IMPORTED_MODULE_4__["default"],
     Editor: _tinymce_tinymce_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     VSelect: vue_select__WEBPACK_IMPORTED_MODULE_1___default.a
@@ -3018,6 +3043,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var uikit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uikit */ "./node_modules/uikit/dist/js/uikit.js");
 /* harmony import */ var uikit__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(uikit__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _partial_paginated_table__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partial/paginated-table */ "./resources/js/components/partial/paginated-table.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3053,8 +3079,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "location-overview",
+  components: {
+    PaginatedTable: _partial_paginated_table__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
   created: function created() {
     this.$store.dispatch('Locations/loadLocations');
   },
@@ -3188,6 +3218,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _partial_html_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../partial/html-editor */ "./resources/js/components/partial/html-editor.vue");
+/* harmony import */ var _partial_permissions_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partial/permissions-form */ "./resources/js/components/partial/permissions-form.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3229,12 +3260,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "NoteForm",
   props: ['id'],
   components: {
+    PermissionsForm: _partial_permissions_form__WEBPACK_IMPORTED_MODULE_2__["default"],
     HtmlEditor: _partial_html_editor__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   created: function created() {
@@ -3250,7 +3296,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      note: null
+      note: null,
+      tab: 'details'
     };
   },
   methods: {
@@ -3258,14 +3305,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       var promise;
+      var note = {
+        name: this.note.name,
+        content: this.note.content,
+        "private": this.note["private"]
+      };
+
+      if (this.$store.getters.can('edit', 'role')) {
+        note.permissions = this.note.permissions || {};
+      }
 
       if (this.id) {
         promise = this.$store.dispatch('Notes/update', {
           id: this.id,
-          note: this.note
+          note: note
         });
       } else {
-        promise = this.$store.dispatch('Notes/store', this.note);
+        promise = this.$store.dispatch('Notes/store', note);
       }
 
       promise.then(function () {
@@ -3681,12 +3737,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "permissions-form",
-  props: ['value'],
+  props: ['value', 'entity', 'id'],
   mounted: function mounted() {
     var _this = this;
 
-    this.$store.dispatch('Users/load').then(function () {
-      var permissions = {};
+    var promises = [this.$store.dispatch('Permissions/fetch', {
+      entity: this.entity,
+      id: this.id
+    }), this.$store.dispatch('Users/load')];
+    Promise.all(promises).then(function () {
+      _this.override = Object.keys(_this.permission(_this.entity, _this.id)).length > 0;
+
+      _this.$set(_this, 'permissions', _this.permission(_this.entity, _this.id));
 
       var _iterator = _createForOfIteratorHelper(_this.users.data),
           _step;
@@ -3694,22 +3756,22 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var user = _step.value;
-          permissions[user.id] = _this.value[user.id] || {
-            view: false,
-            edit: false,
-            create: false,
-            "delete": false
-          };
+
+          if (!_this.permissions.hasOwnProperty(user.id)) {
+            _this.$set(_this.permissions, user.id, {
+              view: false,
+              edit: false,
+              create: false,
+              "delete": false
+            });
+          }
         }
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
       }
-
-      _this.$set(_this, 'permissions', permissions);
     });
-    this.override = Object.keys(this.value || {}).length > 0;
   },
   data: function data() {
     return {
@@ -3727,13 +3789,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     selectAll: function selectAll(type) {
       this.selected[type] = !this.selected[type];
 
-      for (var index in this.value) {
-        var permission = this.value[index];
-        permission[type] = this.selected[type];
+      for (var index in this.permissions) {
+        this.$set(this.permissions[index], type, this.selected[type]);
       }
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Users', ['users'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('Users', ['users']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('Permissions', ['permission'])),
   watch: {
     permissions: {
       deep: true,
@@ -3779,6 +3840,13 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3904,8 +3972,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var quest = {
         title: this.quest.title,
         description: this.quest.description,
-        objectives: []
+        objectives: [],
+        "private": this.quest["private"]
       };
+
+      if (this.$store.getters.can('edit', 'role')) {
+        quest.permissions = this.quest.permissions || {};
+      }
 
       if (this.quest.location_id > 0) {
         quest.location_id = this.quest.location_id;
@@ -3938,7 +4011,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       promise.then(function () {
-        if (Object.keys(_this2.errors).length === 0) {
+        if (!_this2.errors || Object.keys(_this2.errors).length === 0) {
           _this2.$store.dispatch('Quests/load');
 
           _this2.$router.push({
@@ -35902,222 +35975,315 @@ var render = function() {
                 attrs: { id: "location-form" }
               },
               [
-                _c("div", { attrs: { "uk-grid": "" } }, [
-                  _c("div", { staticClass: "uk-width-1-2" }, [
-                    _c("div", { staticClass: "uk-margin" }, [
+                _vm.$store.getters.can("edit", "role")
+                  ? _c("ul", { attrs: { "uk-tab": "" } }, [
                       _c(
-                        "label",
-                        {
-                          staticClass: "uk-form-label",
-                          attrs: { for: "name" }
-                        },
-                        [_vm._v("Name")]
+                        "li",
+                        { class: { "uk-active": _vm.tab === "details" } },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.tab = "details"
+                                }
+                              }
+                            },
+                            [_vm._v("Details")]
+                          )
+                        ]
                       ),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.location.name,
-                            expression: "location.name"
-                          }
-                        ],
-                        staticClass: "uk-input",
-                        attrs: { id: "name", title: "name", type: "text" },
-                        domProps: { value: _vm.location.name },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.location, "name", $event.target.value)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "uk-margin" }, [
                       _c(
-                        "label",
-                        {
-                          staticClass: "uk-form-label",
-                          attrs: { for: "type" }
-                        },
-                        [_vm._v("Type")]
+                        "li",
+                        { class: { "uk-active": _vm.tab === "permissions" } },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.tab = "permissions"
+                                }
+                              }
+                            },
+                            [_vm._v("Permissions")]
+                          )
+                        ]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.tab === "details",
+                        expression: "tab === 'details'"
+                      }
+                    ],
+                    attrs: { "uk-grid": "" }
+                  },
+                  [
+                    _c("div", { staticClass: "uk-width-1-2" }, [
+                      _c("div", { staticClass: "uk-margin" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "uk-form-label",
+                            attrs: { for: "name" }
+                          },
+                          [_vm._v("Name")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.location.name,
+                              expression: "location.name"
+                            }
+                          ],
+                          staticClass: "uk-input",
+                          attrs: { id: "name", title: "name", type: "text" },
+                          domProps: { value: _vm.location.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.location,
+                                "name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "uk-margin" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "uk-form-label",
+                            attrs: { for: "type" }
+                          },
+                          [_vm._v("Type")]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.location.type,
+                              expression: "location.type"
+                            }
+                          ],
+                          staticClass: "uk-input",
+                          attrs: { id: "type", name: "type", type: "text" },
+                          domProps: { value: _vm.location.type },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.location,
+                                "type",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "uk-margin" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "uk-form-label",
+                              attrs: { for: "location" }
+                            },
+                            [_vm._v("Location")]
+                          ),
+                          _vm._v(" "),
+                          _c("v-select", {
+                            staticClass: "uk-select",
+                            attrs: {
+                              id: "location",
+                              name: "location",
+                              options: _vm.locations
+                            },
+                            on: { search: _vm.onSearch },
+                            model: {
+                              value: _vm.location.location_id,
+                              callback: function($$v) {
+                                _vm.$set(_vm.location, "location_id", $$v)
+                              },
+                              expression: "location.location_id"
+                            }
+                          })
+                        ],
+                        1
                       ),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
+                      _c("div", { staticClass: "uk-margin" }, [
+                        _c(
+                          "label",
                           {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.location.type,
-                            expression: "location.type"
-                          }
-                        ],
-                        staticClass: "uk-input",
-                        attrs: { id: "type", name: "type", type: "text" },
-                        domProps: { value: _vm.location.type },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                            staticClass: "uk-form-label",
+                            attrs: { for: "map" }
+                          },
+                          [_vm._v("Map")]
+                        ),
+                        _vm._v(" "),
+                        _vm.map
+                          ? _c("img", {
+                              staticClass: "preview-image",
+                              attrs: {
+                                src: _vm.map,
+                                alt: "Uploaded map image",
+                                width: "300",
+                                height: "300"
+                              }
+                            })
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("input", {
+                          attrs: { id: "map", name: "map", type: "file" },
+                          on: { change: _vm.onFileChange }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("hr"),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "uk-margin uk-form-controls" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.location.private,
+                              expression: "location.private"
                             }
-                            _vm.$set(_vm.location, "type", $event.target.value)
+                          ],
+                          staticClass: "uk-checkbox",
+                          attrs: {
+                            id: "private",
+                            name: "private",
+                            type: "checkbox"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.location.private)
+                              ? _vm._i(_vm.location.private, null) > -1
+                              : _vm.location.private
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.location.private,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.location,
+                                      "private",
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.location,
+                                      "private",
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
+                              } else {
+                                _vm.$set(_vm.location, "private", $$c)
+                              }
+                            }
                           }
-                        }
-                      })
+                        }),
+                        _vm._v(" "),
+                        _c("label", { attrs: { for: "private" } }, [
+                          _vm._v("Private")
+                        ])
+                      ])
                     ]),
                     _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "uk-margin" },
+                      { staticClass: "uk-width-1-2" },
                       [
                         _c(
                           "label",
                           {
                             staticClass: "uk-form-label",
-                            attrs: { for: "location" }
+                            attrs: { for: "description" }
                           },
-                          [_vm._v("Location")]
+                          [_vm._v("Description")]
                         ),
                         _vm._v(" "),
-                        _c("v-select", {
-                          staticClass: "uk-select",
+                        _c("html-editor", {
                           attrs: {
-                            id: "location",
-                            name: "location",
-                            options: _vm.locations
+                            id: "description",
+                            name: "description",
+                            height: "600"
                           },
-                          on: { search: _vm.onSearch },
                           model: {
-                            value: _vm.location.location_id,
+                            value: _vm.location.description,
                             callback: function($$v) {
-                              _vm.$set(_vm.location, "location_id", $$v)
+                              _vm.$set(_vm.location, "description", $$v)
                             },
-                            expression: "location.location_id"
+                            expression: "location.description"
                           }
                         })
                       ],
                       1
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "uk-margin" }, [
-                      _c(
-                        "label",
-                        { staticClass: "uk-form-label", attrs: { for: "map" } },
-                        [_vm._v("Map")]
-                      ),
-                      _vm._v(" "),
-                      _vm.map
-                        ? _c("img", {
-                            staticClass: "preview-image",
-                            attrs: {
-                              src: _vm.map,
-                              alt: "Uploaded map image",
-                              width: "300",
-                              height: "300"
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("input", {
-                        attrs: { id: "map", name: "map", type: "file" },
-                        on: { change: _vm.onFileChange }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("hr"),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "uk-margin uk-form-controls" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.location.private,
-                            expression: "location.private"
-                          }
-                        ],
-                        staticClass: "uk-checkbox",
-                        attrs: {
-                          id: "private",
-                          name: "private",
-                          type: "checkbox"
-                        },
-                        domProps: {
-                          checked: Array.isArray(_vm.location.private)
-                            ? _vm._i(_vm.location.private, null) > -1
-                            : _vm.location.private
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.location.private,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 &&
-                                  _vm.$set(
-                                    _vm.location,
-                                    "private",
-                                    $$a.concat([$$v])
-                                  )
-                              } else {
-                                $$i > -1 &&
-                                  _vm.$set(
-                                    _vm.location,
-                                    "private",
-                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                  )
-                              }
-                            } else {
-                              _vm.$set(_vm.location, "private", $$c)
-                            }
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("label", { attrs: { for: "private" } }, [
-                        _vm._v("Private")
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "uk-width-1-2" },
-                    [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "uk-form-label",
-                          attrs: { for: "description" }
-                        },
-                        [_vm._v("Description")]
-                      ),
-                      _vm._v(" "),
-                      _c("html-editor", {
-                        attrs: {
-                          id: "description",
-                          name: "description",
-                          height: "600"
-                        },
-                        model: {
-                          value: _vm.location.description,
-                          callback: function($$v) {
-                            _vm.$set(_vm.location, "description", $$v)
-                          },
-                          expression: "location.description"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]),
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("permissions-form", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.tab === "permissions" &&
+                        _vm.$store.getters.can("edit", "role"),
+                      expression:
+                        "tab === 'permissions' && $store.getters.can('edit', 'role')"
+                    }
+                  ],
+                  attrs: { entity: "location", id: _vm.id },
+                  model: {
+                    value: _vm.location.permissions,
+                    callback: function($$v) {
+                      _vm.$set(_vm.location, "permissions", $$v)
+                    },
+                    expression: "location.permissions"
+                  }
+                }),
                 _vm._v(" "),
                 _c(
                   "p",
@@ -36152,7 +36318,8 @@ var render = function() {
                   ],
                   1
                 )
-              ]
+              ],
+              1
             )
           : _c("p", { staticClass: "uk-text-center" }, [
               _c("i", { staticClass: "fas fa-2x fa-sync fa-spin" })
@@ -36435,152 +36602,257 @@ var render = function() {
     _c("div", { staticClass: "uk-section uk-section-default" }, [
       _c("div", { staticClass: "uk-container padded" }, [
         _vm.note
-          ? _c("form", { attrs: { action: "" } }, [
-              _c("div", { staticClass: "uk-margin" }, [
-                _c(
-                  "label",
-                  { staticClass: "uk-form-label", attrs: { for: "name" } },
-                  [_vm._v("Name")]
-                ),
+          ? _c(
+              "form",
+              { attrs: { action: "" } },
+              [
+                _vm.$store.getters.can("edit", "role")
+                  ? _c("ul", { attrs: { "uk-tab": "" } }, [
+                      _c(
+                        "li",
+                        { class: { "uk-active": _vm.tab === "details" } },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.tab = "details"
+                                }
+                              }
+                            },
+                            [_vm._v("Details")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "li",
+                        { class: { "uk-active": _vm.tab === "permissions" } },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.tab = "permissions"
+                                }
+                              }
+                            },
+                            [_vm._v("Permissions")]
+                          )
+                        ]
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.note.name,
-                      expression: "note.name"
-                    }
-                  ],
-                  staticClass: "uk-input",
-                  attrs: { id: "name", name: "name", type: "text" },
-                  domProps: { value: _vm.note.name },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.note, "name", $event.target.value)
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "uk-margin" },
-                [
-                  _c(
-                    "label",
-                    { staticClass: "uk-form-label", attrs: { for: "content" } },
-                    [_vm._v("Content")]
-                  ),
-                  _vm._v(" "),
-                  _c("html-editor", {
-                    attrs: { id: "content", name: "content", height: "800" },
-                    model: {
-                      value: _vm.note.content,
-                      callback: function($$v) {
-                        _vm.$set(_vm.note, "content", $$v)
-                      },
-                      expression: "note.content"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "uk-margin" }, [
                 _c(
-                  "label",
-                  { staticClass: "uk-form-label", attrs: { for: "private" } },
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.tab === "details",
+                        expression: "tab === 'details'"
+                      }
+                    ]
+                  },
                   [
-                    _c("input", {
-                      directives: [
+                    _c("div", { staticClass: "uk-margin" }, [
+                      _c(
+                        "label",
                         {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.note.private,
-                          expression: "note.private"
-                        }
-                      ],
-                      staticClass: "uk-checkbox",
-                      attrs: {
-                        id: "private",
-                        name: "private",
-                        type: "checkbox"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.note.private)
-                          ? _vm._i(_vm.note.private, null) > -1
-                          : _vm.note.private
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.note.private,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                _vm.$set(_vm.note, "private", $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                _vm.$set(
-                                  _vm.note,
-                                  "private",
-                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                )
+                          staticClass: "uk-form-label",
+                          attrs: { for: "name" }
+                        },
+                        [_vm._v("Name")]
+                      ),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.note.name,
+                            expression: "note.name"
+                          }
+                        ],
+                        staticClass: "uk-input",
+                        attrs: { id: "name", name: "name", type: "text" },
+                        domProps: { value: _vm.note.name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
                             }
-                          } else {
-                            _vm.$set(_vm.note, "private", $$c)
+                            _vm.$set(_vm.note, "name", $event.target.value)
                           }
                         }
-                      }
-                    }),
-                    _vm._v(
-                      "\n                        Private\n                    "
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "p",
-                { staticClass: "uk-margin" },
-                [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "uk-button uk-button-primary",
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.save($event)
-                        }
-                      }
-                    },
-                    [_vm._v("Save")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "uk-button uk-button-danger",
-                      attrs: { to: { name: "notes" } }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Cancel\n                    "
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "uk-margin" },
+                      [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "uk-form-label",
+                            attrs: { for: "content" }
+                          },
+                          [_vm._v("Content")]
+                        ),
+                        _vm._v(" "),
+                        _c("html-editor", {
+                          attrs: {
+                            id: "content",
+                            name: "content",
+                            height: "800"
+                          },
+                          model: {
+                            value: _vm.note.content,
+                            callback: function($$v) {
+                              _vm.$set(_vm.note, "content", $$v)
+                            },
+                            expression: "note.content"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "uk-margin" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "uk-form-label",
+                          attrs: { for: "private" }
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.note.private,
+                                expression: "note.private"
+                              }
+                            ],
+                            staticClass: "uk-checkbox",
+                            attrs: {
+                              id: "private",
+                              name: "private",
+                              type: "checkbox"
+                            },
+                            domProps: {
+                              checked: Array.isArray(_vm.note.private)
+                                ? _vm._i(_vm.note.private, null) > -1
+                                : _vm.note.private
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.note.private,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      _vm.$set(
+                                        _vm.note,
+                                        "private",
+                                        $$a.concat([$$v])
+                                      )
+                                  } else {
+                                    $$i > -1 &&
+                                      _vm.$set(
+                                        _vm.note,
+                                        "private",
+                                        $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1))
+                                      )
+                                  }
+                                } else {
+                                  _vm.$set(_vm.note, "private", $$c)
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(
+                            "\n                            Private\n                        "
+                          )
+                        ]
                       )
-                    ]
-                  )
-                ],
-                1
-              )
-            ])
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("permissions-form", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.tab === "permissions" &&
+                        _vm.$store.getters.can("edit", "role"),
+                      expression:
+                        "tab === 'permissions' && $store.getters.can('edit', 'role')"
+                    }
+                  ],
+                  attrs: { entity: "note", id: _vm.id },
+                  model: {
+                    value: _vm.note.permissions,
+                    callback: function($$v) {
+                      _vm.$set(_vm.note, "permissions", $$v)
+                    },
+                    expression: "note.permissions"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "p",
+                  { staticClass: "uk-margin" },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "uk-button uk-button-primary",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.save($event)
+                          }
+                        }
+                      },
+                      [_vm._v("Save")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "uk-button uk-button-danger",
+                        attrs: { to: { name: "notes" } }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Cancel\n                    "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
           : _c("p", { staticClass: "uk-text-center" }, [
               _c("i", { staticClass: "fas fa-2x fa-sync fa-spin" })
             ])
@@ -36630,7 +36902,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.quests != null && _vm.quests.data.length > 0
+          _vm.notes != null && _vm.notes.data.length > 0
             ? _c("paginated-table", {
                 attrs: {
                   actions: _vm.actions,
@@ -37465,7 +37737,73 @@ var render = function() {
                           })
                         ],
                         1
-                      )
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "uk-margin" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "uk-form-label",
+                            attrs: { for: "private" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.quest.private,
+                                  expression: "quest.private"
+                                }
+                              ],
+                              staticClass: "uk-checkbox",
+                              attrs: {
+                                id: "private",
+                                name: "private",
+                                type: "checkbox"
+                              },
+                              domProps: {
+                                checked: Array.isArray(_vm.quest.private)
+                                  ? _vm._i(_vm.quest.private, null) > -1
+                                  : _vm.quest.private
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = _vm.quest.private,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = null,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        _vm.$set(
+                                          _vm.quest,
+                                          "private",
+                                          $$a.concat([$$v])
+                                        )
+                                    } else {
+                                      $$i > -1 &&
+                                        _vm.$set(
+                                          _vm.quest,
+                                          "private",
+                                          $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1))
+                                        )
+                                    }
+                                  } else {
+                                    _vm.$set(_vm.quest, "private", $$c)
+                                  }
+                                }
+                              }
+                            }),
+                            _vm._v(
+                              "\n                                Private\n                            "
+                            )
+                          ]
+                        )
+                      ])
                     ]),
                     _vm._v(" "),
                     _c(
@@ -37627,6 +37965,7 @@ var render = function() {
                         "tab === 'permissions' && $store.getters.can('edit', 'role')"
                     }
                   ],
+                  attrs: { entity: "quest", id: _vm.id },
                   model: {
                     value: _vm.quest.permissions,
                     callback: function($$v) {
@@ -56942,7 +57281,7 @@ var Locations = {
     },
     destroy: function destroy(_ref7, location) {
       var dispatch = _ref7.dispatch;
-      axios["delete"]("/campaign/locations/".concat(location.id)).then(function () {
+      return axios["delete"]("/campaign/locations/".concat(location.id)).then(function () {
         dispatch('loadLocations').then(function () {
           dispatch('Messages/success', 'Location successfully deleted!', {
             root: true
@@ -57083,7 +57422,7 @@ var Notes = {
     store: function store(_ref6, note) {
       var commit = _ref6.commit,
           dispatch = _ref6.dispatch;
-      axios.post('/campaign/notes', note).then(function () {
+      return axios.post('/campaign/notes', note).then(function () {
         commit('SET_ERRORS', {});
         dispatch('Messages/success', 'Note saved!', {
           root: true
@@ -57100,7 +57439,7 @@ var Notes = {
           dispatch = _ref7.dispatch;
       var payload = data.note;
       payload._method = 'put';
-      axios.post("/campaign/notes/".concat(data.id), payload).then(function () {
+      return axios.post("/campaign/notes/".concat(data.id), payload).then(function () {
         commit('SET_ERRORS', {});
         dispatch('Messages/success', 'Note saved!', {
           root: true
@@ -57114,7 +57453,7 @@ var Notes = {
     },
     destroy: function destroy(_ref8, note) {
       var dispatch = _ref8.dispatch;
-      axios["delete"]("/campaign/notes/".concat(note.id)).then(function () {
+      return axios["delete"]("/campaign/notes/".concat(note.id)).then(function () {
         dispatch('Messages/success', 'Note successfully deleted!', {
           root: true
         });
@@ -57127,6 +57466,75 @@ var Notes = {
     },
     SET_NOTES: function SET_NOTES(state, notes) {
       state.notes = notes;
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/js/modules/permissions.js":
+/*!*********************************************!*\
+  !*** ./resources/js/modules/permissions.js ***!
+  \*********************************************/
+/*! exports provided: Permissions */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Permissions", function() { return Permissions; });
+var Permissions = {
+  namespaced: true,
+  state: {
+    permissions: {}
+  },
+  actions: {
+    fetch: function fetch(_ref, data) {
+      var state = _ref.state,
+          commit = _ref.commit;
+
+      if (data.entity && data.id) {
+        if (!state.permissions.hasOwnProperty(data.entity) || !state.permissions[data.entity].hasOwnProperty(data.id)) {
+          return axios.get("/campaign/permissions/".concat(data.entity, "/").concat(data.id)).then(function (response) {
+            var permissions = {};
+
+            for (var index in response.data) {
+              if (index > 0) {
+                permissions[index] = response.data[index];
+              }
+            }
+
+            commit('SET_PERMISSIONS', {
+              id: data.id,
+              entity: data.entity,
+              permissions: permissions
+            });
+          })["catch"](function () {});
+        }
+      }
+    }
+  },
+  mutations: {
+    SET_PERMISSIONS: function SET_PERMISSIONS(state, data) {
+      if (!state.permissions.hasOwnProperty(data.entity)) {
+        state.permissions[data.entity] = {};
+      }
+
+      if (!state.permissions[data.entity].hasOwnProperty(data.id)) {
+        state.permissions[data.entity][data.id] = {};
+      }
+
+      state.permissions[data.entity][data.id] = data.permissions;
+    }
+  },
+  getters: {
+    permission: function permission(state) {
+      return function (entity, id) {
+        if (state.permissions.hasOwnProperty(entity) && state.permissions[entity].hasOwnProperty(id)) {
+          return state.permissions[entity][id] || {};
+        }
+
+        return {};
+      };
     }
   }
 };
@@ -57192,7 +57600,7 @@ var Quests = {
     store: function store(_ref6, quest) {
       var commit = _ref6.commit,
           dispatch = _ref6.dispatch;
-      axios.post('/campaign/quests', quest).then(function () {
+      return axios.post('/campaign/quests', quest).then(function () {
         commit('SET_ERRORS', {});
         dispatch('Messages/success', 'Quest saved!', {
           root: true
@@ -57209,7 +57617,7 @@ var Quests = {
           dispatch = _ref7.dispatch;
       var payload = data.quest;
       payload._method = 'put';
-      axios.post("/campaign/quests/".concat(data.id), payload).then(function () {
+      return axios.post("/campaign/quests/".concat(data.id), payload).then(function () {
         commit('SET_ERRORS', {});
         dispatch('Messages/success', 'Quest saved!', {
           root: true
@@ -57223,7 +57631,7 @@ var Quests = {
     },
     destroy: function destroy(_ref8, quest) {
       var dispatch = _ref8.dispatch;
-      axios["delete"]("/campaign/quests/".concat(quest.id)).then(function () {
+      return axios["delete"]("/campaign/quests/".concat(quest.id)).then(function () {
         dispatch('Messages/success', 'Location successfully deleted!', {
           root: true
         });
@@ -57372,7 +57780,7 @@ var Users = {
     invite: function invite(_ref3, user) {
       var commit = _ref3.commit,
           dispatch = _ref3.dispatch;
-      axios.post('/campaign/users/invite', user).then(function () {
+      return axios.post('/campaign/users/invite', user).then(function () {
         dispatch('Messages/success', 'Invite sent!', {
           root: true
         });
@@ -57615,12 +58023,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_locations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/locations */ "./resources/js/modules/locations.js");
 /* harmony import */ var _modules_messages__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/messages */ "./resources/js/modules/messages.js");
 /* harmony import */ var _modules_notes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/notes */ "./resources/js/modules/notes.js");
-/* harmony import */ var _modules_quests__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/quests */ "./resources/js/modules/quests.js");
-/* harmony import */ var _modules_roles__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/roles */ "./resources/js/modules/roles.js");
-/* harmony import */ var _modules_users__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/users */ "./resources/js/modules/users.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _modules_permissions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/permissions */ "./resources/js/modules/permissions.js");
+/* harmony import */ var _modules_quests__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/quests */ "./resources/js/modules/quests.js");
+/* harmony import */ var _modules_roles__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/roles */ "./resources/js/modules/roles.js");
+/* harmony import */ var _modules_users__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/users */ "./resources/js/modules/users.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 
 
 
@@ -57630,16 +58039,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_7___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_8__["default"]);
-var store = new vuex__WEBPACK_IMPORTED_MODULE_8__["default"].Store({
+
+vue__WEBPACK_IMPORTED_MODULE_8___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_9__["default"]);
+var store = new vuex__WEBPACK_IMPORTED_MODULE_9__["default"].Store({
   modules: {
     Characters: _modules_characters__WEBPACK_IMPORTED_MODULE_0__["Characters"],
     Locations: _modules_locations__WEBPACK_IMPORTED_MODULE_1__["Locations"],
     Messages: _modules_messages__WEBPACK_IMPORTED_MODULE_2__["Messages"],
     Notes: _modules_notes__WEBPACK_IMPORTED_MODULE_3__["Notes"],
-    Quests: _modules_quests__WEBPACK_IMPORTED_MODULE_4__["Quests"],
-    Roles: _modules_roles__WEBPACK_IMPORTED_MODULE_5__["Roles"],
-    Users: _modules_users__WEBPACK_IMPORTED_MODULE_6__["Users"]
+    Permissions: _modules_permissions__WEBPACK_IMPORTED_MODULE_4__["Permissions"],
+    Quests: _modules_quests__WEBPACK_IMPORTED_MODULE_5__["Quests"],
+    Roles: _modules_roles__WEBPACK_IMPORTED_MODULE_6__["Roles"],
+    Users: _modules_users__WEBPACK_IMPORTED_MODULE_7__["Users"]
   },
   state: {
     campaign: {},

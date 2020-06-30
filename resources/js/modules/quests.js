@@ -41,7 +41,7 @@ export const Quests = {
                 })
         },
         store({commit, dispatch}, quest) {
-            axios.post('/campaign/quests', quest)
+            return axios.post('/campaign/quests', quest)
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Quest saved!', {root: true});
@@ -54,7 +54,7 @@ export const Quests = {
         update({commit, dispatch}, data) {
             let payload = data.quest;
             payload._method = 'put';
-            axios.post(`/campaign/quests/${data.id}`, payload)
+            return axios.post(`/campaign/quests/${data.id}`, payload)
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Quest saved!', {root: true});
@@ -65,7 +65,7 @@ export const Quests = {
                 })
         },
         destroy({dispatch}, quest) {
-            axios.delete(`/campaign/quests/${quest.id}`)
+            return axios.delete(`/campaign/quests/${quest.id}`)
                 .then(() => {
                     dispatch('Messages/success', 'Location successfully deleted!', {root: true});
                 })
