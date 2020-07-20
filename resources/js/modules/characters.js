@@ -1,8 +1,15 @@
+import Vue from 'vue';
+
 export const Characters = {
     namespaced: true,
     state: {
         characters: null,
-        races: {}
+        classes: [],
+
+        races: {},
+        player: {
+            info: {},
+        }
     },
     actions: {
         loadRaces({commit}) {
@@ -53,10 +60,10 @@ export const Characters = {
         SET_RACES(state, races) {
             if (races) {
                 for (let race of races) {
-                    state.races[race.id] = race;
+                    Vue.set(state.races, race.id, race);
                 }
             } else {
-                state.races = {};
+                Vue.set(state, 'races', {});
             }
         },
     }
