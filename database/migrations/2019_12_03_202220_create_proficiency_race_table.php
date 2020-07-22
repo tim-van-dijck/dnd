@@ -15,8 +15,10 @@ class CreateProficiencyRaceTable extends Migration
     {
         Schema::create('proficiency_race', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('race_id', false, true);
-            $table->integer('proficiency_id', false, true);
+            $table->unsignedInteger('race_id');
+            $table->unsignedInteger('subrace_id')->nullable();
+            $table->unsignedInteger('proficiency_id');
+            $table->boolean('optional')->default(false);
 
             $table->foreign('race_id')->references('id')->on('races')
                 ->onUpdate('cascade')

@@ -4,14 +4,15 @@ namespace App\Models\Character;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
- * Class Race
+ * Class Subrace
  * @package App\Models\Character
  * @property int id
+ * @property int race_id
  * @property string name
- * @property int speed
- * @property string size
+ * @property string description
  * @property int optional_ability_bonuses
  * @property int optional_languages
  * @property int optional_proficiencies
@@ -19,10 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Collection|Language[] languages
  * @property Collection|Proficiency[] proficiencies
- * @property Collection|Subrace[] subraces
+ * @property Race race
  * @property Collection|RaceTrait[] traits
  */
-class Race extends Model
+class Subrace extends Model
 {
     public $timestamps = false;
 
@@ -31,7 +32,7 @@ class Race extends Model
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class);
+        return $this->belongsToMany(Language::class, 'proficiency_race', 'subrace_id', 'proficiency_id');
     }
 
     /**
@@ -39,15 +40,15 @@ class Race extends Model
      */
     public function proficiencies()
     {
-        return $this->belongsToMany(Proficiency::class, 'proficiency_race', 'race_id', 'proficiency_id');
+        return $this->belongsToMany(Proficiency::class, 'proficiency_race', 'subrace_id', 'proficiency_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function subraces()
+    public function race()
     {
-        return $this->hasMany(Subrace::class);
+        return $this->belongsTo(Race::class);
     }
 
     /**
@@ -55,6 +56,6 @@ class Race extends Model
      */
     public function traits()
     {
-        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'race_id', 'trait_id');
+        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'subrace_id', 'trait_id');
     }
 }

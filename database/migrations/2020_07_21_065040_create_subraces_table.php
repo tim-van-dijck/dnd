@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRacesTable extends Migration
+class CreateSubracesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateRacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('races', function (Blueprint $table) {
+        Schema::create('subraces', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('race_id');
             $table->string('name');
-            $table->integer('speed');
-            $table->string('size');
+            $table->text('description');
             $table->tinyInteger('optional_ability_bonuses');
             $table->tinyInteger('optional_languages');
             $table->tinyInteger('optional_proficiencies');
@@ -32,6 +32,6 @@ class CreateRacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('races');
+        Schema::dropIfExists('subraces');
     }
 }
