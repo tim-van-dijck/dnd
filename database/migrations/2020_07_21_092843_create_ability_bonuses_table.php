@@ -16,7 +16,7 @@ class CreateAbilityBonusesTable extends Migration
         Schema::create('ability_bonuses', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('race_id');
-            $table->unsignedInteger('subrace_id')->unsigned();
+            $table->unsignedInteger('subrace_id')->nullable();
             $table->string('ability');
             $table->integer('bonus');
             $table->integer('optional')->default(false);

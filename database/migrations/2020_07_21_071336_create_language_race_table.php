@@ -17,7 +17,7 @@ class CreateLanguageRaceTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('race_id');
             $table->unsignedInteger('subrace_id')->nullable();
-            $table->unsignedInteger('language_id');
+            $table->unsignedSmallInteger('language_id');
             $table->boolean('optional')->default(false);
             $table->timestamps();
 
@@ -40,6 +40,6 @@ class CreateLanguageRaceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('race_language');
+        Schema::dropIfExists('language_race');
     }
 }

@@ -277,7 +277,7 @@
 				},
 				{
 					"url": "http://www.dnd5eapi.co/api/languages/8",
-					"name": "Orc"
+					"name": "Orcish"
 				},
 				{
 					"url": "http://www.dnd5eapi.co/api/languages/9",
@@ -370,53 +370,7 @@
 			}
 
 		],
-		"trait_options":
-			{
-				"choose": 1,
-				"from": [
-					{
-						"name": "Breath Weapon (Black)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Blue)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Brass)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Bronze)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Copper)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Gold)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Green)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Red)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (Silver)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					},
-					{
-						"name": "Breath Weapon (White)",
-						"url": "http://www.dnd5eapi.co/api/traits/17"
-					}
-				],
-				"type": "trait"
-			},
+		"trait_options": {},
 		"subraces": [],
 		"url": "http://www.dnd5eapi.co/api/races/5"
 	},
@@ -552,7 +506,7 @@
 					"url":"http://www.dnd5eapi.co/api/languages/7"
 				},
 				{
-					"name":"Orc",
+					"name":"Orcish",
 					"url":"http://www.dnd5eapi.co/api/languages/8"
 				},
 				{

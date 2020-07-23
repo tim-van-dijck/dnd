@@ -22,9 +22,9 @@ class RacesTableSeeder extends Seeder
      */
     public function __construct()
     {
-        $this->languages = Language::get()->keyBy('name');
-        $this->proficiencies = Proficiency::get()->keyBy('name');
-        $this->traits = RaceTrait::get()->keyBy('name');
+        $this->languages = Language::get()->keyBy('name')->toArray();
+        $this->proficiencies = Proficiency::get()->keyBy('name')->toArray();
+        $this->traits = RaceTrait::get()->keyBy('name')->toArray();
     }
 
     /**
@@ -51,6 +51,7 @@ class RacesTableSeeder extends Seeder
 
             $this->setAbilityBonuses($race, $raceArray);
             $this->setLanguages($race, $raceArray);
+            $this->setProficiencies($race, $raceArray);
             $this->setTraits($race, $raceArray);
         }
     }
@@ -70,13 +71,15 @@ class RacesTableSeeder extends Seeder
             $bonus->save();
         }
 
-        foreach ($raceArray['ability_bonus_options'] as $optionalAbilityBonus) {
-            $bonus = new AbilityBonus();
-            $bonus->race_id = $race->id;
-            $bonus->ability = $optionalAbilityBonus['name'];
-            $bonus->bonus = $optionalAbilityBonus['bonus'];
-            $bonus->optional = true;
-            $bonus->save();
+        if (!empty($raceArray['ability_bonus_options'])) {
+            foreach ($raceArray['ability_bonus_options']['from'] as $optionalAbilityBonus) {
+                $bonus = new AbilityBonus();
+                $bonus->race_id = $race->id;
+                $bonus->ability = $optionalAbilityBonus['name'];
+                $bonus->bonus = $optionalAbilityBonus['bonus'];
+                $bonus->optional = true;
+                $bonus->save();
+            }
         }
     }
 
@@ -88,14 +91,16 @@ class RacesTableSeeder extends Seeder
     {
         $languageIds = [];
         foreach ($raceArray['languages'] as $languageArray) {
-            $languageIds[$this->languages[$languageArray['name']]->id] = ['optional' => false];
+            $languageIds[$this->languages[$languageArray['name']]['id']] = ['optional' => false];
         }
 
-        $optionalLanguageIds = [];
-        foreach ($raceArray['language_options'] as $languageArray) {
-            $optionalLanguageIds[$this->languages[$languageArray['name']]->id] = ['optional' => true];
+        if (!empty($raceArray['language_options'])) {
+            $optionalLanguageIds = [];
+            foreach ($raceArray['language_options']['from'] as $optionalLanguageArray) {
+                $optionalLanguageIds[$this->languages[$optionalLanguageArray['name']]['id']] = ['optional' => true];
+            }
+            $race->languages()->sync($optionalLanguageIds);
         }
-        $race->languages()->sync($optionalLanguageIds);
     }
 
     /**
@@ -106,18 +111,19 @@ class RacesTableSeeder extends Seeder
     {
         $proficiencyIds = [];
         foreach ($raceArray['starting_proficiencies'] as $startingProficiency) {
-            $proficiencyId = $this->proficiencies[$startingProficiency['name']]->id;
+            $proficiencyId = $this->proficiencies[$startingProficiency['name']]['id'];
             $proficiencyIds[$proficiencyId] = ['optional' => false];
         }
         $race->proficiencies()->sync($proficiencyIds);
 
-
-        $optionalProficiencyIds = [];
-        foreach ($raceArray['starting_proficiency_options']['from'] as $optionalProficiency) {
-            $proficiencyId = $this->proficiencies[$optionalProficiency['name']]->id;
-            $optionalProficiencyIds[$proficiencyId] = ['optional' => true];
+        if (!empty($raceArray['starting_proficiency_options'])) {
+            $optionalProficiencyIds = [];
+            foreach ($raceArray['starting_proficiency_options']['from'] as $optionalProficiency) {
+                $proficiencyId = $this->proficiencies[$optionalProficiency['name']]['id'];
+                $optionalProficiencyIds[$proficiencyId] = ['optional' => true];
+            }
+            $race->proficiencies()->sync($optionalProficiencyIds);
         }
-        $race->proficiencies()->sync($optionalProficiencyIds);
     }
 
     /**
@@ -128,14 +134,16 @@ class RacesTableSeeder extends Seeder
     {
         $raceTraitIds = [];
         foreach ($raceArray['traits'] as $traitArray) {
-            $optionalRaceTraitIds[$this->traits[$traitArray['name']]->id] = ['optional' => false];
+            $optionalRaceTraitIds[$this->traits[$traitArray['name']]['id']] = ['optional' => false];
         }
         $race->traits()->sync($raceTraitIds);
 
-        $optionalRaceTraitIds = [];
-        foreach ($raceArray['trait_options'] as $traitArray) {
-            $optionalRaceTraitIds[$this->traits[$traitArray['name']]->id] = ['optional' => true];
+        if (!empty($raceArray['trait_options'])) {
+            $optionalRaceTraitIds = [];
+            foreach ($raceArray['trait_options']['from'] as $traitArray) {
+                $optionalRaceTraitIds[$this->traits[$traitArray['name']]['id']] = ['optional' => true];
+            }
+            $race->traits()->sync($raceTraitIds);
         }
-        $race->traits()->sync($raceTraitIds);
     }
 }
