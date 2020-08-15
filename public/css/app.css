@@ -16080,3 +16080,9 @@ header.uk-position-fixed {
   transition: color 0.3s ease;
 }
 
+#pc-form .skills .racial,
+#pc-form .skills .class-based,
+#pc-form .skills .class-based .class {
+  margin-bottom: 2em;
+}
+

@@ -6,14 +6,25 @@
                 <input id="name" title="name" type="text" class="uk-input" v-model="info.name">
             </div>
             <div class="uk-margin">
-                <label for="title" class="uk-form-label">Title</label>
-                <input id="title" name="title" type="text" class="uk-input" v-model="info.title">
-            </div>
-            <div class="uk-margin">
                 <label for="race" class="uk-form-label">Race</label>
                 <select id="race" name="race" class="uk-select" v-model="info.race_id">
-                    <option value="">- Choose a race -</option>
+                    <option :value="null">- Choose a race -</option>
                     <option v-for="race in races" :value="race.id">{{ race.name }}</option>
+                </select>
+            </div>
+            <div class="uk-margin">
+                <label for="subrace" class="uk-form-label">Subrace</label>
+                <select id="subrace" name="subrace" class="uk-select" v-model="info.subrace_id"
+                        :disabled="subraces.length == 0">
+                    <option :value="null">- Choose a subrace -</option>
+                    <option v-for="subrace in subraces" :value="subrace.id">{{ subrace.name }}</option>
+                </select>
+            </div>
+            <div class="uk-margin">
+                <label for="alignment" class="uk-form-label">Alignment</label>
+                <select id="alignment" name="alignment" class="uk-select" v-model="info.alignment">
+                    <option :value="null">- Choose an alignment -</option>
+                    <option v-for="alignment in alignments" :value="alignment">{{ alignment }}</option>
                 </select>
             </div>
             <div class="uk-margin">
@@ -32,25 +43,38 @@
         </div>
         <div class="uk-width-1-2">
             <label for="bio" class="uk-form-label">Bio</label>
-            <editor id="bio" name="bio" :init="init" v-model="info.bio"></editor>
+            <html-editor id="bio" name="bio" v-model="info.bio"></html-editor>
         </div>
     </div>
 </template>
 
 <script>
-    import Editor from '@tinymce/tinymce-vue'
+    import HtmlEditor from '../../partial/html-editor';
     import {mapState} from "vuex";
 
     export default {
         name: "pc-form-info-tab",
         props: ['value'],
         mounted() {
-            this.$store.dispatch('Characters/loadRaces');
-            this.info = this.value;
+            this.$set(this, 'info', this.value);
         },
         data() {
             return {
-                info: {}
+                info: {
+                    race_id: null,
+                    subrace_id: null
+                },
+                alignments: [
+                    'Lawful Good',
+                    'Neutral Good',
+                    'Chaotic Good',
+                    'Lawful Neutral',
+                    'True Neutral',
+                    'Chaotic Neutral',
+                    'Lawful Evil',
+                    'Neutral Evil',
+                    'Chaotic Evil',
+                ]
             }
         },
         watch: {
@@ -63,21 +87,16 @@
         },
         computed: {
             ...mapState('Characters', ['races']),
-            init() {
-                return {
-                    height: 400,
-                    plugins: [
-                        'link', 'template', 'hr', 'anchor', 'fullscreen',
-                        'searchreplace', 'autolink', 'table'
-                    ],
-                    toolbar1: 'formatselect | bold italic underline strikethrough forecolor backcolor | link table | alignleft aligncenter alignright  | numlist bullist outdent indent | removeformat',
-                    init_instance_callback: function(editor) {
-                        var freeTiny = document.querySelector('.tox-notifications-container');
-                        freeTiny.style.display = 'none';
+            subraces() {
+                if (this.races)  {
+                    let race = this.races[this.info.race_id];
+                    if (race) {
+                        return race.subraces || [];
                     }
                 }
+                return [];
             }
         },
-        components: {Editor}
+        components: {HtmlEditor}
     }
 </script>

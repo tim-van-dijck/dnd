@@ -31,7 +31,9 @@ class Race extends Model
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class);
+        return $this->belongsToMany(Language::class)
+            ->wherePivot('subrace_id', '=', null)
+            ->withPivot('optional');
     }
 
     /**
@@ -39,7 +41,8 @@ class Race extends Model
      */
     public function proficiencies()
     {
-        return $this->belongsToMany(Proficiency::class, 'proficiency_race', 'race_id', 'proficiency_id');
+        return $this->morphToMany(Proficiency::class, 'entity', 'proficiency_morph', 'entity_id')
+            ->withPivot('optional');
     }
 
     /**
@@ -55,6 +58,8 @@ class Race extends Model
      */
     public function traits()
     {
-        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'race_id', 'trait_id');
+        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'race_id', 'trait_id')
+            ->wherePivot('subrace_id', '=', null)
+            ->withPivot('optional');
     }
 }

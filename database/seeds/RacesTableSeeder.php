@@ -93,13 +93,14 @@ class RacesTableSeeder extends Seeder
         foreach ($raceArray['languages'] as $languageArray) {
             $languageIds[$this->languages[$languageArray['name']]['id']] = ['optional' => false];
         }
+        $race->languages()->attach($languageIds);
 
         if (!empty($raceArray['language_options'])) {
             $optionalLanguageIds = [];
             foreach ($raceArray['language_options']['from'] as $optionalLanguageArray) {
                 $optionalLanguageIds[$this->languages[$optionalLanguageArray['name']]['id']] = ['optional' => true];
             }
-            $race->languages()->sync($optionalLanguageIds);
+            $race->languages()->attach($optionalLanguageIds);
         }
     }
 
@@ -114,7 +115,7 @@ class RacesTableSeeder extends Seeder
             $proficiencyId = $this->proficiencies[$startingProficiency['name']]['id'];
             $proficiencyIds[$proficiencyId] = ['optional' => false];
         }
-        $race->proficiencies()->sync($proficiencyIds);
+        $race->proficiencies()->attach($proficiencyIds);
 
         if (!empty($raceArray['starting_proficiency_options'])) {
             $optionalProficiencyIds = [];
@@ -122,7 +123,7 @@ class RacesTableSeeder extends Seeder
                 $proficiencyId = $this->proficiencies[$optionalProficiency['name']]['id'];
                 $optionalProficiencyIds[$proficiencyId] = ['optional' => true];
             }
-            $race->proficiencies()->sync($optionalProficiencyIds);
+            $race->proficiencies()->attach($optionalProficiencyIds);
         }
     }
 
@@ -134,16 +135,16 @@ class RacesTableSeeder extends Seeder
     {
         $raceTraitIds = [];
         foreach ($raceArray['traits'] as $traitArray) {
-            $optionalRaceTraitIds[$this->traits[$traitArray['name']]['id']] = ['optional' => false];
+            $raceTraitIds[$this->traits[$traitArray['name']]['id']] = ['optional' => false];
         }
-        $race->traits()->sync($raceTraitIds);
+        $race->traits()->attach($raceTraitIds);
 
         if (!empty($raceArray['trait_options'])) {
             $optionalRaceTraitIds = [];
             foreach ($raceArray['trait_options']['from'] as $traitArray) {
                 $optionalRaceTraitIds[$this->traits[$traitArray['name']]['id']] = ['optional' => true];
             }
-            $race->traits()->sync($raceTraitIds);
+            $race->traits()->attach($optionalRaceTraitIds);
         }
     }
 }

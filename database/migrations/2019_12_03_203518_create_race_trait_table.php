@@ -18,6 +18,7 @@ class CreateRaceTraitTable extends Migration
             $table->unsignedInteger('race_id');
             $table->unsignedInteger('subrace_id')->nullable();
             $table->unsignedInteger('trait_id');
+            $table->boolean('optional');
 
             $table->foreign('race_id')->references('id')->on('races')
                 ->onUpdate('cascade')

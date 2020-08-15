@@ -34,28 +34,29 @@ let routes = [
     },
     {
         path: '/characters',
+        redirect: 'player-characters',
         name: 'characters',
         component: CharacterOverview,
         children: [
-            {name: 'player-characters', path: '/characters', component: PlayerCharacterOverview},
+            {name: 'player-characters', path: 'players', component: PlayerCharacterOverview},
             {name: 'npcs', path: 'npc', component: NPCOverview},
         ]
     },
     {
-        path: '/characters/create/player',
+        path: '/characters/player/create',
         name: 'pc-create',
         props: true,
         component: PCForm
     },
     {
-        path: '/characters/create/npc',
-        name: 'character-create',
+        path: '/characters/npc/create',
+        name: 'npc-create',
         props: true,
         component: CharacterForm
     },
     {
         path: '/characters/:id/edit',
-        name: 'character-edit',
+        name: 'npc-edit',
         props: true,
         component: CharacterForm
     },

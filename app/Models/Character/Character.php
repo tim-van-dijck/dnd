@@ -54,4 +54,9 @@ class Character extends Model
         return $this->belongsToMany(Subclass::class, 'character_class', 'character_id', 'class_id')
             ->withPivot(['level']);
     }
+
+    public function proficiencies()
+    {
+        return $this->belongsToMany(Proficiency::class)->withPivot(['origin_type', 'origin_id']);
+    }
 }

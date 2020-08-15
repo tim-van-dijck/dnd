@@ -106,7 +106,7 @@
 		"starting_proficiencies": [
 			{
 				"url": "http://www.dnd5eapi.co/api/proficiencies/116",
-				"name": "Skill: Perception"
+				"name": "Perception"
 			}
 		],
 		"starting_proficiency_options": {},
@@ -586,7 +586,7 @@
 		"size_description": "Half-orcs are somewhat larger and bulkier than humans, and they range from 5 to well over 6 feet tall. Your size is Medium.",
 		"starting_proficiencies": [
 			{
-				"name": "Skill: Intimidation",
+				"name": "Intimidation",
 				"url": "http://www.dnd5eapi.co/api/proficiencies/112"
 			}
 		],

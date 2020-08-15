@@ -17,7 +17,9 @@ class CreateClassesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('hit_die');
-            $table->integer('proficiency_choices');
+            $table->integer('instrument_choices')->default(0);
+            $table->integer('skill_choices')->default(0);
+            $table->integer('tool_choices')->default(0);
         });
     }
 

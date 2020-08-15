@@ -4,18 +4,25 @@ export const Characters = {
     namespaced: true,
     state: {
         characters: null,
-        classes: [],
+        classes: {},
 
         races: {},
         player: {
             info: {},
+            classes: {},
         }
     },
     actions: {
-        loadRaces({commit}) {
-            return axios.get(`/races`)
+        loadClasses({commit}) {
+            return axios.get(`/classes?include=subclasses,proficiencies,subclasses.proficiencies`)
                 .then((response) => {
-                    commit('SET_RACES', response.data)
+                    commit('SET_CLASSES', response.data.data)
+                });
+        },
+        loadRaces({commit}) {
+            return axios.get(`/races?include=proficiencies,languages,subraces`)
+                .then((response) => {
+                    commit('SET_RACES', response.data.data)
                 });
         },
         loadCharacters({commit}, type) {
@@ -55,6 +62,15 @@ export const Characters = {
                 state.characters[characterIndex] = character;
             } else {
                 state.characters.push(character);
+            }
+        },
+        SET_CLASSES(state, classes) {
+            if (classes) {
+                for (let charClass of classes) {
+                    Vue.set(state.classes, charClass.id, charClass);
+                }
+            } else {
+                Vue.set(state, 'classes', {});
             }
         },
         SET_RACES(state, races) {

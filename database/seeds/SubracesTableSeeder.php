@@ -47,7 +47,7 @@ class SubracesTableSeeder extends Seeder
             $subrace->optional_ability_bonuses =
                 empty($subraceArray['starting_proficiency_options']) ? 0 : $subraceArray['starting_proficiency_options']['choose'];
             $subrace->optional_languages =
-                empty($raceArray['language_options']) ? 0 : $raceArray['language_options']['choose'];
+                empty($subraceArray['language_options']) ? 0 : $subraceArray['language_options']['choose'];
             $subrace->optional_proficiencies =
                 empty($subraceArray['ability_bonus_options']) ? 0 : $subraceArray['ability_bonus_options']['choose'];
             $subrace->optional_traits =
@@ -102,6 +102,7 @@ class SubracesTableSeeder extends Seeder
                 'optional' => false,
                 'race_id' => $subrace->race_id
             ];
+            $subrace->languages()->attach($languageIds);
         }
 
         if (!empty($subraceArray['language_options'])) {
@@ -112,7 +113,7 @@ class SubracesTableSeeder extends Seeder
                     'race_id' => $subrace->race_id
                 ];
             }
-            $subrace->languages()->sync($optionalLanguageIds);
+            $subrace->languages()->attach($optionalLanguageIds);
         }
     }
 
@@ -126,22 +127,20 @@ class SubracesTableSeeder extends Seeder
         foreach ($subraceArray['starting_proficiencies'] as $startingProficiency) {
             $proficiencyId = $this->proficiencies[$startingProficiency['name']]->id;
             $proficiencyIds[$proficiencyId] = [
-                'optional' => false,
-                'race_id' => $subrace->race_id
+                'optional' => false
             ];
         }
-        $subrace->proficiencies()->sync($proficiencyIds);
+        $subrace->proficiencies()->attach($proficiencyIds);
 
         if (!empty($subraceArray['starting_proficiency_options'])) {
             $optionalProficiencyIds = [];
             foreach ($subraceArray['starting_proficiency_options']['from'] as $optionalProficiency) {
                 $proficiencyId = $this->proficiencies[$optionalProficiency['name']]->id;
                 $optionalProficiencyIds[$proficiencyId] = [
-                    'optional' => true,
-                    'race_id' => $subrace->race_id
+                    'optional' => true
                 ];
             }
-            $subrace->proficiencies()->sync($optionalProficiencyIds);
+            $subrace->proficiencies()->attach($optionalProficiencyIds);
         }
     }
 
@@ -153,12 +152,12 @@ class SubracesTableSeeder extends Seeder
     {
         $raceTraitIds = [];
         foreach ($subraceArray['racial_traits'] as $traitArray) {
-            $optionalRaceTraitIds[$this->traits[$traitArray['name']]->id] = [
+            $raceTraitIds[$this->traits[$traitArray['name']]->id] = [
                 'race_id' => $subrace->race_id,
                 'optional' => false
             ];
         }
-        $subrace->traits()->sync($raceTraitIds);
+        $subrace->traits()->attach($raceTraitIds);
 
         if (!empty($subraceArray['racial_trait_options'])) {
             $optionalRaceTraitIds = [];
@@ -170,7 +169,7 @@ class SubracesTableSeeder extends Seeder
                     ];
                 }
             }
-            $subrace->traits()->sync($raceTraitIds);
+            $subrace->traits()->attach($optionalRaceTraitIds);
         }
     }
 }

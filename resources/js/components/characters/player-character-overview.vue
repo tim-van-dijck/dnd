@@ -1,6 +1,6 @@
 <template>
     <div class="player-characters">
-        <router-link class="uk-button uk-button-primary" :to="{name: 'character-create', params: {type: 'player'}}">
+        <router-link class="uk-button uk-button-primary" :to="{name: 'pc-create', params: {type: 'player'}}">
             <i class="fas fa-plus"></i> Add character
         </router-link>
         <table class="uk-table uk-table-divider" v-if="characters != null && characters.data.length > 0">

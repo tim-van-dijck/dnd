@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="pc-form">
         <h1>{{ title }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
@@ -8,11 +8,21 @@
                         <li :class="{'uk-active': tab == 'info'}">
                             <a @click.prevent="tab = 'info'">Info</a>
                         </li>
-                        <li :class="{'uk-active': tab == 'race'}">
-                            <a @click.prevent="tab = 'race'">Race</a>
+                        <li :class="{'uk-active': tab == 'class'}">
+                            <a @click.prevent="tab = 'class'">Class</a>
+                        </li>
+                        <li :class="{'uk-active': tab == 'proficiency'}">
+                            <a @click.prevent="tab = 'proficiency'">Skills, Traits & Proficiencies</a>
+                        </li>
+                        <li :class="{'uk-active': tab == 'ideal'}">
+                            <a @click.prevent="tab = 'ideal'">Personality</a>
                         </li>
                     </ul>
                     <pc-form-info-tab v-show="tab == 'info'" v-model="character.info" />
+                    <pc-form-class-tab v-show="tab == 'class'" v-model="character.classes" />
+                    <pc-form-proficiency-tab v-show="tab == 'proficiency'" v-model="character.proficiencies"
+                        :info="character.info" :character-classes="character.classes" />
+                    <pc-form-personality-tab v-show="tab == 'ideal'" v-model="character.personality" />
 
                     <p class="uk-margin">
                         <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
@@ -32,14 +42,29 @@
 <script>
     import {mapState} from 'vuex';
     import PcFormInfoTab from "./partial/pc-form-info-tab";
+    import PcFormClassTab from "./partial/pc-form-class-tab";
+    import PcFormProficiencyTab from "./partial/pc-form-proficiency-tab";
+    import PcFormPersonalityTab from "./partial/pc-form-personality-tab";
 
     export default {
         name: "character-form",
         props: ['id', 'type'],
         created() {
+            this.$store.dispatch('Characters/loadRaces');
+            this.$store.dispatch('Characters/loadClasses');
             this.character = {
                 type: 'player',
-                info: {}
+                info: {
+                    race_id: null,
+                    subrace_id: null
+                },
+                classes: [],
+                personality: {
+                    trait: '',
+                    ideal: '',
+                    bond: '',
+                    flaw: ''
+                }
             };
             if (this.id) {
                 this.$store.dispatch('Characters/loadCharacter', {campaign_id: 1, id: this.id})
@@ -76,6 +101,9 @@
             }
         },
         components: {
+            PcFormPersonalityTab,
+            PcFormProficiencyTab,
+            PcFormClassTab,
             PcFormInfoTab,
         }
     }

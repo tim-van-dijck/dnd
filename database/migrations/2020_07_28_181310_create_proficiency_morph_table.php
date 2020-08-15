@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProficiencyRaceTable extends Migration
+class CreateProficiencyMorphTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateProficiencyRaceTable extends Migration
      */
     public function up()
     {
-        Schema::create('proficiency_race', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('race_id');
-            $table->unsignedInteger('subrace_id')->nullable();
+        Schema::create('proficiency_morph', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('entity_type');
+            $table->unsignedInteger('entity_id');
             $table->unsignedInteger('proficiency_id');
             $table->boolean('optional')->default(false);
 
-            $table->foreign('race_id')->references('id')->on('races')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->index('entity_id');
             $table->foreign('proficiency_id')->references('id')->on('proficiencies')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -36,6 +34,6 @@ class CreateProficiencyRaceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('proficiency_race');
+        Schema::dropIfExists('proficiency_morph');
     }
 }
