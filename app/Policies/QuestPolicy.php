@@ -33,6 +33,6 @@ class QuestPolicy
 
     public function destroy(User $user, Quest $quest)
     {
-        return AuthService::userHasCampaignPermission($user, $quest, 'quest', 'destroy');
+        return AuthService::userHasCampaignPermission($user, $quest, 'quest', 'delete');
     }
 }

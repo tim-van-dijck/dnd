@@ -12,7 +12,10 @@
                             <a @click.prevent="tab = 'class'">Class</a>
                         </li>
                         <li :class="{'uk-active': tab == 'proficiency'}">
-                            <a @click.prevent="tab = 'proficiency'">Skills, Traits & Proficiencies</a>
+                            <a @click.prevent="tab = 'proficiency'">Languages, Skills & Proficiencies</a>
+                        </li>
+                        <li :class="{'uk-active': tab == 'ability'}">
+                            <a @click.prevent="tab = 'ability'">Abilities</a>
                         </li>
                         <li :class="{'uk-active': tab == 'ideal'}">
                             <a @click.prevent="tab = 'ideal'">Personality</a>
@@ -21,6 +24,8 @@
                     <pc-form-info-tab v-show="tab == 'info'" v-model="character.info" />
                     <pc-form-class-tab v-show="tab == 'class'" v-model="character.classes" />
                     <pc-form-proficiency-tab v-show="tab == 'proficiency'" v-model="character.proficiencies"
+                        :info="character.info" :character-classes="character.classes" />
+                    <pc-form-abilities-tab v-show="tab == 'ability'" v-model="character.abilities"
                         :info="character.info" :character-classes="character.classes" />
                     <pc-form-personality-tab v-show="tab == 'ideal'" v-model="character.personality" />
 
@@ -41,10 +46,11 @@
 
 <script>
     import {mapState} from 'vuex';
-    import PcFormInfoTab from "./partial/pc-form-info-tab";
-    import PcFormClassTab from "./partial/pc-form-class-tab";
-    import PcFormProficiencyTab from "./partial/pc-form-proficiency-tab";
-    import PcFormPersonalityTab from "./partial/pc-form-personality-tab";
+    import PcFormInfoTab from "./tabs/pc-form-info-tab";
+    import PcFormClassTab from "./tabs/pc-form-class-tab";
+    import PcFormProficiencyTab from "./tabs/pc-form-proficiency-tab";
+    import PcFormPersonalityTab from "./tabs/pc-form-personality-tab";
+    import PcFormAbilitiesTab from "./tabs/pc-form-abilities-tab";
 
     export default {
         name: "character-form",
@@ -54,6 +60,7 @@
             this.$store.dispatch('Characters/loadClasses');
             this.character = {
                 type: 'player',
+                abilities: {},
                 info: {
                     race_id: null,
                     subrace_id: null
@@ -64,7 +71,8 @@
                     ideal: '',
                     bond: '',
                     flaw: ''
-                }
+                },
+                proficiencies: {}
             };
             if (this.id) {
                 this.$store.dispatch('Characters/loadCharacter', {campaign_id: 1, id: this.id})
@@ -81,12 +89,11 @@
         },
         methods: {
             save() {
-                let data = {campaign_id: 1, character: this.character};
                 if (this.id) {
-                    data.id = this.id;
-                    this.$store.dispatch('Characters/updateCharacter', data);
+                    let payload = {id: this.id, character: this.character}
+                    this.$store.dispatch('Characters/updateCharacter', payload);
                 } else {
-                    this.$store.dispatch('Characters/storeCharacter', data);
+                    this.$store.dispatch('Characters/storeCharacter', this.character);
                 }
             }
         },
@@ -101,6 +108,7 @@
             }
         },
         components: {
+            PcFormAbilitiesTab,
             PcFormPersonalityTab,
             PcFormProficiencyTab,
             PcFormClassTab,

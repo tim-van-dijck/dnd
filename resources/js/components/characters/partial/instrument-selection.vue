@@ -12,26 +12,29 @@
                     </div>
                 </div>
             </div>
-            <div class="class-based">
+            <div class="class-based" v-if="hasClassInstruments">
                 <h4>Class-based</h4>
-                <div class="class" v-for="(charClass, classIndex) in classes" v-if="charClass.class_id != null">
-                    <h5>{{ availableClasses[charClass.class_id].name }}</h5>
-                    <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                        <div v-for="instrument in classInstruments[charClass.class_id].known">
+                <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
+                    <template v-for="instruments in classInstruments">
+                        <div v-for="instrument in instruments.known">
                             <div class="uk-card uk-card-body uk-card-primary">
                                 <div class="uk-card-title">{{ instrument.name }}</div>
                             </div>
                         </div>
-                        <div v-for="(instrument, index) in (selection[charClass.class_id] || [])">
-                            <div class="uk-card uk-card-body uk-card-primary">
-                                <div class="uk-card-title">{{ instrument.name }} ({{ instrument.origin }})</div>
-                                <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
-                                        @click.prevent="selection[charClass.class_id].splice(index, 1)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
+                    </template>
+                    <div v-for="(instrument, index) in (selection[charClass.class_id] || [])">
+                        <div class="uk-card uk-card-body uk-card-primary">
+                            <div class="uk-card-title">{{ instrument.name }} ({{ instrument.origin }})</div>
+                            <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
+                                    @click.prevent="selection[charClass.class_id].splice(index, 1)">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
+                </div>
+                <div class="class" v-for="(charClass, classIndex) in classes"
+                     v-if="charClass.class_id != null && (classInstruments[charClass.class_id].known.length + classInstruments[charClass.class_id].optional.length) > 0">
+                    <h5>{{ availableClasses[charClass.class_id].name }}</h5>
                     <div class="uk-margin" v-if="availableClasses[charClass.class_id].instrument_choices > (selection[charClass.class_id] || []).length">
                         <label :for="`instruments_${classIndex}`">
                             Choose {{ availableClasses[charClass.class_id].instrument_choices - (selection[charClass.class_id] || []).length }} instrument proficiencies
@@ -39,9 +42,9 @@
                         <select :name="`instruments_${classIndex}`" :id="`instruments_${classIndex}`" class="uk-select"
                                 @input="addInstrumentToClass(availableClasses[charClass.class_id], $event.target.value); $event.target.value = ''">
                             <option :value="null">- Make a choice -</option>
-                            <option v-for="skill in classInstruments[charClass.class_id].optional" :value="skill.id"
-                                    :disabled="classInstruments[charClass.class_id].known.includes(skill.id)">
-                                {{ skill.name }}
+                            <option v-for="instrument in classInstruments[charClass.class_id].optional" :value="instrument.id"
+                                    :disabled="classInstruments[charClass.class_id].known.includes(instrument.id)">
+                                {{ instrument.name }}
                             </option>
                         </select>
                     </div>
@@ -58,11 +61,12 @@
         name: "instrument-selection",
         props: ['race', 'subrace', 'classes', 'value'],
         created() {
-            this.$set(this, 'selection', this.value || {});
+            this.$set(this, 'selection', this.value || []);
         },
         data() {
             return {
-                selection: {}
+                selection: [],
+                classSelected: {}
             }
         },
         methods: {
@@ -70,9 +74,26 @@
                 if (!this.selection.hasOwnProperty(charClass.id)) {
                     this.$set(this.selection, charClass.id, []);
                 }
-                let classSelection = this.selection[charClass.id];
                 let skill = this.classInstruments[charClass.id].optional.find((item) => item.id == input);
-                classSelection.splice(classSelection.length, 1, {origin: charClass.name, name: skill.name, id: input});
+                this.skillSelection.splice(this.skillSelection.length, 1, {
+                    origin_type: 'class',
+                    origin_id: charClass.id,
+                    origin: charClass.name,
+                    name: skill.name,
+                    id: input
+                });
+                if (this.classSelected.hasOwnProperty(charClass.id)) {
+                    this.classSelected[charClass.id]++;
+                } else {
+                    this.classSelected[charClass.id] = 1;
+                }
+            },
+            removeInstrument(index) {
+                let skill = this.selection[index];
+                if (skill.origin_type == 'class') {
+                    this.classSelected[skill.origin_id]--;
+                }
+                this.selection.splice(index, 1);
             }
         },
         computed: {
@@ -103,14 +124,14 @@
                 for (let chosenClass of this.classes) {
                     if (chosenClass.class_id) {
                         let charClass = copy(this.availableClasses[chosenClass.class_id]);
-                        let classInstruments = {
+                        instruments[chosenClass.class_id] = {
                             known: charClass.proficiencies.filter(item => item.type == 'Instruments' && !item.optional),
                             optional: charClass.proficiencies.filter((item) => {
                                 if (item.type == 'Instruments' && item.optional) {
                                     let canChoose = true;
                                     for (let classId in this.selection) {
-                                        let duplicateClassInstrument = this.selection[classId].find(instrument => item.id == instrument.id);
-                                        let duplicateRaceInstrument = this.raceInstruments.find(instrument => item.id == instrument.id)
+                                        let duplicateClassInstrument = this.selection.find((instrument) => item.id == instrument.id);
+                                        let duplicateRaceInstrument = this.raceInstruments.find((instrument) => item.id == instrument.id)
                                         if (duplicateClassInstrument || duplicateRaceInstrument) {
                                             canChoose = false;
                                         }
@@ -120,14 +141,15 @@
                                 return false;
                             })
                         };
-                        instruments[chosenClass.class_id] = classInstruments;
                     }
                 }
                 return instruments;
             },
             hasInstruments() {
+                return this.raceInstruments.length + this.classInstrumentCount;
+            },
+            classInstrumentCount() {
                 let count = 0;
-                count += this.raceInstruments.length;
                 for (let classId in this.classInstruments) {
                     count += this.classInstruments[classId].known.length;
                     count += this.classInstruments[classId].optional.length;
@@ -139,9 +161,12 @@
             classes: {
                 deep: true,
                 handler() {
-                    let selection = {}
+                    let selection = [];
                     for (let charClass of this.classes) {
-                        selection[charClass.class_id] = this.selection[charClass.class_id] || [];
+                        let instruments = this.selection.filter((item) => {
+                            return item.origin_type == 'class' && item.origin_id == charClass.class_id;
+                        });
+                        selection.concat(instruments);
                     }
                     this.$set(this, 'selection', selection);
                 }

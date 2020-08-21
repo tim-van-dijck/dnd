@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Character;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CharacterRequest;
 use App\Http\Resources\CharacterResource;
+use App\Managers\CharacterManager;
 use App\Models\Character\Character;
 use App\Repositories\CharacterRepository;
 use Illuminate\Http\Request;
@@ -24,73 +26,66 @@ class CharacterController extends Controller
         $this->authorize('viewAny', Character::class);
         $filters = $request->query('filter', []);
         $page = $request->query('page', []);
+        $includes = $request->has('includes') ? explode(',', $request->query('includes')) : [];
         $characters = $characterRepository
-            ->get(Session::get('campaign_id'), $filters, $page['number'] ?? null, $page['size'] ?? null);
+            ->get(Session::get('campaign_id'), $filters, $includes, $page['number'] ?? 1, $page['size'] ?? 20);
         return CharacterResource::collection($characters);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param CharacterRepository $characterRepository
-     * @param  \Illuminate\Http\Request $request
+     * @param CharacterManager $characterManager
+     * @param  CharacterRequest $request
      * @param int $campaignId
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(CharacterRepository $characterRepository, Request $request)
+    public function store(CharacterManager $characterManager, CharacterRequest $request)
     {
         $this->authorize('create', Character::class);
-        $this->validate($request, [
-            'name' => 'required|string',
-            'title' => 'string',
-            'race_id' => 'required_if:type,player|integer',
-            'type' => 'required|string',
-            'age' => 'integer',
-            'dead' => 'boolean',
-            'private' => 'boolean',
-            'bio' => 'string',
-        ]);
-        $characterRepository->store(Session::get('campaign_id'), $request->input());
+        $request->validate($request->rules());
+        $characterManager->store(Session::get('campaign_id'), $request->input());
     }
 
     /**
      * Display the specified resource.
      *
      * @param CharacterRepository $characterRepository
-     * @param int $characterId
+     * @param Character $character
      * @return Character
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(CharacterRepository $characterRepository, int $characterId): Character
+    public function show(CharacterRepository $characterRepository, Character $character): Character
     {
-        $this->authorize('view', [Character::class, $characterId]);
-        return $characterRepository->find(Session::get('campaign_id'), $characterId);
+        $this->authorize('view', $character);
+        return $characterRepository->find(Session::get('campaign_id'), $character->id);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $characterId
+     * @param Character $character
      * @return void
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, int $characterId)
+    public function update(Request $request, Character $character)
     {
-        $this->authorize('update', [Character::class, $characterId]);
+        $this->authorize('update', $character);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param CharacterRepository $characterRepository
-     * @param int $characterId
+     * @param Character $character
      * @return void
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(CharacterRepository $characterRepository, int $characterId)
+    public function destroy(CharacterRepository $characterRepository, Character $character)
     {
-        $this->authorize('delete', [Character::class, $characterId]);
-        $characterRepository->destroy(Session::get('campaign_id'), $characterId);
+        $this->authorize('delete', $character);
+        $characterRepository->destroy(Session::get('campaign_id'), $character->id);
     }
 }

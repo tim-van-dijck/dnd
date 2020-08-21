@@ -43,9 +43,9 @@ class RacesTableSeeder extends Seeder
             $race->name = $raceArray['name'];
             $race->speed = $raceArray['speed'];
             $race->size = $raceArray['size'];
-            $race->optional_ability_bonuses = empty($optionalProficiencies) ? 0 : $optionalProficiencies['choose'];
+            $race->optional_ability_bonuses = empty($optionalAbilityBonuses) ? 0 : $optionalAbilityBonuses['choose'];
             $race->optional_languages = empty($raceArray['language_options']) ? 0 : $raceArray['language_options']['choose'];
-            $race->optional_proficiencies = empty($optionalAbilityBonuses) ? 0 : $optionalAbilityBonuses['choose'];
+            $race->optional_proficiencies = empty($optionalProficiencies) ? 0 : $optionalProficiencies['choose'];
             $race->optional_traits = empty($raceArray['trait_options']) ? 0 : $raceArray['trait_options']['choose'];
             $race->save();
 

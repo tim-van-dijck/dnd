@@ -21,9 +21,9 @@ class CharacterPolicy
         return AuthService::userHasCampaignPermission($user, $character, 'character', 'view');
     }
 
-    public function create(User $user, Character $character)
+    public function create(User $user)
     {
-        return AuthService::userHasCampaignPermission($user, $character, 'character', 'create');
+        return AuthService::userHasCampaignPermission($user, null, 'character', 'create');
     }
 
     public function update(User $user, Character $character)

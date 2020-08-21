@@ -1,5 +1,5 @@
 <template>
-    <div uk-accordion="multiple: true; active: 0">
+    <div id="proficiency-tab" uk-accordion="multiple: true; active: 0">
         <div class="languages">
             <div class="uk-accordion-title"><h2>Languages</h2></div>
             <div class="uk-accordion-content">
@@ -41,24 +41,21 @@
                 </div>
             </div>
         </div>
-        <div class="proficiencies">
-            <div class="uk-accordion-title"><h2>Skills</h2></div>
-            <skill-selection class="uk-accordion-content"
-                             :race="race"
-                             :subrace="subrace"
-                             :classes="characterClasses"
-                             v-model="choices.proficiencies.skills" />
-        </div>
-        <tool-selection :race="race" :subrace="subrace" :classes="characterClasses" v-model="choices.proficiencies.tools" />
-        <instrument-selection :race="race" :subrace="subrace" :classes="characterClasses" v-model="choices.proficiencies.instruments" />
+        <skill-selection class="uk-accordion-content"
+                         :race="race"
+                         :subrace="subrace"
+                         :classes="characterClasses"
+                         v-model="choices.skills" />
+        <tool-selection :race="race" :subrace="subrace" :classes="characterClasses" v-model="choices.tools" />
+        <instrument-selection :race="race" :subrace="subrace" :classes="characterClasses" v-model="choices.instruments" />
     </div>
 </template>
 
 <script>
     import {mapState} from "vuex";
-    import SkillSelection from "./skill-selection";
-    import ToolSelection from "./tool-selection";
-    import InstrumentSelection from "./instrument-selection";
+    import SkillSelection from "../partial/skill-selection";
+    import ToolSelection from "../partial/tool-selection";
+    import InstrumentSelection from "../partial/instrument-selection";
 
     export default {
         name: "pc-form-proficiency-tab",
@@ -68,12 +65,9 @@
             return {
                 choices: {
                     languages: [],
-                    proficiencies: {
-                        instruments: [],
-                        skills: [],
-                        tools: []
-                    },
-                    traits: []
+                    instruments: [],
+                    skills: [],
+                    tools: []
                 }
             }
         },
@@ -132,6 +126,12 @@
             'info.subrace_id': function (value, oldValue) {
                 if (oldValue != value || oldValue != value) {
                     this.$set(this.choices, 'languages', []);
+                }
+            },
+            choices: {
+                deep: true,
+                handler() {
+                    this.$emit('input', this.choices);
                 }
             }
         }

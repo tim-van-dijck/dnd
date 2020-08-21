@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property Collection|Proficiency[] proficiencies
  * @property Race race
  * @property Collection|RaceTrait[] traits
+ * @property Collection|AbilityBonus[] abilities
  */
 class Subrace extends Model
 {
@@ -60,5 +61,13 @@ class Subrace extends Model
     {
         return $this->belongsToMany(RaceTrait::class, 'race_trait', 'subrace_id', 'trait_id')
             ->withPivot('optional');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function abilities()
+    {
+        return $this->hasMany(AbilityBonus::class);
     }
 }

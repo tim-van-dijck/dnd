@@ -38,6 +38,11 @@ let store = new Vuex.Store({
             return axios.get('/campaign/me')
                 .then((response) => {
                     commit('SET_USER', response.data);
+                })
+                .catch((error) => {
+                    if ([401,403,404].includes(error.response.status)) {
+                        window.location = '/';
+                    }
                 });
         }
     },

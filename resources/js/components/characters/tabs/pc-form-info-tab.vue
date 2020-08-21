@@ -1,5 +1,5 @@
 <template>
-    <div uk-grid>
+    <div id="info-tab" uk-grid>
         <div class="uk-width-1-2">
             <div class="uk-margin">
                 <label for="name" class="uk-form-label">Name</label>
@@ -7,7 +7,7 @@
             </div>
             <div class="uk-margin">
                 <label for="race" class="uk-form-label">Race</label>
-                <select id="race" name="race" class="uk-select" v-model="info.race_id">
+                <select id="race" name="race" class="uk-select" v-model="info.race_id" @input="info.subrace_id = null">
                     <option :value="null">- Choose a race -</option>
                     <option v-for="race in races" :value="race.id">{{ race.name }}</option>
                 </select>
@@ -24,7 +24,7 @@
                 <label for="alignment" class="uk-form-label">Alignment</label>
                 <select id="alignment" name="alignment" class="uk-select" v-model="info.alignment">
                     <option :value="null">- Choose an alignment -</option>
-                    <option v-for="alignment in alignments" :value="alignment">{{ alignment }}</option>
+                    <option v-for="alignment in alignments" :value="alignment.value">{{ alignment.name }}</option>
                 </select>
             </div>
             <div class="uk-margin">
@@ -65,15 +65,15 @@
                     subrace_id: null
                 },
                 alignments: [
-                    'Lawful Good',
-                    'Neutral Good',
-                    'Chaotic Good',
-                    'Lawful Neutral',
-                    'True Neutral',
-                    'Chaotic Neutral',
-                    'Lawful Evil',
-                    'Neutral Evil',
-                    'Chaotic Evil',
+                    {value: 'LG', name: 'Lawful Good'},
+                    {value: 'NG', name: 'Neutral Good'},
+                    {value: 'CG', name: 'Chaotic Good'},
+                    {value: 'LN', name: 'Lawful Neutral'},
+                    {value: 'TN', name: 'True Neutral'},
+                    {value: 'CN', name: 'Chaotic Neutral'},
+                    {value: 'LE', name: 'Lawful Evil'},
+                    {value: 'NE', name: 'Neutral Evil'},
+                    {value: 'CE', name: 'Chaotic Evil'},
                 ]
             }
         },

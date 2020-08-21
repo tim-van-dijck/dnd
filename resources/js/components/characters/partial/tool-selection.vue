@@ -12,24 +12,23 @@
                     </div>
                 </div>
             </div>
-            <div class="class-based">
+            <div class="class-based" v-if="classToolCount > 0">
                 <h4>Class-based</h4>
-                <div class="class" v-for="charClass in classes" v-if="charClass.class_id != null">
-                    <h5>{{ availableClasses[charClass.class_id].name }}</h5>
-                    <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                        <div v-for="tool in classTools[charClass.class_id].known">
+                <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
+                    <template v-for="tools in classTools">
+                        <div v-for="tool in tools.known">
                             <div class="uk-card uk-card-body uk-card-primary">
                                 <div class="uk-card-title">{{ tool.name }}</div>
                             </div>
                         </div>
-                        <div v-for="(tool, index) in (selection[charClass.class_id] || [])">
-                            <div class="uk-card uk-card-body uk-card-primary">
-                                <div class="uk-card-title">{{ tool.name }} ({{ tool.origin }})</div>
-                                <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
-                                        @click.prevent="selection[charClass.class_id].splice(index, 1)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
+                    </template>
+                    <div v-for="(tool, index) in (selection[charClass.class_id] || [])">
+                        <div class="uk-card uk-card-body uk-card-primary">
+                            <div class="uk-card-title">{{ tool.name }} ({{ tool.origin }})</div>
+                            <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
+                                    @click.prevent="selection[charClass.class_id].splice(index, 1)">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
         },
         data() {
             return {
-                selection: {}
+                selection: []
             }
         },
         computed: {
@@ -86,7 +85,7 @@
                                 if (item.type === 'Tools' && item.optional) {
                                     let canChoose = true;
                                     for (let classId in this.selection) {
-                                        let duplicateClassTool = this.selection[classId].find(tool => item.id == tool.id);
+                                        let duplicateClassTool = this.selection.find(tool => item.id == tool.id);
                                         let duplicateRaceTool = this.raceTools.find(tool => item.id == tool.id)
                                         if (duplicateClassTool || duplicateRaceTool) {
                                             canChoose = false;
@@ -102,8 +101,10 @@
                 return tools;
             },
             hasTools() {
+                return this.raceTools.length + this.classToolCount;
+            },
+            classToolCount() {
                 let count = 0;
-                count += this.raceTools.length;
                 for (let classId in this.classTools) {
                     count += this.classTools[classId].known.length;
                     count += this.classTools[classId].optional.length;
@@ -115,9 +116,12 @@
             classes: {
                 deep: true,
                 handler() {
-                    let selection = {}
+                    let selection = [];
                     for (let charClass of this.classes) {
-                        selection[charClass.class_id] = this.selection[charClass.class_id] || [];
+                        let skills = this.selection.filter((item) => {
+                            return item.origin_type == 'class' && item.origin_id == charClass.class_id;
+                        });
+                        selection.concat(skills);
                     }
                     this.$set(this, 'selection', selection);
                 }

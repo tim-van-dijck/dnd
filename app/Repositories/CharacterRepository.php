@@ -27,7 +27,7 @@ class CharacterRepository
      * @param int $pageSize
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function get(int $campaignId, array $filters, int $page = 1, int $pageSize = 20)
+    public function get(int $campaignId, array $filters, array $includes, int $page = 1, int $pageSize = 20)
     {
         $type = $filters['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
         $query = Character::query()->where([
@@ -49,27 +49,31 @@ class CharacterRepository
         } else {
             $query->where('user_permissions.view', 1);
         }
+        if (!empty($includes)) {
+            $query->with($includes);
+        }
         return $query->paginate($pageSize, ['characters.*'], 'page[number]', $page);
     }
 
     /**
      * @param int $campaignId
      * @param array $input
+     *
+     * @return Character
      */
-    public function store(int $campaignId, array $input)
+    public function store(int $campaignId, array $input): Character
     {
-        $character = new Character();
+        $character = new Character($input);
         $character->campaign_id = $campaignId;
         $character->race_id = $input['race_id'];
-        $character->name = $input['name'];
-        $character->type = $input['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : $input['type'];
-        $character->title = $input['title'];
-        $character->age = $input['age'];
-        $character->dead = !empty($input['dead']);
-        $character->bio = $input['bio'];
+        if (!empty($input['subrace_id'])) {
+            $character->subrace_id = $input['race_id'];
+        }
+        $character->private = !empty($input['private']);
         $character->save();
 
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'created');
+        return $character;
     }
 
     /**

@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection|Proficiency[] proficiencies
  * @property Collection|Subrace[] subraces
  * @property Collection|RaceTrait[] traits
+ * @property Collection|AbilityBonus[] abilities
  */
 class Race extends Model
 {
@@ -61,5 +62,10 @@ class Race extends Model
         return $this->belongsToMany(RaceTrait::class, 'race_trait', 'race_id', 'trait_id')
             ->wherePivot('subrace_id', '=', null)
             ->withPivot('optional');
+    }
+
+    public function abilities()
+    {
+        return $this->hasMany(AbilityBonus::class);
     }
 }

@@ -20,9 +20,9 @@
                             <i class="fas fa-edit"></i>
                         </router-link>
                     </td>
-                    <td>{{ character.name }} ({{ character.title }})</td>
-                    <td>{{ character.class }}</td>
-                    <td>{{ character.level }}</td>
+                    <td>{{ character.name }}</td>
+                    <td>{{ className(character) }}</td>
+                    <td>{{ classLevel(character) }}</td>
                     <td></td>
                 </tr>
             </tbody>
@@ -42,8 +42,33 @@
     export default {
         name: "PlayerCharacterOverview",
         created() {
-            this.$store.dispatch('Characters/loadCharacters', {campaign_id: 1, type: 'player'});
+            this.$store.dispatch('Characters/loadCharacters', 'player');
             this.$store.dispatch('Characters/loadRaces');
+        },
+        methods: {
+            className(character) {
+                if (character.classes) {
+                    if (character.classes.length == 1) {
+                        return character.classes[0].name
+                    } else {
+                        let classNames = [];
+                        for (let charClass of character.classes) {
+                            classNames.push(charClass.name);
+                        }
+                        if (classNames.length > 0) {
+                            return `Multiclass: ${classNames.join(' - ')}`;
+                        }
+                    }
+                }
+                return 'N/A'
+            },
+            classLevel(character) {
+                let level = 0;
+                for (let charClass of character.classes) {
+                    level += parseInt(charClass.pivot.level);
+                }
+                return level;
+            }
         },
         computed: {
             ...mapState('Characters', ['characters', 'races'])

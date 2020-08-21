@@ -22,4 +22,13 @@ class RaceRepository
         }
         return Race::with(array_unique($includes))->get();
     }
+
+    /**
+     * @param int $raceId
+     * @return Race
+     */
+    public function find(int $raceId): Race
+    {
+        return Race::with('subraces')->findOrFail($raceId);
+    }
 }

@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/8c4a80dd98.js" crossorigin="anonymous"></script>
+    <script src="js/app.js"></script>
 </head>
 <body>
     <header class="uk-position-fixed uk-width-1-1">

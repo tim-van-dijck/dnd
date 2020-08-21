@@ -39,7 +39,7 @@
                         </div>
                         <div class="uk-width-1-2">
                             <h2>Objectives</h2>
-                            <div class="uk-card uk-card-body objective" v-for="(objective, index) in quest.objectives">
+                            <div class="uk-card uk-card-body uk-card-secondary objective" v-for="(objective, index) in quest.objectives">
                                 <div class="uk-margin">
                                     <input type="text" class="uk-input" v-model="objective.name">
                                 </div>

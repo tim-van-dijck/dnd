@@ -140,7 +140,10 @@
                 UIkit.modal('#user-modal').hide();
             },
             destroy(user) {
-                // this.$store.dispatch('Users/ban');
+                this.$store.dispatch('Users/destroy', user)
+                    .then(() => {
+                        this.$store.dispatch('Users/load');
+                    });
             }
         },
         computed: {

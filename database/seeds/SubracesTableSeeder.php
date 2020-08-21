@@ -45,11 +45,11 @@ class SubracesTableSeeder extends Seeder
             $subrace->name = $subraceArray['name'];
             $subrace->description = $subraceArray['desc'];
             $subrace->optional_ability_bonuses =
-                empty($subraceArray['starting_proficiency_options']) ? 0 : $subraceArray['starting_proficiency_options']['choose'];
+                empty($subraceArray['ability_bonus_options']) ? 0 : $subraceArray['ability_bonus_options']['choose'];
             $subrace->optional_languages =
                 empty($subraceArray['language_options']) ? 0 : $subraceArray['language_options']['choose'];
             $subrace->optional_proficiencies =
-                empty($subraceArray['ability_bonus_options']) ? 0 : $subraceArray['ability_bonus_options']['choose'];
+                empty($subraceArray['starting_proficiency_options']) ? 0 : $subraceArray['starting_proficiency_options']['choose'];
             $subrace->optional_traits =
                 empty($raceArray['racial_trait_options']) ? 0 : $raceArray['racial_trait_options']['choose'];
             $subrace->save();

@@ -20,13 +20,13 @@ export const Characters = {
                 });
         },
         loadRaces({commit}) {
-            return axios.get(`/races?include=proficiencies,languages,subraces`)
+            return axios.get(`/races?include=proficiencies,languages,abilities,subraces,subraces.abilities`)
                 .then((response) => {
                     commit('SET_RACES', response.data.data)
                 });
         },
         loadCharacters({commit}, type) {
-            return axios.get(`/campaign/characters?filter[type]=${type}`)
+            return axios.get(`/campaign/characters?filter[type]=${type}&includes=classes,race,subrace`)
                 .then((response) => {
                     commit('SET_CHARACTERS', response.data)
                 });

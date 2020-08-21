@@ -11,8 +11,8 @@ use Illuminate\Support\Carbon;
  * @package App\Models\Character
  * @property int id
  * @property int campaign_id
- * @property int|null player_id
- * @property int|null race_id
+ * @property int race_id
+ * @property int|null subrace_id
  * @property string name
  * @property string title
  * @property string type
@@ -24,11 +24,14 @@ use Illuminate\Support\Carbon;
  * @property Carbon updated_at
  *
  * @property Race race
+ * @property Subrace subrace
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
  */
 class Character extends Model
 {
+
+    protected $fillable = ['name', 'title', 'type', 'age', 'dead', 'bio'];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -36,13 +39,20 @@ class Character extends Model
     {
         return $this->belongsTo(Race::class);
     }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function subrace()
+    {
+        return $this->belongsTo(Subrace::class);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function classes()
     {
-        return $this->belongsToMany(CharacterClass::class, null, 'character_id', 'class_id')
+        return $this->belongsToMany(CharacterClass::class, 'character_class', 'character_id', 'class_id')
             ->withPivot(['level']);
     }
 
@@ -58,5 +68,10 @@ class Character extends Model
     public function proficiencies()
     {
         return $this->belongsToMany(Proficiency::class)->withPivot(['origin_type', 'origin_id']);
+    }
+
+    public function languages()
+    {
+        return $this->belongsToMany(Language::class);
     }
 }
