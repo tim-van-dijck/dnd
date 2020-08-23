@@ -53,13 +53,14 @@ class CharacterController extends Controller
      *
      * @param CharacterRepository $characterRepository
      * @param Character $character
-     * @return Character
+     * @return CharacterResource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(CharacterRepository $characterRepository, Character $character): Character
+    public function show(CharacterRepository $characterRepository, Request $request, Character $character): CharacterResource
     {
         $this->authorize('view', $character);
-        return $characterRepository->find(Session::get('campaign_id'), $character->id);
+        $includes = $request->has('includes') ? explode(',', $request->query('includes')) : [];
+        return new CharacterResource($characterRepository->find(Session::get('campaign_id'), $character->id, $includes));
     }
 
     /**

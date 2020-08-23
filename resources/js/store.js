@@ -16,6 +16,7 @@ let store = new Vuex.Store({
     state: {
         campaign: {},
         errors: {},
+        languages: null,
         logs: [],
         user: {
             permissions: {}
@@ -27,6 +28,12 @@ let store = new Vuex.Store({
                 .then((response) => {
                     commit('SET_CAMPAIGN', response.data);
                 });
+        },
+        loadLanguages({commit}) {
+            return axios.get('/languages')
+                .then((response) => {
+                    commit('SET_LANGUAGES', response.data);
+                })
         },
         loadLogs({commit}) {
             return axios.get('/campaign/logs')
@@ -49,6 +56,9 @@ let store = new Vuex.Store({
     mutations: {
         SET_CAMPAIGN(state, campaign) {
             state.campaign = campaign;
+        },
+        SET_LANGUAGES(state, languages) {
+            state.languages = languages
         },
         SET_LOGS(state, logs) {
             state.logs = logs;

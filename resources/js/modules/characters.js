@@ -5,6 +5,7 @@ export const Characters = {
     state: {
         characters: null,
         classes: {},
+        errors: {},
 
         races: {},
         player: {
@@ -25,28 +26,41 @@ export const Characters = {
                     commit('SET_RACES', response.data.data)
                 });
         },
-        loadCharacters({commit}, type) {
+
+        load({commit}, type) {
             return axios.get(`/campaign/characters?filter[type]=${type}&includes=classes,race,subrace`)
                 .then((response) => {
                     commit('SET_CHARACTERS', response.data)
                 });
         },
-        loadCharacter({commit}, id) {
-            return axios.get(`/campaign/characters/${id}`)
+        find({commit}, id) {
+            return axios.get(`/campaign/characters/${id}?includes=classes,race,subrace,proficiencies,languages`)
                 .then((response) => {
-                    return response.data;
+                    return response.data.data;
                 });
         },
-        storeCharacter({commit}, character) {
+        store({commit, dispatch}, character) {
             return axios.post(`/campaign/characters`, character)
                 .then((response) => {
                     commit('SET_CHARACTER', response.data);
+                    commit('SET_ERRORS', {});
+                    dispatch('Messages/success', 'Character saved!', {root: true});
+                })
+                .catch((error) => {
+                    commit('SET_ERRORS', error.response.data.errors);
+                    dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         },
-        updateCharacter({commit}, data) {
+        update({commit}, data) {
             return axios.post(`/campaign/characters/${data.id}`, data.character)
                 .then((response) => {
                     commit('SET_CHARACTER', response.data)
+                });
+        },
+        destroy({commit}, character) {
+            return axios.delete(`/campaign/characters/${character.id}`)
+                .then(() => {
+                    commit('REMOVE_CHARACTER', character);
                 });
         }
     },
@@ -64,6 +78,13 @@ export const Characters = {
                 state.characters.push(character);
             }
         },
+        REMOVE_CHARACTER(state, character) {
+            let index = state.characters.findIndex((item) => item.id == character.id);
+            if (index) {
+                state.characters.splice(index, 1);
+            }
+        },
+
         SET_CLASSES(state, classes) {
             if (classes) {
                 for (let charClass of classes) {

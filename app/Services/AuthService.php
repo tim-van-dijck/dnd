@@ -175,4 +175,19 @@ class AuthService
             $userPermission->save();
         }
     }
+
+    public static function setPrivateEntity(int $campaignId, string $entity, int $entityId, $userId)
+    {
+        $userPermission = UserPermission::firstOrNew([
+            'campaign_id' => $campaignId,
+            'entity' => $entity,
+            'entity_id' => $entityId,
+            'user_id' => $userId
+        ]);
+        $userPermission->view = true;
+        $userPermission->create = true;
+        $userPermission->edit = true;
+        $userPermission->delete = true;
+        $userPermission->save();
+    }
 }

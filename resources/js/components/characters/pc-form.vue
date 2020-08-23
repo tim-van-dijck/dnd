@@ -25,13 +25,13 @@
                     <pc-form-class-tab v-show="tab == 'class'" v-model="character.classes" />
                     <pc-form-proficiency-tab v-show="tab == 'proficiency'" v-model="character.proficiencies"
                         :info="character.info" :character-classes="character.classes" />
-                    <pc-form-abilities-tab v-show="tab == 'ability'" v-model="character.abilities"
+                    <pc-form-abilities-tab v-show="tab == 'ability'" v-model="character.ability_scores"
                         :info="character.info" :character-classes="character.classes" />
                     <pc-form-personality-tab v-show="tab == 'ideal'" v-model="character.personality" />
 
                     <p class="uk-margin">
                         <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
-                        <router-link class="uk-button uk-button-danger" :to="{name: type == 'player' ? 'player-characters' : 'npcs'}">
+                        <router-link class="uk-button uk-button-danger" :to="{name: 'player-characters'}">
                             Cancel
                         </router-link>
                     </p>
@@ -60,10 +60,11 @@
             this.$store.dispatch('Characters/loadClasses');
             this.character = {
                 type: 'player',
-                abilities: {},
+                ability_scores: {},
                 info: {
                     race_id: null,
-                    subrace_id: null
+                    subrace_id: null,
+                    alignment: null
                 },
                 classes: [],
                 personality: {
@@ -75,7 +76,7 @@
                 proficiencies: {}
             };
             if (this.id) {
-                this.$store.dispatch('Characters/loadCharacter', {campaign_id: 1, id: this.id})
+                this.$store.dispatch('Characters/find', this.id)
                     .then((character) => {
                         this.character = JSON.parse(JSON.stringify(character));
                     });
@@ -91,9 +92,15 @@
             save() {
                 if (this.id) {
                     let payload = {id: this.id, character: this.character}
-                    this.$store.dispatch('Characters/updateCharacter', payload);
+                    this.$store.dispatch('Characters/update', payload)
+                        .then((response) => {
+                            this.$router.push({name: 'pc-detail', params: {id: response.data.data.id}});
+                        });
                 } else {
-                    this.$store.dispatch('Characters/storeCharacter', this.character);
+                    this.$store.dispatch('Characters/store', this.character)
+                        .then(() => {
+                            this.$router.push({name: 'player-characters'});
+                        });
                 }
             }
         },

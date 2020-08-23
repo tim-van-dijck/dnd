@@ -36,21 +36,33 @@ class CharacterRequest extends FormRequest
             'classes.*.class_id' => 'required|integer|exists:classes,id',
             'classes.*.subclass_id' => 'required|integer|exists:subclasses,id',
             'classes.*.level' => 'required|integer|between:1,20',
+
             'proficiencies' => 'required',
-            'proficiencies.languages' => 'required|array|min:1',
+            'proficiencies.languages' => 'sometimes|array',
             'proficiencies.languages.*' => 'required|integer|exists:languages,id',
+
             'proficiencies.skills' => 'required|array',
             'proficiencies.skills.*.id' => 'required|integer|exists:proficiencies,id',
             'proficiencies.skills.*.origin_id' => 'required|integer',
             'proficiencies.skills.*.origin_type' => 'required|string|in:class,subclass,race,subrace,background',
+
             'proficiencies.tools' => 'sometimes|array',
             'proficiencies.tools.*.id' => 'required|integer|exists:proficiencies,id',
             'proficiencies.tools.*.origin_id' => 'required|integer',
             'proficiencies.tools.*.origin_type' => 'required|string|in:class,subclass,race,subrace,background',
+
             'proficiencies.instruments' => 'sometimes|array',
             'proficiencies.instruments.*.id' => 'required|integer|exists:proficiencies,id',
             'proficiencies.instruments.*.origin_id' => 'required|integer',
             'proficiencies.instruments.*.origin_type' => 'required|string|in:class,subclass,race,subrace,background',
+
+            'ability_scores' => 'required|array|size:6',
+            'ability_scores.*' => 'required|integer|min:3|max:20',
+
+            'personality.ideal' => 'sometimes|nullable|string',
+            'personality.bond' => 'sometimes|nullable|string',
+            'personality.flaw' => 'sometimes|nullable|string',
+            'personality.trait' => 'sometimes|nullable|string'
         ]);
     }
 
@@ -65,11 +77,7 @@ class CharacterRequest extends FormRequest
             'info.dead' => 'boolean',
             'info.private' => 'boolean',
             'info.bio' => 'sometimes|string',
-            'personality' => 'sometimes',
-            'personality.ideal' => 'sometimes|nullable|string',
-            'personality.bond' => 'sometimes|nullable|string',
-            'personality.flaw' => 'sometimes|nullable|string',
-            'personality.trait' => 'sometimes|nullable|string'
+            'personality' => 'sometimes'
         ];
     }
 

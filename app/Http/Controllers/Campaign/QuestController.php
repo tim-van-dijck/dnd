@@ -140,7 +140,7 @@ class QuestController extends Controller
                 $join->on('quests.id', '=', 'quest_objectives.quest_id')
                     ->where('quests.campaign_id', Session::get('campaign_id'));
             })
-            ->firstOrFail();
+            ->firstOrFail(['quest_objectives.*']);
         $objective->status = $request->input('status');
         $objective->save();
         return $objective;

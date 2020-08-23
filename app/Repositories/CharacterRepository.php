@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\CharacterTypes;
 use App\Models\Campaign\Quest;
 use App\Models\Character\Character;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 
 class CharacterRepository
@@ -50,6 +51,9 @@ class CharacterRepository
             $query->where('user_permissions.view', 1);
         }
         if (!empty($includes)) {
+            foreach ($includes as $include) {
+                $query->with($include);
+            }
             $query->with($includes);
         }
         return $query->paginate($pageSize, ['characters.*'], 'page[number]', $page);
@@ -72,6 +76,10 @@ class CharacterRepository
         $character->private = !empty($input['private']);
         $character->save();
 
+        if ($character->private) {
+            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
+        }
+
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'created');
         return $character;
     }
@@ -81,9 +89,9 @@ class CharacterRepository
      * @param int $characterId
      * @return Character
      */
-    public function find(int $campaignId, int $characterId): Character
+    public function find(int $campaignId, int $characterId, array $includes = []): Character
     {
-        return Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->firstOrFail();
+        return Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->with($includes)->firstOrFail();
     }
 
     public function update(int $campaignId, int $characterId, array $data)
@@ -99,7 +107,10 @@ class CharacterRepository
     public function destroy(int $campaignId, int $characterId)
     {
         /** @var Character $character */
-        $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->findOrFail();
+        $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->firstOrFail();
+        $character->languages()->sync([]);
+        $character->proficiencies()->sync([]);
+        $character->classes()->sync([]);
         $character->delete();
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
     }

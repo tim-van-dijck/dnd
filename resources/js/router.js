@@ -2,6 +2,7 @@ import Dashboard from './components/dashboard';
 
 import CharacterForm from './components/characters/character-form';
 import PCForm from './components/characters/pc-form';
+import PCDetail from './components/characters/details/pc-detail';
 import CharacterOverview from './components/characters/character-overview';
 import PlayerCharacterOverview from './components/characters/player-character-overview';
 import NPCOverview from './components/characters/npc-overview';
@@ -47,6 +48,12 @@ let routes = [
         name: 'pc-create',
         props: true,
         component: PCForm
+    },
+    {
+        path: '/characters/player/:id',
+        name: 'pc-detail',
+        props: true,
+        component: PCDetail
     },
     {
         path: '/characters/npc/create',

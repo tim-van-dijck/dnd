@@ -12,13 +12,13 @@
                 <td class="uk-width-small">
                     <ul class="uk-iconnav">
                         <li v-for="action in actions">
-                            <a href="/" :class="action.classes || ''" @click.prevent="$emit(action.name, row)">
+                            <a :href="action.to || '/'" :class="action.classes || ''" @click.prevent="$emit(action.name, row)">
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
                         </li>
                     </ul>
                 </td>
-                <td v-for="column in columns">{{ column.format ? column.format(row[column.name], row) : row[column.name] }}</td>
+                <td v-for="column in columns">{{ column.format ? column.format(getValue(row, column.name), row) : getValue(row, column.name) }}</td>
             </tr>
             </tbody>
         </table>
@@ -63,6 +63,13 @@
                 if (this.records.meta.current_page < this.records.meta.last_page) {
                     this.$store.dispatch(`${this.module}/next`);
                 }
+            },
+            getValue(row, name) {
+                let value = row;
+                for (let key of name.split('.')) {
+                    value = value[key];
+                }
+                return value;
             }
         },
         computed: {

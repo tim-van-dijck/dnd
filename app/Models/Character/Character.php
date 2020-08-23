@@ -17,9 +17,15 @@ use Illuminate\Support\Carbon;
  * @property string title
  * @property string type
  * @property string age
+ * @property string alignment
  * @property bool dead
  * @property bool private
  * @property string bio
+ * @property string ability_scores
+ * @property string trait
+ * @property string ideal
+ * @property string bond
+ * @property string flaw
  * @property Carbon created_at
  * @property Carbon updated_at
  *
@@ -27,11 +33,16 @@ use Illuminate\Support\Carbon;
  * @property Subrace subrace
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
+ * @property Collection|Proficiency[] proficiencies
+ * @property Collection|Language[] languages
  */
 class Character extends Model
 {
 
-    protected $fillable = ['name', 'title', 'type', 'age', 'dead', 'bio'];
+    protected $fillable = [
+        'name', 'title', 'type', 'age', 'alignment', 'dead', 'bio', 'ability_scores', 'trait', 'ideal', 'bond', 'flaw'
+    ];
+    protected $casts = ['ability_scores' => 'array'];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -53,7 +64,7 @@ class Character extends Model
     public function classes()
     {
         return $this->belongsToMany(CharacterClass::class, 'character_class', 'character_id', 'class_id')
-            ->withPivot(['level']);
+            ->withPivot(['level', 'subclass_id']);
     }
 
     /**

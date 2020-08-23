@@ -22,9 +22,15 @@ class CreateCharactersTable extends Migration
             $table->string('title')->nullable();
             $table->string('type')->nullable();
             $table->string('age');
+            $table->string('alignment', 2);
             $table->boolean('dead')->default(false);
             $table->boolean('private')->default(false);
             $table->text('bio')->nullable();
+            $table->json('ability_scores');
+            $table->text('trait');
+            $table->text('ideal');
+            $table->text('bond');
+            $table->text('flaw');
             $table->timestamps();
 
             $table->foreign('campaign_id')->references('id')->on('campaigns')

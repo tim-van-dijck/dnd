@@ -39,9 +39,15 @@ class CharacterManager
 
     private function storePlayerCharacter(int $campaignId, array $input)
     {
-        $info = $input['info'];
-        $info['type'] = 'player';
-        $character = $this->characterRepository->store($campaignId, $info);
+        $characterInput = array_merge($input['info'], [
+            'type' => 'player',
+            'trait' => $input['personality']['trait'] ?? '',
+            'ideal' => $input['personality']['ideal'] ?? '',
+            'bond' => $input['personality']['bond'] ?? '',
+            'flaw' => $input['personality']['flaw'] ?? '',
+            'ability_scores' => $input['ability_scores'],
+        ]);
+        $character = $this->characterRepository->store($campaignId, $characterInput);
         $this->setCharacterClasses($character, $input['classes']);
         $this->setCharacterProficiencies($character, $input['proficiencies']);
     }
@@ -82,6 +88,35 @@ class CharacterManager
                         ]
                     ]);
                 }
+            }
+        }
+
+        foreach ($character->race->proficiencies()->where('optional', 0)->get() as $proficiency) {
+            $character->proficiencies()->attach([
+                $proficiency->id => [
+                    'origin_type' => Race::class,
+                    'origin_id' => $character->race_id
+                ]
+            ]);
+        }
+
+        foreach ($character->subrace->proficiencies()->where('optional', 0)->get() as $proficiency) {
+            $character->proficiencies()->attach([
+                $proficiency->id => [
+                    'origin_type' => Race::class,
+                    'origin_id' => $character->race_id
+                ]
+            ]);
+        }
+
+        foreach ($character->classes as $charClass) {
+            foreach ($charClass->proficiencies()->where('optional', 0)->get() as $proficiency) {
+                $character->proficiencies()->attach([
+                    $proficiency->id => [
+                        'origin_type' => Race::class,
+                        'origin_id' => $character->race_id
+                    ]
+                ]);
             }
         }
     }

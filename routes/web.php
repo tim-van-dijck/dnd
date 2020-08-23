@@ -17,8 +17,9 @@ Route::post('{token}/register', 'InviteController@registerInvitation')->name('re
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', 'PageController@index');
-    Route::get('/races', 'Character\RaceController@index');
-    Route::get('/classes', 'Character\ClassController@index');
+    Route::get('/races', 'Character\ApiController@races');
+    Route::get('/classes', 'Character\ApiController@classes');
+    Route::get('/languages', 'Character\ApiController@languages');
 
     Route::get('/permissions', 'Campaign\RoleController@permissions');
     Route::resource('/campaigns', 'Campaign\CampaignController');
