@@ -14,7 +14,7 @@ class CreateProficiencyMorphTable extends Migration
     public function up()
     {
         Schema::create('proficiency_morph', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('entity_type');
             $table->unsignedInteger('entity_id');
             $table->unsignedInteger('proficiency_id');

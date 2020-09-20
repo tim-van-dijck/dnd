@@ -132,51 +132,7 @@
       "from": [
         {
           "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Light"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Mage Hand"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Mending"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Message"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Minor Illusion"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Acid Splash"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Prestidigitation"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Ray of Frost"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Shocking Grasp"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: True Strike"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Chill Touch"
-        },
-        {
-          "url": "http://www.dnd5eapi.co/api/traits/10",
-          "name": "High Elf Cantrip: Dancing Lights"
+          "name": "High Elf Cantrip"
         }
       ],
       "type": "trait"

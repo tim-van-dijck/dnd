@@ -33,7 +33,7 @@ class Subrace extends Model
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'language_race', 'subrace_id')
+        return $this->morphToMany(Language::class, 'entity', 'language_morph', 'entity_id')
             ->withPivot('optional');
     }
 

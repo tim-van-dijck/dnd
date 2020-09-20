@@ -3,6 +3,7 @@ import Vue from 'vue';
 export const Characters = {
     namespaced: true,
     state: {
+        backgrounds: [],
         characters: null,
         classes: {},
         errors: {},
@@ -14,14 +15,20 @@ export const Characters = {
         }
     },
     actions: {
+        loadBackgrounds({commit}) {
+            axios('/backgrounds?include=proficiencies,languages')
+                .then((response) => {
+                    commit('SET_BACKGROUNDS', response.data.data || []);
+                });
+        },
         loadClasses({commit}) {
-            return axios.get(`/classes?include=subclasses,proficiencies,subclasses.proficiencies`)
+            return axios.get(`/classes?include=subclasses,proficiencies,subclasses.proficiencies,spells,subclasses.spells`)
                 .then((response) => {
                     commit('SET_CLASSES', response.data.data)
                 });
         },
         loadRaces({commit}) {
-            return axios.get(`/races?include=proficiencies,languages,abilities,subraces,subraces.abilities`)
+            return axios.get(`/races?include=proficiencies,languages,abilities,subraces,subraces.abilities,traits,subraces.traits`)
                 .then((response) => {
                     commit('SET_RACES', response.data.data)
                 });
@@ -85,6 +92,9 @@ export const Characters = {
             }
         },
 
+        SET_BACKGROUNDS(state, backgrounds) {
+            state.backgrounds = backgrounds || null;
+        },
         SET_CLASSES(state, classes) {
             if (classes) {
                 for (let charClass of classes) {

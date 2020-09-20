@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Character\CharacterClass;
+use App\Models\Character\ClassLevel;
 use App\Models\Character\Proficiency;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
@@ -33,6 +34,7 @@ class ClassesTableSeeder extends Seeder
             $charClass->save();
 
             $this->setProficiencies($charClass, $classArray);
+            $this->setLevels($charClass->id, $classArray);
         }
     }
 
@@ -68,9 +70,29 @@ class ClassesTableSeeder extends Seeder
                     $proficiencyId = $this->proficiencies[$optionalProficiency['name']]['id'];
                     $optionalProficiencyIds[$proficiencyId] = ['optional' => true];
                 }
-                $charClass->proficiencies()->attach($optionalProficiencyIds);
-                $charClass->save();
             }
+            $charClass->proficiencies()->attach($optionalProficiencyIds);
+            $charClass->save();
+        }
+    }
+
+    /**
+     * @param int $classId
+     * @param array $classArray
+     */
+    private function setLevels(int $classId, array $classArray)
+    {
+        foreach ($classArray['levels'] as $levelArray) {
+            $level = new ClassLevel();
+            $level->class_id = $classId;
+            $level->level = $levelArray['level'];
+            $level->cantrips_known = $levelArray['cantrips_known'];
+            $level->spells_known = $levelArray['spells_known'];
+            foreach ($levelArray['spell_slots'] as $key => $value) {
+                $level->{"spell_slots_$key"} = $value;
+            }
+            $level->class_specific = $levelArray['class_specific'] ?? [];
+            $level->save();
         }
     }
 }

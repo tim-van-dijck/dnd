@@ -2,8 +2,12 @@
 
 namespace App\Models\Character;
 
+use App\Models\Magic\Spell;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class CharacterClass
@@ -17,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
+ * @property Collection|Spell[] spells
  */
 class CharacterClass extends Model
 {
@@ -25,7 +30,7 @@ class CharacterClass extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function subclasses()
     {
@@ -33,7 +38,7 @@ class CharacterClass extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return MorphToMany
      */
     public function proficiencies()
     {
@@ -41,8 +46,27 @@ class CharacterClass extends Model
             ->withPivot('optional');
     }
 
+    /**
+     * @return HasMany
+     */
     public function features()
     {
         return $this->hasMany(Feature::class, 'class_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function spells()
+    {
+        return $this->belongsToMany(Spell::class, 'class_spell', 'class_id', 'spell_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function levels()
+    {
+        return $this->hasMany(ClassLevel::class, 'class_id');
     }
 }

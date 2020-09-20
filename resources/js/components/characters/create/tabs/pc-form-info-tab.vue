@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import HtmlEditor from '../../partial/html-editor';
+    import HtmlEditor from '../../../partial/html-editor';
     import {mapState} from "vuex";
 
     export default {
@@ -86,7 +86,7 @@
             }
         },
         computed: {
-            ...mapState('Characters', ['races']),
+            ...mapState('Characters', ['races', 'backgrounds']),
             subraces() {
                 if (this.races)  {
                     let race = this.races[this.info.race_id];

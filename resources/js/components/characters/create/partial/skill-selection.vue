@@ -22,7 +22,7 @@
                             </div>
                         </div>
                     </template>
-                    <div v-for="(skill, index) in (skillSelection || [])">
+                    <div v-for="(skill, index) in (selection || [])">
                         <div class="uk-card uk-card-body uk-card-primary">
                             <div class="uk-card-title">{{ skill.name }} ({{ skill.origin }})</div>
                             <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
@@ -61,18 +61,18 @@
         name: "skill-selection",
         props: ['classes', 'race', 'subrace', 'value'],
         created() {
-            this.$set(this, 'skillSelection', this.value || []);
+            this.$set(this, 'selection', this.value || []);
         },
         data() {
             return {
-                skillSelection: [],
+                selection: [],
                 classSelected: {}
             }
         },
         methods: {
             addSkillToClass(charClass, input) {
                 let skill = this.classSkills[charClass.id].optional.find((item) => item.id == input);
-                this.skillSelection.splice(this.skillSelection.length, 1, {
+                this.selection.splice(this.selection.length, 1, {
                     origin_type: 'class',
                     origin_id: charClass.id,
                     origin: charClass.name,
@@ -86,11 +86,11 @@
                 }
             },
             removeSkill(index) {
-                let skill = this.skillSelection[index];
+                let skill = this.selection[index];
                 if (skill.origin_type == 'class') {
                     this.classSelected[skill.origin_id]--;
                 }
-                this.skillSelection.splice(index, 1);
+                this.selection.splice(index, 1);
             }
         },
         computed: {
@@ -126,12 +126,10 @@
                             optional: charClass.proficiencies.filter((item) => {
                                 if (item.type === 'Skills' && item.optional) {
                                     let canChoose = true;
-                                    for (let classId in this.skillSelection) {
-                                        let duplicateClassSkill = this.skillSelection.find((skill) => item.id == skill.id);
-                                        let duplicateRaceSkill = this.raceSkills.find((skill) => item.id == skill.id)
-                                        if (duplicateClassSkill || duplicateRaceSkill) {
-                                            canChoose = false;
-                                        }
+                                    let duplicateClassSkill = this.selection.find((skill) => item.id == skill.id);
+                                    let duplicateRaceSkill = this.raceSkills.find((skill) => item.id == skill.id)
+                                    if (duplicateClassSkill || duplicateRaceSkill) {
+                                        canChoose = false;
                                     }
                                     return canChoose;
                                 }
@@ -149,19 +147,19 @@
                 handler() {
                     let selection = [];
                     for (let charClass of this.classes) {
-                        let skills = this.skillSelection.filter((item) => {
+                        let skills = this.selection.filter((item) => {
                             return item.origin_type == 'class' && item.origin_id == charClass.class_id;
                         });
                         selection.concat(skills);
                     }
-                    this.$set(this, 'skillSelection', selection);
+                    this.$set(this, 'selection', selection);
                 }
 
             },
-            skillSelection: {
+            selection: {
                 deep: true,
                 handler() {
-                    this.$emit('input', this.skillSelection);
+                    this.$emit('input', this.selection);
                 }
             }
         }

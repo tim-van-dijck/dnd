@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/races', 'Character\ApiController@races');
     Route::get('/classes', 'Character\ApiController@classes');
     Route::get('/languages', 'Character\ApiController@languages');
+    Route::get('/spells', 'Magic\SpellController@index');
 
     Route::get('/permissions', 'Campaign\RoleController@permissions');
     Route::resource('/campaigns', 'Campaign\CampaignController');

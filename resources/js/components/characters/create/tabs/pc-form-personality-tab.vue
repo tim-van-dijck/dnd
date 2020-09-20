@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import HtmlEditor from "../../partial/html-editor";
+    import HtmlEditor from "../../../partial/html-editor";
     export default {
         name: "pc-form-personality-tab",
         props: ['value'],

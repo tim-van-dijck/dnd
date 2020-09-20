@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCharacterProficiencyTable extends Migration
+class CreateCharacterSpellTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,21 @@ class CreateCharacterProficiencyTable extends Migration
      */
     public function up()
     {
-        Schema::create('character_proficiency', function (Blueprint $table) {
+        Schema::create('character_spell', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('character_id');
-            $table->unsignedInteger('proficiency_id');
+            $table->unsignedInteger('spell_id');
             $table->string('origin_type');
             $table->unsignedInteger('origin_id');
             $table->timestamps();
 
-            $table->foreign('character_id')->references('id')->on('characters');
-            $table->foreign('proficiency_id')->references('id')->on('proficiencies');
+            $table->foreign('character_id')->references('id')->on('characters')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('spell_id')->references('id')->on('spells')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -33,6 +38,6 @@ class CreateCharacterProficiencyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('character_proficiency');
+        Schema::dropIfExists('character_spell');
     }
 }

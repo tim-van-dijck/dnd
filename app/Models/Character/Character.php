@@ -2,6 +2,7 @@
 
 namespace App\Models\Character;
 
+use App\Models\Magic\Spell;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -35,14 +36,15 @@ use Illuminate\Support\Carbon;
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
  * @property Collection|Language[] languages
+ * @property Collection|Spell[] spells
  */
 class Character extends Model
 {
-
     protected $fillable = [
         'name', 'title', 'type', 'age', 'alignment', 'dead', 'bio', 'ability_scores', 'trait', 'ideal', 'bond', 'flaw'
     ];
     protected $casts = ['ability_scores' => 'array'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -76,13 +78,27 @@ class Character extends Model
             ->withPivot(['level']);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function proficiencies()
     {
         return $this->belongsToMany(Proficiency::class)->withPivot(['origin_type', 'origin_id']);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function languages()
     {
         return $this->belongsToMany(Language::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function spells()
+    {
+        return $this->belongsToMany(Spell::class)->withPivot(['origin_type', 'origin_id']);
     }
 }

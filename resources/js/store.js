@@ -5,6 +5,7 @@ import {Notes} from './modules/notes';
 import {Permissions} from './modules/permissions';
 import {Quests} from './modules/quests';
 import {Roles} from './modules/roles';
+import {Spells} from "./modules/spells";
 import {Users} from './modules/users';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -12,7 +13,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 let store = new Vuex.Store({
-    modules: {Characters, Locations, Messages, Notes, Permissions, Quests, Roles, Users},
+    modules: {Characters, Locations, Messages, Notes, Permissions, Quests, Roles, Spells, Users},
     state: {
         campaign: {},
         errors: {},

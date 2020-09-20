@@ -22,14 +22,31 @@
                             </div>
                         </div>
                     </template>
-                    <div v-for="(tool, index) in (selection[charClass.class_id] || [])">
+                    <div v-for="(tool, index) in (selection || [])">
                         <div class="uk-card uk-card-body uk-card-primary">
                             <div class="uk-card-title">{{ tool.name }} ({{ tool.origin }})</div>
                             <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
-                                    @click.prevent="selection[charClass.class_id].splice(index, 1)">
+                                    @click.prevent="removeTool(index)">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
+                    </div>
+                </div>
+                <div class="class" v-for="(charClass, classIndex) in classes"
+                     v-if="charClass.class_id != null && availableClasses[charClass.class_id].tool_choices > (classSelected[charClass.class_id] || 0)">
+                    <h5>{{ availableClasses[charClass.class_id].name }}</h5>
+                    <div class="uk-margin">
+                        <label :for="`tools_${classIndex}`">
+                            Choose {{ availableClasses[charClass.class_id].tool_choices - (selection || []).length }} tool proficiencies
+                        </label>
+                        <select :name="`tools_${classIndex}`" :id="`tools_${classIndex}`" class="uk-select"
+                                @input="addToolToClass(availableClasses[charClass.class_id], $event.target.value); $event.target.value = ''">
+                            <option :value="null">- Make a choice -</option>
+                            <option v-for="tool in classTools[charClass.class_id].optional" :value="tool.id"
+                                    :disabled="classTools[charClass.class_id].known.includes(tool.id)">
+                                {{ tool.name }}
+                            </option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -48,7 +65,32 @@
         },
         data() {
             return {
-                selection: []
+                selection: [],
+                classSelected: {}
+            }
+        },
+        methods: {
+            addToolToClass(charClass, input) {
+                let tool = this.classTools[charClass.id].optional.find((item) => item.id == input);
+                this.selection.splice(this.selection.length, 1, {
+                    origin_type: 'class',
+                    origin_id: charClass.id,
+                    origin: charClass.name,
+                    name: tool.name,
+                    id: input
+                });
+                if (this.classSelected.hasOwnProperty(charClass.id)) {
+                    this.classSelected[charClass.id]++;
+                } else {
+                    this.classSelected[charClass.id] = 1;
+                }
+            },
+            removeTool(index) {
+                let tool = this.selection[index];
+                if (tool.origin_type == 'class') {
+                    this.classSelected[tool.origin_id]--;
+                }
+                this.selection.splice(index, 1);
             }
         },
         computed: {
@@ -84,12 +126,10 @@
                             optional: charClass.proficiencies.filter((item) => {
                                 if (item.type === 'Tools' && item.optional) {
                                     let canChoose = true;
-                                    for (let classId in this.selection) {
-                                        let duplicateClassTool = this.selection.find(tool => item.id == tool.id);
-                                        let duplicateRaceTool = this.raceTools.find(tool => item.id == tool.id)
-                                        if (duplicateClassTool || duplicateRaceTool) {
-                                            canChoose = false;
-                                        }
+                                    let duplicateClassTool = this.selection.find(tool => item.id == tool.id);
+                                    let duplicateRaceTool = this.raceTools.find(tool => item.id == tool.id)
+                                    if (duplicateClassTool || duplicateRaceTool) {
+                                        canChoose = false;
                                     }
                                     return canChoose;
                                 }

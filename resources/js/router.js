@@ -1,7 +1,7 @@
 import Dashboard from './components/dashboard';
 
 import CharacterForm from './components/characters/character-form';
-import PCForm from './components/characters/pc-form';
+import PCForm from './components/characters/create/pc-form';
 import PCDetail from './components/characters/details/pc-detail';
 import CharacterOverview from './components/characters/character-overview';
 import PlayerCharacterOverview from './components/characters/player-character-overview';

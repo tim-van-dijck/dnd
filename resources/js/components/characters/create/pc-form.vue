@@ -5,29 +5,35 @@
             <div class="uk-container padded">
                 <form v-if="character" id="character-form" class="uk-form-stacked">
                     <ul class="uk-tab">
-                        <li :class="{'uk-active': tab == 'info'}">
+                        <li :class="{'uk-active': tab === 'info'}">
                             <a @click.prevent="tab = 'info'">Info</a>
                         </li>
-                        <li :class="{'uk-active': tab == 'class'}">
+                        <li :class="{'uk-active': tab === 'class'}">
                             <a @click.prevent="tab = 'class'">Class</a>
                         </li>
-                        <li :class="{'uk-active': tab == 'proficiency'}">
+                        <li :class="{'uk-active': tab === 'proficiency'}">
                             <a @click.prevent="tab = 'proficiency'">Languages, Skills & Proficiencies</a>
                         </li>
-                        <li :class="{'uk-active': tab == 'ability'}">
+                        <li :class="{'uk-active': tab === 'ability'}">
                             <a @click.prevent="tab = 'ability'">Abilities</a>
                         </li>
-                        <li :class="{'uk-active': tab == 'ideal'}">
-                            <a @click.prevent="tab = 'ideal'">Personality</a>
+                        <li :class="{'uk-active': tab === 'personality'}">
+                            <a @click.prevent="tab = 'personality'">Personality</a>
+                        </li>
+                        <li v-if="spellcaster" :class="{'uk-active': tab === 'spells'}">
+                            <a @click.prevent="tab = 'spells'">Spells</a>
                         </li>
                     </ul>
-                    <pc-form-info-tab v-show="tab == 'info'" v-model="character.info" />
-                    <pc-form-class-tab v-show="tab == 'class'" v-model="character.classes" />
-                    <pc-form-proficiency-tab v-show="tab == 'proficiency'" v-model="character.proficiencies"
+
+                    <pc-form-info-tab v-show="tab === 'info'" v-model="character.info" />
+                    <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" />
+                    <pc-form-proficiency-tab v-show="tab === 'proficiency'" v-model="character.proficiencies"
                         :info="character.info" :character-classes="character.classes" />
-                    <pc-form-abilities-tab v-show="tab == 'ability'" v-model="character.ability_scores"
+                    <pc-form-abilities-tab v-show="tab === 'ability'" v-model="character.ability_scores"
                         :info="character.info" :character-classes="character.classes" />
-                    <pc-form-personality-tab v-show="tab == 'ideal'" v-model="character.personality" />
+                    <pc-form-personality-tab v-show="tab === 'personality'" v-model="character.personality" />
+                    <pc-form-spell-tab v-if="spellcaster" v-show="tab === 'spells'" v-model="character.spells"
+                                       :info="character.info" :character-classes="character.classes" />
 
                     <p class="uk-margin">
                         <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
@@ -51,9 +57,10 @@
     import PcFormProficiencyTab from "./tabs/pc-form-proficiency-tab";
     import PcFormPersonalityTab from "./tabs/pc-form-personality-tab";
     import PcFormAbilitiesTab from "./tabs/pc-form-abilities-tab";
+    import PcFormSpellTab from "./tabs/pc-form-spell-tab";
 
     export default {
-        name: "character-form",
+        name: "pc-form",
         props: ['id', 'type'],
         created() {
             this.$store.dispatch('Characters/loadRaces');
@@ -105,16 +112,53 @@
             }
         },
         computed: {
-            ...mapState('Characters', ['characters', 'errors']),
+            ...mapState('Characters', ['characters', 'errors', 'classes', 'races']),
             title() {
                 if (this.id) {
                     return 'Edit ' + (this.character ? this.character.name : 'character');
                 } else {
                     return 'Add character';
                 }
+            },
+            spellcaster() {
+                if (this.character.classes.length === 0 || Object.keys(this.classes).length === 0) {
+                    return false;
+                }
+
+                if (this.character.info.race_id) {
+                    for (let index in this.races) {
+                        if (this.races[index].id == this.character.info.race_id) {
+                            let race = this.races[index];
+                            if (race.traits.find(item => item.name.includes('Cantrip'))) {
+                                return true;
+                            }
+                            if (this.character.info.subrace_id) {
+                                let subrace = race.subraces.find(sub => sub.id = this.character.info.subrace_id);
+                                if (subrace.traits.find(item => item.name.includes('Cantrip')) != null) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (let characterClass of this.character.classes) {
+                    if (characterClass.class_id) {
+                        let chosenClass = this.classes[characterClass.class_id];
+                        if (chosenClass.spells.length > 0) {
+                            return true;
+                        }
+                        let subclass = chosenClass.subclasses.find(item => item.id == characterClass.subclass_id);
+                        if (subclass && subclass.spells.length > 0) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
         },
         components: {
+            PcFormSpellTab,
             PcFormAbilitiesTab,
             PcFormPersonalityTab,
             PcFormProficiencyTab,

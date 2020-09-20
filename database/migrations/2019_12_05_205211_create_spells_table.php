@@ -16,7 +16,7 @@ class CreateSpellsTable extends Migration
         Schema::create('spells', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('range');
+            $table->string('range');
             $table->string('components');
             $table->boolean('ritual');
             $table->boolean('concentration');

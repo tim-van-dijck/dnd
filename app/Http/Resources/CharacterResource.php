@@ -2,12 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\OriginTypes;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterClass;
 use App\Models\Character\Proficiency;
 use App\Models\Character\Race;
 use App\Models\Character\Subclass;
 use App\Models\Character\Subrace;
+use App\Models\Magic\Spell;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CharacterResource extends JsonResource
@@ -84,24 +86,31 @@ class CharacterResource extends JsonResource
             }
             /** @var Proficiency $proficiency */
             foreach ($this->resource->proficiencies as $proficiency) {
-                switch ($proficiency->pivot->origin_type) {
-                    case CharacterClass::class:
-                    case Subclass::class:
-                        $origin = 'Class';
-                        break;
-                    case Race::class:
-                    case Subrace::class:
-                        $origin = 'Race';
-                        break;
-                    default:
-                        $origin = 'Unknown origin';
-                        break;
-                }
                 $character['proficiencies'][strtolower($proficiency->type)][] = [
                     'id' => $proficiency->id,
                     'name' => $proficiency->name,
-                    'origin' => $origin
+                    'origin' => OriginTypes::getOrigin($proficiency->pivot->origin_type)
                 ];
+            }
+        }
+        if ($this->resource->spells) {
+            $spells = [
+                'cantrips' => [],
+                'spells' => []
+            ];
+            /** @var Spell $spell */
+            foreach ($this->resource->spells as $spell) {
+                $spellArray = [
+                    'id' => $spell->id,
+                    'name' => $spell->name,
+                    'level' => $spell->level,
+                    'school' => $spell->school,
+                    'origin_id' => $spell->pivot->origin_id,
+                    'origin_type' => OriginTypes::getOrigin($spell->pivot->origin_type)
+                ];
+                if ($spell->level > 0) {
+                    $spells['spells'][] = $spellArray;
+                }
             }
         }
         return $character;

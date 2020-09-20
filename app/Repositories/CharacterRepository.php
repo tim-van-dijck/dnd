@@ -111,6 +111,7 @@ class CharacterRepository
         $character->languages()->sync([]);
         $character->proficiencies()->sync([]);
         $character->classes()->sync([]);
+        $character->spells()->sync([]);
         $character->delete();
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
     }
