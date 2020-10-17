@@ -53,10 +53,11 @@ class Subclass extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return MorphToMany
      */
     public function spells()
     {
-        return $this->belongsToMany(Spell::class, 'class_spell');
+        return $this->morphToMany(Spell::class, 'entity', 'spell_morph', 'entity_id')
+            ->withPivot(['optional', 'required_level']);
     }
 }

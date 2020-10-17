@@ -4,6 +4,8 @@ namespace App\Models\Character;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Race
@@ -28,7 +30,7 @@ class Race extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function languages()
     {
@@ -37,7 +39,7 @@ class Race extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function proficiencies()
     {
@@ -46,7 +48,7 @@ class Race extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function subraces()
     {
@@ -54,7 +56,7 @@ class Race extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function traits()
     {
@@ -63,6 +65,9 @@ class Race extends Model
             ->withPivot('optional');
     }
 
+    /**
+     * @return HasMany
+     */
     public function abilities()
     {
         return $this->hasMany(AbilityBonus::class);

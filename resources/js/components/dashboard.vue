@@ -3,11 +3,11 @@
         <h1>{{ campaign.name }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded" uk-grid>
-                <div class="uk-width-1-2">
+                <div class="uk-width-1-2" v-if="campaign.description && campaign.description.length > 0">
                     <h3>Welcome to {{ campaign.name }}!</h3>
                     <div class="uk-margin" v-html="campaign.description"></div>
                 </div>
-                <div class="uk-width-1-2">
+                <div :class="`uk-width-1-${campaign.description && campaign.description.length > 0 ? 2 : 1}`">
                     <h3>Recent activity</h3>
                     <ul v-if="logs && logs.length > 0" class="uk-list uk-list-divider">
                         <li v-for="log in logs">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSpellSubclassTable extends Migration
+class CreateSpellMorphTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateSpellSubclassTable extends Migration
      */
     public function up()
     {
-        Schema::create('spell_subclass', function (Blueprint $table) {
+        Schema::create('spell_morph', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('subclass_id', false, true);
-            $table->integer('spell_id', false, true);
+            $table->string('entity_type');
+            $table->unsignedInteger('entity_id');
+            $table->unsignedInteger('spell_id');
+            $table->boolean('optional')->default(false);
+            $table->tinyInteger('required_level')->default(1);
 
-            $table->foreign('subclass_id')->references('id')->on('subclasses')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
+            $table->index('entity_id');
             $table->foreign('spell_id')->references('id')->on('spells')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -35,6 +35,6 @@ class CreateSpellSubclassTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('spell_subclass');
+        Schema::dropIfExists('spell_morph');
     }
 }

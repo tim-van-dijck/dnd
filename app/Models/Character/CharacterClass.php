@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
  * @property Collection|Spell[] spells
+ * @property Collection|ClassLevel[] levels
  */
 class CharacterClass extends Model
 {
@@ -59,7 +60,8 @@ class CharacterClass extends Model
      */
     public function spells()
     {
-        return $this->belongsToMany(Spell::class, 'class_spell', 'class_id', 'spell_id');
+        return $this->morphToMany(Spell::class, 'entity', 'spell_morph', 'entity_id')
+            ->withPivot(['optional', 'required_level']);
     }
 
     /**

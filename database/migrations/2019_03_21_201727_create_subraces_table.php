@@ -22,6 +22,12 @@ class CreateSubracesTable extends Migration
             $table->tinyInteger('optional_languages');
             $table->tinyInteger('optional_proficiencies');
             $table->tinyInteger('optional_traits');
+
+            $table->foreign('race_id')
+                ->references('id')
+                ->on('races')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

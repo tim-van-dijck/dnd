@@ -2,9 +2,13 @@
 
 namespace App\Models\Character;
 
+use App\Models\Magic\Spell;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class Subrace
@@ -23,13 +27,14 @@ use Illuminate\Support\Carbon;
  * @property Race race
  * @property Collection|RaceTrait[] traits
  * @property Collection|AbilityBonus[] abilities
+ * @property Collection|Spell[] spells
  */
 class Subrace extends Model
 {
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function languages()
     {
@@ -38,7 +43,7 @@ class Subrace extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function proficiencies()
     {
@@ -47,7 +52,7 @@ class Subrace extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function race()
     {
@@ -55,7 +60,7 @@ class Subrace extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function traits()
     {
@@ -64,10 +69,19 @@ class Subrace extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function abilities()
     {
         return $this->hasMany(AbilityBonus::class);
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public function spells()
+    {
+        return $this->morphToMany(Spell::class, 'entity', 'spell_morph', 'entity_id')
+            ->withPivot(['optional', 'required_level']);
     }
 }

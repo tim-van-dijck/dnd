@@ -99,8 +99,7 @@ class SubracesTableSeeder extends Seeder
         $languageIds = [];
         foreach ($subraceArray['languages'] as $languageArray) {
             $languageIds[$this->languages[$languageArray['name']]->id] = [
-                'optional' => false,
-                'race_id' => $subrace->race_id
+                'optional' => false
             ];
             $subrace->languages()->attach($languageIds);
         }
@@ -109,8 +108,7 @@ class SubracesTableSeeder extends Seeder
             $optionalLanguageIds = [];
             foreach ($subraceArray['language_options']['from'] as $languageArray) {
                 $optionalLanguageIds[$this->languages[$languageArray['name']]->id] = [
-                    'optional' => true,
-                    'race_id' => $subrace->race_id
+                    'optional' => true
                 ];
             }
             $subrace->languages()->attach($optionalLanguageIds);
