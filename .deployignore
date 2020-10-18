@@ -1,0 +1,16 @@
+vendor/**
+node_modules/**
+resources/js/**
+resources/js
+resources/sass/**
+resources/sass
+storage/logs/**
+makefile
+*.yml
+Dockerfile
+yarn.lock
+phpunit.xml
+webpack.mix.js
+.gitignore
+.gitattributes
+.env.example
