@@ -1,3 +1,5 @@
+public/storage/**
+public/storage
 resources/js/**
 resources/js
 resources/sass/**
