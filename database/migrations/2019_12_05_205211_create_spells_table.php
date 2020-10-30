@@ -18,12 +18,15 @@ class CreateSpellsTable extends Migration
             $table->string('name');
             $table->string('range');
             $table->string('components');
+            $table->string('materials')->nullable();
             $table->boolean('ritual');
             $table->boolean('concentration');
             $table->string('duration');
             $table->string('casting_time');
             $table->integer('level');
             $table->string('school');
+            $table->text('description');
+            $table->text('higher_levels')->nullable();
         });
     }
 

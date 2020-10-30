@@ -35,7 +35,7 @@
             </div>
             <div v-if="race && choices.race.length < race.optional_ability_bonuses" class="uk-margin">
                 <h4>Race</h4>
-                <label :for="`skills_${classIndex}`">
+                <label for="race-ability">
                     Choose {{ race.optional_ability_bonuses - choices.race.length }} ability bonuses
                 </label>
                 <select id="race-ability"
@@ -50,7 +50,7 @@
             </div>
             <div v-if="subrace && choices.subrace.length < subrace.optional_ability_bonuses" class="uk-margin">
                 <h4>Subrace</h4>
-                <label :for="`skills_${classIndex}`">
+                <label for="subrace-ability">
                     Choose {{ subrace.optional_ability_bonuses - choices.subrace.length }} ability bonuses
                 </label>
                 <select id="subrace-ability"
@@ -64,6 +64,13 @@
                 </select>
             </div>
         </div>
+
+        <p class="uk-margin">
+            <router-link class="uk-button uk-button-danger" :to="{name: 'player-characters'}">
+                Cancel
+            </router-link>
+            <button class="uk-button uk-button-primary uk-align-right" @click.prevent="$emit('next')">Next <i class="fas fa-chevron-right"></i></button>
+        </p>
     </div>
 </template>
 

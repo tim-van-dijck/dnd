@@ -17,12 +17,15 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property string name
  * @property int range
  * @property string components
+ * @property string materials
  * @property bool ritual
  * @property bool concentration
  * @property string duration
  * @property string casting_time
  * @property int level
  * @property string school
+ * @property string description
+ * @property string higher_levels
  *
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
@@ -36,7 +39,7 @@ class Spell extends Model
      */
     public function classes()
     {
-        return $this->morphToMany(CharacterClass::class, 'entity', 'spell_morph', 'spell_id', 'entity_id')
+        return $this->morphedByMany(CharacterClass::class, 'entity', 'spell_morph', 'spell_id', 'entity_id')
             ->withPivot('optional');
     }
 
@@ -45,7 +48,7 @@ class Spell extends Model
      */
     public function subclasses()
     {
-        return $this->morphToMany(Subclass::class, 'entity', 'spell_morph', 'spell_id', 'entity_id')
+        return $this->morphedByMany(Subclass::class, 'entity', 'spell_morph', 'spell_id', 'entity_id')
             ->withPivot('optional');
     }
 

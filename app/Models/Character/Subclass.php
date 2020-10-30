@@ -15,8 +15,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @package App\Models\Character
  * @property int id
  * @property int class_id
- * @property string subclass_flavor
+ * @property string name
  * @property string description
+ * @property bool spellcaster
  *
  * @property CharacterClass characterClass
  * @property Collection|Proficiency[] proficiencies
@@ -36,11 +37,11 @@ class Subclass extends Model
     }
 
     /**
-     * @return HasMany
+     * @return MorphToMany
      */
     public function features()
     {
-        return $this->hasMany(Feature::class, 'subclass_id');
+        return $this->morphToMany(Feature::class, 'entity', 'feature_morph');
     }
 
     /**

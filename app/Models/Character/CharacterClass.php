@@ -14,19 +14,28 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @package App\Models\Character
  * @property int id
  * @property string name
+ * @property string description
+ * @property string subclass_flavor
  * @property int hit_die
  * @property int instrument_choices
  * @property int skill_choices
  * @property int tool_choices
+ * @property array saving_throws
+ * @property bool spellcaster
  *
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
  * @property Collection|Spell[] spells
  * @property Collection|ClassLevel[] levels
+ * @property Collection|Feature[] features
  */
 class CharacterClass extends Model
 {
     protected $table = 'classes';
+
+    protected $casts = [
+        'saving_throws' => 'array'
+    ];
 
     public $timestamps = false;
 
@@ -48,11 +57,17 @@ class CharacterClass extends Model
     }
 
     /**
-     * @return HasMany
+     * @return MorphToMany
      */
     public function features()
     {
-        return $this->hasMany(Feature::class, 'class_id');
+        return $this->morphToMany(
+            Feature::class,
+            'entity',
+            'feature_morph',
+            'entity_id',
+            'feature_id'
+        );
     }
 
     /**

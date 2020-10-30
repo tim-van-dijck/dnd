@@ -71,7 +71,7 @@ class CharacterRepository
         $character->campaign_id = $campaignId;
         $character->race_id = $input['race_id'];
         if (!empty($input['subrace_id'])) {
-            $character->subrace_id = $input['race_id'];
+            $character->subrace_id = $input['subrace_id'];
         }
         $character->private = !empty($input['private']);
         $character->save();

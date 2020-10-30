@@ -1,74 +1,88 @@
 <template>
     <div id="spell-tab">
-        <div class="spells-known">
-            <h2>Spells known</h2>
-            <div v-if="level.spells.length > 0 || (index == 0 && raceCantrip)" class="spell-level" v-for="(level, index) in spellsKnown">
-                <h3>{{ level.title }}</h3>
-                <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                    <div v-for="(spell, index) in level.spells">
-                        <div class="uk-card uk-card-body uk-card-primary">
-                            <div class="uk-card-title">{{ spell.name }}</div>
-                            <button v-if="selection[spell.level > 0 ? 'spells' : 'cantrips'].find(item => spell.id == item.id)"
-                                    class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
-                                    @click.prevent="removeSpell(spell.level > 0 ? 'spells' : 'cantrips', spell.origin_type, spell.origin_id, spell.id)">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <p>({{spell.origin_name}})</p>
+        <pc-spellbook />
+        <div uk-grid>
+            <div class="uk-width-2-3@s spells-known" v-if="selection.cantrips.length > 0 || selection.spells.length > 0">
+                <h2>Spells known</h2>
+                <div v-if="level.spells.length > 0 || (index == 0 && raceCantrip)" class="spell-level" v-for="(level, index) in spellsKnown">
+                    <h3>{{ level.title }}</h3>
+                    <div class="uk-child-width-1-2@m uk-grid-small uk-grid-match" uk-grid>
+                        <div v-for="(spell, index) in level.spells">
+                            <div class="uk-card uk-card-body uk-card-primary">
+                                <div class="uk-card-title">{{ spell.name }}</div>
+                                <button v-if="selection[spell.level > 0 ? 'spells' : 'cantrips'].find(item => spell.id == item.id)"
+                                        class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
+                                        @click.prevent="removeSpell(spell.level > 0 ? 'spells' : 'cantrips', spell.origin_type, spell.origin_id, spell.id)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <p>({{spell.origin_name}})</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-width-1-3@s">
+                <h2>Spell selection</h2>
+                <div v-if="Object.keys(spells.items).length > 0 || (level == 0 && raceCantrips.length > 0)"
+                     v-for="(spells, level) in classSpells">
+                    <h3>{{ spells.title }}</h3>
+                    <div :class="{'uk-form-horizontal': chosenClasses.length > 1 || raceCantrips.length > 0}">
+                        <div class="uk-margin" v-if="level == 0 && raceCantrips.length > 0">
+                            <label for="subrace_cantrip" class="uk-form-label">
+                                {{ subrace.name }}
+                            </label>
+                            <div class="uk-form-controls">
+                                <select id="subrace_cantrip" class="uk-select" :disabled="raceCantrip != null"
+                                        @input="selectRaceCantrip($event.target.value); $event.target.value = ''">
+                                    <option value="">
+                                        - Make a choice -
+                                    </option>
+                                    <option v-for="spell in raceCantrips" :value="spell.id">
+                                        {{ spell.name }} ({{ spell.school }})
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="uk-margin" v-if="classSpells[level].items[chosenClass.id]" v-for="chosenClass in chosenClasses">
+                            <label v-if="chosenClasses.length > 1 || raceCantrips.length > 0"
+                                   :for="`spells_${level}_${chosenClass.id}`" class="uk-form-label">
+                                {{ chosenClass.name }}
+                            </label>
+                            <div class="uk-form-controls">
+                                <select :id="`spells_${level}_${chosenClass.id}`" class="uk-select"
+                                        :disabled="chosenClass.currentLevel[(level > 0) ? 'spells_known' : 'cantrips_known'] <= selection[level > 0 ? 'spells' : 'cantrips'].length"
+                                        @input="selectSpell(level, chosenClass, $event.target.value); $event.target.value = ''">
+                                    <option value="">
+                                        - Make a choice ({{ `${chosenClass.currentLevel[(level > 0) ? 'spells_known' : 'cantrips_known'] - selection[level > 0 ? 'spells' : 'cantrips'].length} remaining` }}) -
+                                    </option>
+                                    <option v-for="spell in classSpells[level].items[chosenClass.id]" :value="spell.id">
+                                        {{ spell.name }} ({{ spell.school }})
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <h2>Spell selection</h2>
-        <div v-if="Object.keys(spells.items).length > 0 || (level == 0 && raceCantrips.length > 0)"
-             v-for="(spells, level) in classSpells">
-            <h3>{{ spells.title }}</h3>
-            <div :class="{'uk-form-horizontal': chosenClasses.length > 1 || raceCantrips.length > 0}">
-                <div class="uk-margin" v-if="level == 0 && raceCantrips.length > 0">
-                    <label for="subrace_cantrip" class="uk-form-label">
-                        {{ subrace.name }}
-                    </label>
-                    <div class="uk-form-controls">
-                        <select id="subrace_cantrip" class="uk-select" :disabled="raceCantrip != null"
-                                @input="selectRaceCantrip($event.target.value); $event.target.value = ''">
-                            <option value="">
-                                - Make a choice -
-                            </option>
-                            <option v-for="spell in raceCantrips" :value="spell.id">
-                                {{ spell.name }} ({{ spell.school }})
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="uk-margin" v-if="classSpells[level].items[chosenClass.id]" v-for="chosenClass in chosenClasses">
-                    <label v-if="chosenClasses.length > 1 || raceCantrips.length > 0"
-                           :for="`spells_${level}_${chosenClass.id}`" class="uk-form-label">
-                        {{ chosenClass.name }}
-                    </label>
-                    <div class="uk-form-controls">
-                        <select :id="`spells_${level}_${chosenClass.id}`" class="uk-select"
-                                :disabled="chosenClass.currentLevel[(level > 0) ? 'spells_known' : 'cantrips_known'] <= selection[level > 0 ? 'spells' : 'cantrips'].length"
-                                @input="selectSpell(level, chosenClass, $event.target.value); $event.target.value = ''">
-                            <option value="">
-                                - Make a choice ({{ `${chosenClass.currentLevel[(level > 0) ? 'spells_known' : 'cantrips_known'] - selection[level > 0 ? 'spells' : 'cantrips'].length} remaining` }}) -
-                            </option>
-                            <option v-for="spell in classSpells[level].items[chosenClass.id]" :value="spell.id">
-                                {{ spell.name }} ({{ spell.school }})
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p class="uk-margin">
+            <router-link class="uk-button uk-button-danger" :to="{name: 'player-characters'}">
+                Cancel
+            </router-link>
+            <button class="uk-button uk-button-primary uk-align-right" @click.prevent="$emit('next')">Save</button>
+        </p>
     </div>
 </template>
 
 <script>
     import {mapState} from "vuex";
+    import PcSpellbook from "../partial/pc-spellbook";
 
     export default {
         name: "pc-form-spell-tab",
+        components: {PcSpellbook},
         props: ['info', 'characterClasses', 'value'],
         created() {
             this.$store.dispatch('Spells/load');

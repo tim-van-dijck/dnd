@@ -1,0 +1,3 @@
+<p>This spell assails and distorts the minds of creatures, generating illusions and causing uncontrolled actions. Each creature in a sphere of 10-foot-radius centered on a point chosen in the range of the spell must make a wisdom saving throw otherwise it will be affected by the spell.</p>
+<p>An affected target can react and it must start at the beginning of 1d10 each of his game rounds to determine its behavior for that round.</p>
+<p>At the end of each turn, an affected creature can make a saving throw of Wisdom. If successful, the effect of the spell ends for this target.</p>

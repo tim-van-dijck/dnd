@@ -22,7 +22,7 @@ export const Characters = {
                 });
         },
         loadClasses({commit}) {
-            return axios.get(`/classes?include=subclasses,proficiencies,subclasses.proficiencies,spells,subclasses.spells`)
+            return axios.get(`/classes?include=subclasses,proficiencies,subclasses.proficiencies,spells,subclasses.spells,features,subclasses.features`)
                 .then((response) => {
                     commit('SET_CLASSES', response.data.data)
                 });

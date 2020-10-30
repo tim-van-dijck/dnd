@@ -20,6 +20,8 @@ $card-secondary-color-mode: dark;
 @import "partial/messages";
 @import "partial/navigation";
 
+@import "player/create";
+
 
 #content {
   padding: 82px 0 0 0;
@@ -90,16 +92,6 @@ $card-secondary-color-mode: dark;
       &.fa-times-circle:hover {
         @extend .uk-text-danger;
       }
-    }
-  }
-}
-
-#pc-form {
-  .skills {
-    .racial,
-    .class-based,
-    .class-based .class {
-      margin-bottom: 2em;
     }
   }
 }

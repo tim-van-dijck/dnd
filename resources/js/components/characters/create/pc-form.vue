@@ -4,43 +4,18 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="character" id="character-form" class="uk-form-stacked">
-                    <ul class="uk-tab">
-                        <li :class="{'uk-active': tab === 'info'}">
-                            <a @click.prevent="tab = 'info'">Info</a>
-                        </li>
-                        <li :class="{'uk-active': tab === 'class'}">
-                            <a @click.prevent="tab = 'class'">Class</a>
-                        </li>
-                        <li :class="{'uk-active': tab === 'proficiency'}">
-                            <a @click.prevent="tab = 'proficiency'">Languages, Skills & Proficiencies</a>
-                        </li>
-                        <li :class="{'uk-active': tab === 'ability'}">
-                            <a @click.prevent="tab = 'ability'">Abilities</a>
-                        </li>
-                        <li :class="{'uk-active': tab === 'personality'}">
-                            <a @click.prevent="tab = 'personality'">Personality</a>
-                        </li>
-                        <li v-if="spellcaster" :class="{'uk-active': tab === 'spells'}">
-                            <a @click.prevent="tab = 'spells'">Spells</a>
-                        </li>
-                    </ul>
+                    <pc-form-navigation :character="character" :spellcaster="spellcaster" :tab="tab" @navigate="goToTab" />
 
-                    <pc-form-info-tab v-show="tab === 'info'" v-model="character.info" />
-                    <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" />
+                    <pc-form-details-tab v-show="tab === 'details'" v-model="character.info" @next="goToTab('class')" />
+                    <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" @next="goToTab('proficiency')" />
                     <pc-form-proficiency-tab v-show="tab === 'proficiency'" v-model="character.proficiencies"
-                        :info="character.info" :character-classes="character.classes" />
+                        :info="character.info" :character-classes="character.classes" @next="goToTab('ability')" />
                     <pc-form-abilities-tab v-show="tab === 'ability'" v-model="character.ability_scores"
-                        :info="character.info" :character-classes="character.classes" />
-                    <pc-form-personality-tab v-show="tab === 'personality'" v-model="character.personality" />
+                        :info="character.info" :character-classes="character.classes" @next="goToTab('personality')" />
+                    <pc-form-personality-tab v-show="tab === 'personality'" :spellcaster="spellcaster"
+                                             v-model="character.personality" @next="spellcaster ? goToTab('spells') : save" />
                     <pc-form-spell-tab v-if="spellcaster" v-show="tab === 'spells'" v-model="character.spells"
-                                       :info="character.info" :character-classes="character.classes" />
-
-                    <p class="uk-margin">
-                        <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
-                        <router-link class="uk-button uk-button-danger" :to="{name: 'player-characters'}">
-                            Cancel
-                        </router-link>
-                    </p>
+                                       :info="character.info" :character-classes="character.classes" @next="save" />
                 </form>
                 <p v-else class="uk-text-center">
                     <i class="fas fa-2x fa-sync fa-spin"></i>
@@ -52,12 +27,13 @@
 
 <script>
     import {mapState} from 'vuex';
-    import PcFormInfoTab from "./tabs/pc-form-info-tab";
+    import PcFormDetailsTab from "./tabs/pc-form-details-tab";
     import PcFormClassTab from "./tabs/pc-form-class-tab";
     import PcFormProficiencyTab from "./tabs/pc-form-proficiency-tab";
     import PcFormPersonalityTab from "./tabs/pc-form-personality-tab";
     import PcFormAbilitiesTab from "./tabs/pc-form-abilities-tab";
     import PcFormSpellTab from "./tabs/pc-form-spell-tab";
+    import PcFormNavigation from "./partial/pc-form-navigation";
 
     export default {
         name: "pc-form",
@@ -92,7 +68,7 @@
         data() {
             return {
                 character: null,
-                tab: 'info'
+                tab: 'details'
             }
         },
         methods: {
@@ -109,6 +85,9 @@
                             this.$router.push({name: 'player-characters'});
                         });
                 }
+            },
+            goToTab(tab) {
+                this.tab = tab;
             }
         },
         computed: {
@@ -145,11 +124,11 @@
                 for (let characterClass of this.character.classes) {
                     if (characterClass.class_id) {
                         let chosenClass = this.classes[characterClass.class_id];
-                        if (chosenClass.spells.length > 0) {
+                        if (chosenClass.spellcaster) {
                             return true;
                         }
                         let subclass = chosenClass.subclasses.find(item => item.id == characterClass.subclass_id);
-                        if (subclass && subclass.spells.length > 0) {
+                        if (subclass && subclass.spellcaster) {
                             return true;
                         }
                     }
@@ -158,12 +137,13 @@
             }
         },
         components: {
+            PcFormNavigation,
             PcFormSpellTab,
             PcFormAbilitiesTab,
             PcFormPersonalityTab,
             PcFormProficiencyTab,
             PcFormClassTab,
-            PcFormInfoTab,
+            PcFormDetailsTab,
         }
     }
 </script>

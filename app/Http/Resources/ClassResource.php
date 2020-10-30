@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Character\ClassLevel;
+use App\Repositories\FeatureRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,6 +25,18 @@ class ClassResource extends JsonResource
         $levels = $this->resource->levels->toArray();
         if (!empty($levels)) {
             $class['levels'] = $this->formatLevels($levels);
+        }
+        if ($request->has('include') && strpos($request->query('include', ''), 'features') !== false) {
+            /** @var FeatureRepository $featureRepository */
+            $featureRepository = resolve(FeatureRepository::class);
+            $class['features'] = $featureRepository->classFeatures($class['id'])->toArray();
+        }
+        if ($request->has('include') && strpos($request->query('include', ''), 'subclasses.features') !== false) {
+            foreach ($class['subclasses'] as &$subclass) {
+                /** @var FeatureRepository $featureRepository */
+                $featureRepository = resolve(FeatureRepository::class);
+                $subclass['features'] = $featureRepository->subclassFeatures($class['id'])->toArray();
+            }
         }
         return $class;
     }
