@@ -122,7 +122,6 @@ export default {
                     }
                 }
             }
-            enabled.push('spells')
             return enabled.filter((value, index, self) => self.indexOf(value) === index);
         },
         activeTab() {

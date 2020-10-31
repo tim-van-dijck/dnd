@@ -8,7 +8,7 @@
                          :columns="columns"
                          module="Characters"
                          :records="characters"
-                         @edit="$router.push({name: 'player-edit', params: {id: $event.id}})"
+                         @edit="$router.push({name: 'pc-edit', params: {id: $event.id}})"
                          @view="$router.push({name: 'pc-detail', params: {id: $event.id}})"
                          @destroy="destroy" />
         <p v-else class="uk-text-center">

@@ -70,6 +70,7 @@
 
     export default {
         name: "pc-form-class-tab",
+        props: ['value'],
         components: {ClassInfoModal},
         data() {
             return {
@@ -77,7 +78,10 @@
             }
         },
         created() {
-            this.addClass()
+            this.classes = this.value;
+            if (this.classes.length === 0) {
+                this.addClass();
+            }
         },
         methods: {
             addClass() {

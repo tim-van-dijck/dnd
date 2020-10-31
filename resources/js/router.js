@@ -56,13 +56,25 @@ let routes = [
         component: PCDetail
     },
     {
+        path: '/characters/player/:id/edit',
+        name: 'pc-edit',
+        props: true,
+        component: PCForm
+    },
+    {
         path: '/characters/npc/create',
         name: 'npc-create',
         props: true,
         component: CharacterForm
     },
     {
-        path: '/characters/:id/edit',
+        path: '/characters/npc/:id',
+        name: 'npc-detail',
+        props: true,
+        component: CharacterForm
+    },
+    {
+        path: '/characters/npc/:id/edit',
         name: 'npc-edit',
         props: true,
         component: CharacterForm

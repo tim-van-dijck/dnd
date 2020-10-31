@@ -43,7 +43,7 @@ class SpellsTableSeeder extends Seeder
         }
     }
 
-    public function getData()
+    private function getData()
     {
         return [
             [

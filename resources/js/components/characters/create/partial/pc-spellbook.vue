@@ -136,7 +136,7 @@
                 deep: true,
                 handler() {
                     if (!this.relevantSpells.includes(this.spell)) {
-                        this.spell = null;
+                        this.$set(this, 'spell', null);
                     }
                 }
             }

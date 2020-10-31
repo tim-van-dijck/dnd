@@ -96,6 +96,16 @@
                 }
             }
         },
+        created() {
+            this.abilities = this.value || {
+                STR: 3,
+                DEX: 3,
+                CON: 3,
+                INT: 3,
+                WIS: 3,
+                CHA: 3
+            };
+        },
         methods: {
             addAbilityBonus(value) {
                 let ability = value.split('_')[0];
@@ -106,7 +116,7 @@
             ...mapState('Characters', {'availableClasses': 'classes', 'races': 'races'}),
             totalAbilities() {
                 let abilities = [];
-                for (let ability in this.abilities) {
+                for (let ability of ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']) {
                     let total = parseInt(this.abilities[ability]) + parseInt(this.bonuses[ability]);
                     abilities.push({
                         score: this.abilities[ability],

@@ -41,28 +41,47 @@
         created() {
             this.$store.dispatch('Characters/loadRaces');
             this.$store.dispatch('Characters/loadClasses');
-            this.character = {
-                type: 'player',
-                ability_scores: {},
-                info: {
-                    race_id: null,
-                    subrace_id: null,
-                    alignment: null
-                },
-                classes: [],
-                personality: {
-                    trait: '',
-                    ideal: '',
-                    bond: '',
-                    flaw: ''
-                },
-                proficiencies: {}
-            };
             if (this.id) {
                 this.$store.dispatch('Characters/find', this.id)
                     .then((character) => {
-                        this.character = JSON.parse(JSON.stringify(character));
+                        let char = {
+                            info: character.info,
+                            personality: character.personality,
+                            ability_scores: character.ability_scores
+                        }
+                        char.info.race_id = character.race.id;
+                        char.classes = [];
+                        for (let charClass of character.classes) {
+                            console.log();
+                            char.classes.push({
+                                class_id: charClass.id,
+                                level: charClass.level,
+                                subclass_id: charClass.subclass ? charClass.subclass.id || null : null
+                            });
+                        }
+                        if (character.race.subrace) {
+                            char.info.subrace_id = character.race.subrace.id;
+                        }
+                        this.$set(this, 'character', char);
                     });
+            } else {
+                this.character = {
+                    type: 'player',
+                    ability_scores: {},
+                    info: {
+                        race_id: null,
+                        subrace_id: null,
+                        alignment: null
+                    },
+                    classes: [],
+                    personality: {
+                        trait: '',
+                        ideal: '',
+                        bond: '',
+                        flaw: ''
+                    },
+                    proficiencies: {}
+                };
             }
         },
         data() {
@@ -94,7 +113,7 @@
             ...mapState('Characters', ['characters', 'errors', 'classes', 'races']),
             title() {
                 if (this.id) {
-                    return 'Edit ' + (this.character ? this.character.name : 'character');
+                    return 'Edit ' + (this.character ? this.character.info.name : 'character');
                 } else {
                     return 'Add character';
                 }
