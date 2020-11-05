@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Character;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BackgroundResource;
 use App\Http\Resources\ClassResource;
 use App\Http\Resources\RaceResource;
+use App\Models\Character\Background;
 use App\Models\Character\Language;
 use App\Repositories\ClassRepository;
 use App\Repositories\RaceRepository;
@@ -38,5 +40,10 @@ class ApiController extends Controller
     {
         $includes = $request->has('include') ? explode(',', $request->query('include', '')) : [];
         return RaceResource::collection($raceRepository->get($includes));
+    }
+
+    public function backgrounds()
+    {
+        return BackgroundResource::collection(Background::get());
     }
 }

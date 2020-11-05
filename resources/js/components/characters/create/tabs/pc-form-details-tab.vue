@@ -2,10 +2,7 @@
     <div id="info-tab">
         <div uk-grid>
             <div class="uk-width-1-2">
-                <div class="uk-margin">
-                    <label for="name" class="uk-form-label">Name</label>
-                    <input id="name" title="name" type="text" class="uk-input" v-model="info.name">
-                </div>
+                <race-info-modal />
                 <div class="uk-margin">
                     <label for="race" class="uk-form-label">Race</label>
                     <select id="race" name="race" class="uk-select" v-model="info.race_id" @input="info.subrace_id = null">
@@ -20,6 +17,11 @@
                         <option :value="null">- Choose a subrace -</option>
                         <option v-for="subrace in subraces" :value="subrace.id">{{ subrace.name }}</option>
                     </select>
+                </div>
+                <hr>
+                <div class="uk-margin">
+                    <label for="name" class="uk-form-label">Name</label>
+                    <input id="name" title="name" type="text" class="uk-input" v-model="info.name">
                 </div>
                 <div class="uk-margin">
                     <label for="alignment" class="uk-form-label">Alignment</label>
@@ -60,6 +62,7 @@
 <script>
     import HtmlEditor from '../../../partial/html-editor';
     import {mapState} from "vuex";
+    import RaceInfoModal from "../../../races/race-info-modal";
 
     export default {
         name: "pc-form-details-tab",
@@ -106,6 +109,6 @@
                 return [];
             }
         },
-        components: {HtmlEditor}
+        components: {RaceInfoModal, HtmlEditor}
     }
 </script>

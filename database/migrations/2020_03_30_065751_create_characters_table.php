@@ -18,6 +18,7 @@ class CreateCharactersTable extends Migration
             $table->bigInteger('campaign_id', false, true);
             $table->unsignedInteger('race_id');
             $table->unsignedInteger('subrace_id')->nullable();
+            $table->unsignedInteger('background_id')->nullable();
             $table->string('name');
             $table->string('title')->nullable();
             $table->string('type')->nullable();
@@ -42,6 +43,10 @@ class CreateCharactersTable extends Migration
                 ->onDelete('cascade');
 
             $table->foreign('subrace_id')->references('id')->on('subraces')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('background_id')->references('id')->on('backgrounds')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });

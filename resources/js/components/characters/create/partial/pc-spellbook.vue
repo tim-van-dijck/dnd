@@ -9,7 +9,7 @@
                 <div class="filters">
                     Level:
                     <select class="uk-select uk-width-auto" v-model="filters.level">
-                        <option value="0">Cantrips</option>
+                        <option :value="0">Cantrips</option>
                         <option v-for="level in 9" :value="level">{{ level }}</option>
                     </select>
                     <div class="uk-button-group">

@@ -16,7 +16,9 @@ class CreateBackgroundsTable extends Migration
         Schema::create('backgrounds', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedTinyInteger('proficiency_choices');
+            $table->text('description');
+            $table->unsignedTinyInteger('instrument_choices');
+            $table->unsignedTinyInteger('tool_choices');
             $table->unsignedTinyInteger('language_choices');
         });
     }

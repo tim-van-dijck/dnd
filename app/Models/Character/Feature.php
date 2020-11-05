@@ -38,6 +38,11 @@ class Feature extends Model
             ->withPivot(['level', 'choose']);
     }
 
+    public function backgrounds()
+    {
+        return $this->morphedByMany(Background::class, 'entity', 'feature_morph');
+    }
+
     /**
      * @return BelongsToMany
      */

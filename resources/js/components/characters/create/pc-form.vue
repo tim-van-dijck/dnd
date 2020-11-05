@@ -7,7 +7,8 @@
                     <pc-form-navigation :character="character" :spellcaster="spellcaster" :tab="tab" @navigate="goToTab" />
 
                     <pc-form-details-tab v-show="tab === 'details'" v-model="character.info" @next="goToTab('class')" />
-                    <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" @next="goToTab('proficiency')" />
+                    <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" @next="goToTab('background')" />
+                    <pc-form-background-tab v-show="tab === 'background'" v-model="character.background" @next="goToTab('proficiency')" />
                     <pc-form-proficiency-tab v-show="tab === 'proficiency'" v-model="character.proficiencies"
                         :info="character.info" :character-classes="character.classes" @next="goToTab('ability')" />
                     <pc-form-abilities-tab v-show="tab === 'ability'" v-model="character.ability_scores"
@@ -34,6 +35,7 @@
     import PcFormAbilitiesTab from "./tabs/pc-form-abilities-tab";
     import PcFormSpellTab from "./tabs/pc-form-spell-tab";
     import PcFormNavigation from "./partial/pc-form-navigation";
+    import PcFormBackgroundTab from "./tabs/pc-form-background-tab";
 
     export default {
         name: "pc-form",
@@ -52,7 +54,6 @@
                         char.info.race_id = character.race.id;
                         char.classes = [];
                         for (let charClass of character.classes) {
-                            console.log();
                             char.classes.push({
                                 class_id: charClass.id,
                                 level: charClass.level,
@@ -67,7 +68,14 @@
             } else {
                 this.character = {
                     type: 'player',
-                    ability_scores: {},
+                    ability_scores: {
+                        STR: 3,
+                        DEX: 3,
+                        CON: 3,
+                        INT: 3,
+                        WIS: 3,
+                        CHA: 3
+                    },
                     info: {
                         race_id: null,
                         subrace_id: null,
@@ -156,6 +164,7 @@
             }
         },
         components: {
+            PcFormBackgroundTab,
             PcFormNavigation,
             PcFormSpellTab,
             PcFormAbilitiesTab,

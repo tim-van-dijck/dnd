@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Character\CharacterClass;
 use App\Models\Character\ClassLevel;
 use App\Repositories\FeatureRepository;
 use Illuminate\Http\Request;
@@ -9,6 +10,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClassResource extends JsonResource
 {
+    /** @var CharacterClass */
+    public $resource;
+
     /**
      * Transform the resource into an array.
      *

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package App\Models\Character
  * @property int id
  * @property string name
+ * @property string description
  * @property int speed
  * @property string size
  * @property int optional_ability_bonuses

@@ -16,6 +16,7 @@ class CreateRacesTable extends Migration
         Schema::create('races', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->text('description');
             $table->integer('speed');
             $table->string('size');
             $table->tinyInteger('optional_ability_bonuses');

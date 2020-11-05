@@ -12,6 +12,11 @@
                 Class
             </button>
             <button class="uk-button"
+                    :class="{'uk-button-primary': tab === 'background', 'uk-button-default': tab !== 'background' && enabledTabs.includes('background'), 'disabled': !enabledTabs.includes('background')}"
+                    @click.prevent="emit('background')">
+                Background
+            </button>
+            <button class="uk-button"
                     :class="{'uk-button-primary': tab === 'proficiency', 'uk-button-default': tab !== 'proficiency' && enabledTabs.includes('proficiency'), 'uk-button-muted': !enabledTabs.includes('proficiency')}"
                     @click.prevent="emit('proficiency')">
                 Languages, Skills & Proficiencies
@@ -56,6 +61,13 @@
                                                 :class="{'uk-button-primary': tab === 'class', 'uk-button-default': tab !== 'class' && enabledTabs.includes('class'), 'disabled': !enabledTabs.includes('class')}"
                                                 @click.prevent="emit('class')">
                                             Class
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="uk-button"
+                                                :class="{'uk-button-primary': tab === 'background', 'uk-button-default': tab !== 'background' && enabledTabs.includes('background'), 'disabled': !enabledTabs.includes('background')}"
+                                                @click.prevent="emit('background')">
+                                            Background
                                             </button>
                                         </li>
                                         <li>
@@ -115,7 +127,7 @@ export default {
                 enabled.push('class');
                 for (let chosenClass of this.character.classes) {
                     if (chosenClass.class_id != null && chosenClass.subclass_id != null) {
-                        enabled = enabled.concat(['ability', 'proficiency', 'personality']);
+                        enabled = enabled.concat(['ability', 'proficiency', 'personality', 'background']);
                         if (this.spellcaster) {
                             enabled.push('spells')
                         }
@@ -126,15 +138,12 @@ export default {
         },
         activeTab() {
             switch (this.tab) {
-                case 'details':
-                case 'class':
-                case 'personality':
-                case 'spells':
-                    return _.capitalize(this.tab);
                 case 'ability':
                     return 'Abilities';
                 case 'proficiency':
                     return 'Languages, Skills & Proficiencies';
+                default:
+                    return _.capitalize(this.tab);
             }
         }
     }

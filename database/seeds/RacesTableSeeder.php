@@ -42,6 +42,7 @@ class RacesTableSeeder extends Seeder
             $race->name = $raceArray['name'];
             $race->speed = $raceArray['speed'];
             $race->size = $raceArray['size'];
+            $race->description = $raceArray['description'];
             $race->optional_ability_bonuses = empty($optionalAbilityBonuses) ? 0 : $optionalAbilityBonuses['choose'];
             $race->optional_languages = empty($raceArray['language_options']) ? 0 : $raceArray['language_options']['choose'];
             $race->optional_proficiencies = empty($optionalProficiencies) ? 0 : $optionalProficiencies['choose'];
@@ -152,6 +153,7 @@ class RacesTableSeeder extends Seeder
         return [
             [
                 "name" => "Dwarf",
+                'description' => view('db.races.dwarf')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [
@@ -180,6 +182,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Elf",
+                'description' => view('db.races.elf')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [
@@ -200,6 +203,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Halfling",
+                'description' => view('db.races.halfling')->render(),
                 "speed" => 25,
                 "ability_bonuses" => [
                     [
@@ -220,6 +224,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Human",
+                'description' => view('db.races.human')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [
@@ -280,6 +285,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Dragonborn",
+                'description' => view('db.races.dragonborn')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [
@@ -309,6 +315,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Gnome",
+                'description' => view('db.races.gnome')->render(),
                 "speed" => 25,
                 "ability_bonuses" => [
                     [
@@ -330,6 +337,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Half-Elf",
+                'description' => view('db.races.half-elf')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [
@@ -395,6 +403,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Half-Orc",
+                'description' => view('db.races.half-orc')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [
@@ -420,6 +429,7 @@ class RacesTableSeeder extends Seeder
             ],
             [
                 "name" => "Tiefling",
+                'description' => view('db.races.tiefling')->render(),
                 "speed" => 30,
                 "ability_bonuses" => [
                     [

@@ -15592,10 +15592,6 @@ header.uk-position-fixed {
   margin-bottom: 0.7em;
 }
 
-[id^=class-info-] .uk-drop {
-  width: 500px;
-}
-
 [id^=class-info-] .uk-drop .uk-card {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.32);
 }
@@ -15608,8 +15604,16 @@ header.uk-position-fixed {
   cursor: pointer;
 }
 
+#spellbook {
+  margin-bottom: 1em;
+}
+
 #spellbook-modal .filters {
   margin: 2em 0;
+}
+
+#spellbook-modal #spell-list {
+  border-right: 1px solid #e5e5e5;
 }
 
 #content {

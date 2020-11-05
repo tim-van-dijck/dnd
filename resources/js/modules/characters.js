@@ -16,7 +16,7 @@ export const Characters = {
     },
     actions: {
         loadBackgrounds({commit}) {
-            axios('/backgrounds?include=proficiencies,languages')
+            axios('/backgrounds?include=proficiencies,languages,features')
                 .then((response) => {
                     commit('SET_BACKGROUNDS', response.data.data || []);
                 });
@@ -76,13 +76,16 @@ export const Characters = {
             state.characters = characters || null;
         },
         SET_CHARACTER(state, character) {
-            let characterIndex = state.characters.findIndex((item) => {
+            if (state.characters == null) {
+                state.characters = {data: []};
+            }
+            let characterIndex = state.characters.data.findIndex((item) => {
                 return item.id == character.id;
             });
             if (characterIndex >= 0) {
                 state.characters[characterIndex] = character;
             } else {
-                state.characters.push(character);
+                state.characters.data.push(character);
             }
         },
         REMOVE_CHARACTER(state, character) {
