@@ -4,10 +4,12 @@
             <div v-for="ability in totalAbilities">
                 <div class="uk-card uk-card-body uk-card-secondary">
                     <h3 class="uk-text-center uk-margin-remove uk-text-bold">{{ ability.name }}</h3>
-                    <h3 class="uk-text-center uk-margin-top uk-margin-bottom">
+                    <h3 class="uk-text-center uk-margin-top uk-margin-bottom"
+                        :class="{'uk-text-danger': errors.hasOwnProperty(`ability_scores.${ability.name}`)}">
                         {{ ability.bonus >= 0 ? '+' : '-' }} {{ Math.abs(ability.bonus) }}
                     </h3>
-                    <p class="uk-text-center uk-margin-remove">
+                    <p class="uk-text-center uk-margin-remove"
+                       :class="{'uk-text-danger': errors.hasOwnProperty(`ability_scores.${ability.name}`)}">
                         {{ ability.total }}
                         <span v-if="ability.total > ability.score">
                             ({{ ability.score }} + {{ bonuses[ability.name] }})
@@ -15,6 +17,7 @@
                     </p>
                     <p class="uk-text-center">
                         <input class="uk-input uk-width uk-text-center"
+                               :class="{'uk-form-danger': errors.hasOwnProperty(`ability_scores.${ability.name}`)}"
                                type="number"
                                min="3"
                                :max="20 - bonuses[ability.name]" v-model="abilities[ability.name]">
@@ -113,7 +116,7 @@
             }
         },
         computed: {
-            ...mapState('Characters', {'availableClasses': 'classes', 'races': 'races'}),
+            ...mapState('Characters', {'availableClasses': 'classes', 'races': 'races', 'errors': 'errors'}),
             totalAbilities() {
                 let abilities = [];
                 for (let ability of ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']) {
@@ -139,7 +142,7 @@
                 if (this.race) {
                     for (let ability of this.race.abilities) {
                         if (ability.optional) {
-                            let chosen = this.choices.race.find(item => item.ability == ability.ability);
+                            let chosen = this.choices.race.find(item => item.ability === ability.ability);
                             if (chosen) {
                                 bonuses[ability.ability] += parseInt(chosen.score);
                             }
@@ -150,7 +153,7 @@
                     if (this.subrace) {
                         for (let ability of this.subrace.abilities) {
                             if (ability.optional) {
-                                let chosen = this.choices.subrace.find(item => item.ability == ability.ability);
+                                let chosen = this.choices.subrace.find(item => item.ability === ability.ability);
                                 if (chosen) {
                                     bonuses[ability.ability] += parseInt(chosen.score);
                                 }
@@ -185,7 +188,7 @@
             },
             subrace() {
                 if (this.race) {
-                    return this.race.subraces.find(item => item.id == this.info.subrace_id) || null;
+                    return this.race.subraces.find(item => item.id === this.info.subrace_id) || null;
                 }
                 return null;
             }

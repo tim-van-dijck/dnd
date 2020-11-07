@@ -14,7 +14,7 @@
             <h2>{{ selected.name }}</h2>
             <ul>
                 <li><b>Skill Proficiencies:</b> {{ selected.skills }}</li>
-                <li><b>Tool Proficiencies:</b> {{ selected.tools }}</li>
+                <li v-if="selected.tools.length > 0"><b>Tool Proficiencies:</b> {{ selected.tools }}</li>
                 <li v-if="selected.language_choices > 0"><b>Languages:</b> {{ `${selected.language_choices} of choice` }}</li>
             </ul>
             <div v-for="feature in selected.features">
@@ -25,6 +25,13 @@
         <div class="uk-alert-primary" v-else-if="selection == ''" uk-alert>
             <p>You've chosen not to use a background</p>
         </div>
+
+        <p class="uk-margin">
+            <router-link class="uk-button uk-button-danger" :to="{name: 'player-characters'}">
+                Cancel
+            </router-link>
+            <button class="uk-button uk-button-primary uk-align-right" @click.prevent="$emit('next')">Next <i class="fas fa-chevron-right"></i></button>
+        </p>
     </div>
 </template>
 
@@ -36,6 +43,7 @@ export default {
     props: ['value'],
     created() {
         this.$store.dispatch('Characters/loadBackgrounds');
+        this.selection = this.value || 0;
     },
     data() {
         return {
@@ -61,6 +69,11 @@ export default {
             }
             selected.tools = tools.join(', ');
             return selected;
+        }
+    },
+    watch: {
+        selection() {
+            this.$emit('input', this.selection);
         }
     }
 }

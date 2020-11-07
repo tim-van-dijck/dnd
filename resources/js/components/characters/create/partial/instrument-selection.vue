@@ -2,39 +2,26 @@
     <div class="instruments" v-if="hasInstruments">
         <div class="uk-accordion-title"><h2>Instruments</h2></div>
         <div class="uk-accordion-content">
-            <div class="racial" v-if="raceInstruments.length > 0">
-                <h4>Racial instrument proficiencies</h4>
-                <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                    <div v-for="instrument in raceInstruments">
-                        <div class="uk-card uk-card-body uk-card-primary">
-                            <div class="uk-card-title">{{ instrument.name }} ({{ instrument.origin }})</div>
-                        </div>
+            <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match uk-margin-bottom" uk-grid>
+                <div v-for="instrument in known">
+                    <div class="uk-card uk-card-body uk-card-primary">
+                        <div class="uk-card-title">{{ instrument.name }} ({{ instrument.origin }})</div>
+                    </div>
+                </div>
+                <div v-for="(instrument, index) in (selection || [])">
+                    <div class="uk-card uk-card-body uk-card-primary">
+                        <div class="uk-card-title">{{ instrument.name }} ({{ instrument.origin }})</div>
+                        <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
+                                @click.prevent="removeInstrument(index)">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="class-based" v-if="classInstrumentCount > 0">
-                <h4>Class-based</h4>
-                <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                    <template v-for="instruments in classInstruments">
-                        <div v-for="instrument in instruments.known">
-                            <div class="uk-card uk-card-body uk-card-primary">
-                                <div class="uk-card-title">{{ instrument.name }}</div>
-                            </div>
-                        </div>
-                    </template>
-                    <div v-for="(instrument, index) in (selection || [])">
-                        <div class="uk-card uk-card-body uk-card-primary">
-                            <div class="uk-card-title">{{ instrument.name }} ({{ instrument.origin }})</div>
-                            <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
-                                    @click.prevent="removeInstrument(index)">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 <div class="class" v-for="(charClass, classIndex) in classes"
                      v-if="charClass.class_id != null && availableClasses[charClass.class_id].instrument_choices > (classSelected[charClass.class_id] || 0)">
-                    <h5>{{ availableClasses[charClass.class_id].name }}</h5>
+                    <h4>Class: {{ availableClasses[charClass.class_id].name }}</h4>
                     <div class="uk-margin">
                         <label :for="`instruments_${classIndex}`">
                             Choose {{ availableClasses[charClass.class_id].instrument_choices - (selection[charClass.class_id] || []).length }} instrument proficiencies
@@ -59,7 +46,7 @@
 
     export default {
         name: "instrument-selection",
-        props: ['race', 'subrace', 'classes', 'value'],
+        props: ['background', 'classes', 'race', 'subrace', 'value'],
         created() {
             this.$set(this, 'selection', this.value || []);
         },
@@ -140,6 +127,45 @@
                 }
                 return instruments;
             },
+            backgroundInstruments() {
+                let instruments = {known: [], optional: []};
+                if (this.background) {
+                    instruments.known = copy(this.background.tools)
+                        .filter(item => item.type == 'Instruments' && item.pivot.optional == 0)
+                        .map((item) => {
+                            return {
+                                id: item.id,
+                                name: item.name,
+                                origin: this.background.name
+                            };
+                        });
+                    instruments.optional = copy(this.background.tools)
+                        .filter(item => item.type == 'Instruments' && item.pivot.optional == 1)
+                        .map((item) => {
+                            return {
+                                id: item.id,
+                                name: item.name,
+                                origin: this.background.name
+                            };
+                        });
+                }
+                return instruments;
+            },
+            known() {
+                let known = [];
+                if (this.raceInstruments) {
+                    known.concat(this.raceInstruments.known);
+                }
+                if (this.classSkills) {
+                    for (let classId in this.classInstruments) {
+                        known.concat(this.classInstruments[classId].known);
+                    }
+                }
+                if (this.backgroundInstruments) {
+                    known.concat(this.backgroundInstruments);
+                }
+                return known;
+            },
             hasInstruments() {
                 return this.raceInstruments.length + this.classInstrumentCount;
             },
@@ -153,16 +179,24 @@
             }
         },
         watch: {
+            background: {
+                deep: true,
+                handler() {
+                    let selection = this.selection.filter((item) => item.origin_type !== 'background');
+                    this.$set(this, 'selection', selection);
+                }
+            },
             classes: {
                 deep: true,
                 handler() {
                     let selection = [];
                     for (let charClass of this.classes) {
                         let instruments = this.selection.filter((item) => {
-                            return item.origin_type == 'class' && item.origin_id == charClass.class_id;
+                            return item.origin_type === 'class' && item.origin_id === charClass.class_id;
                         });
                         selection.concat(instruments);
                     }
+                    selection.concat(this.selection.filter((item) => item.origin_type === 'background'))
                     this.$set(this, 'selection', selection);
                 }
             },

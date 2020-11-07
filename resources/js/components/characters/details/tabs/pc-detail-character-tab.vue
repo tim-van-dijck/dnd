@@ -78,7 +78,7 @@
                     let bonus = Math.floor((this.character.ability_scores[ability] - 10) / 2)
                     scores[ability] = {
                         score: this.character.ability_scores[ability],
-                        bonus: `${bonus > 0 ? '+' : '-'} ${Math.abs(bonus)}`
+                        bonus: `${bonus >= 0 ? '+' : '-'} ${Math.abs(bonus)}`
                     };
                 }
                 return scores;

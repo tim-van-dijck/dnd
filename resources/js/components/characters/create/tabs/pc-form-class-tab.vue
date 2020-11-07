@@ -12,23 +12,32 @@
                 </div>
                 <div class="uk-accordion-content">
                     <div class="uk-margin">
-                        <label :for="`class_${index}`" class="uk-form-label">Class</label>
-                        <select :id="`class_${index}`" :name="`class_${index}`" class="uk-select" v-model="charClass.class_id" @input="charClass.subclass_id = null">
+                        <label :for="`class_${index}`" class="uk-form-label"
+                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.class_id`)}">Class</label>
+                        <select :id="`class_${index}`" :name="`class_${index}`" class="uk-select"
+                                :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.class_id`)}"
+                                v-model="charClass.class_id" @input="charClass.subclass_id = null">
                             <option :value="null">- Choose a class -</option>
                             <option v-for="availableClass in classOptions" :value="availableClass.id">{{ availableClass.name }}</option>
                         </select>
                     </div>
                     <div class="uk-margin">
-                        <label :for="`subclass_${index}`" class="uk-form-label">Subclass</label>
-                        <select :id="`subclass_${index}`" :name="`subclass_${index}`" class="uk-select" v-model="charClass.subclass_id"
+                        <label :for="`subclass_${index}`" class="uk-form-label"
+                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}">Subclass</label>
+                        <select :id="`subclass_${index}`" :name="`subclass_${index}`" class="uk-select"
+                                :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}"
+                                v-model="charClass.subclass_id"
                                 :disabled="charClass.class_id == null || availableClasses[charClass.class_id].subclasses.length == 0">
                             <option :value="null">- Choose a subclass -</option>
                             <option v-for="subclass in subclasses[charClass.class_id]" :value="subclass.id">{{ subclass.name }}</option>
                         </select>
                     </div>
                     <div class="uk-margin">
-                        <label for="level" class="uk-form-label">Level</label>
-                        <input id="level" type="number" name="level" class="uk-input" min="1" max="20" v-model="charClass.level" />
+                        <label for="level" class="uk-form-label"
+                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.level`)}">Level</label>
+                        <input id="level" type="number" name="level" class="uk-input"min="1" max="20"
+                               :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.level`)}"
+                               v-model="charClass.level" />
                     </div>
                     <a v-if="classes.length > 1"
                        class="uk-text-danger uk-float-right" @click.prevent="removeClass(index)">
@@ -83,7 +92,7 @@
             }
         },
         computed: {
-            ...mapState('Characters', {'availableClasses': 'classes'}),
+            ...mapState('Characters', {'availableClasses': 'classes', 'errors': 'errors'}),
             classOptions() {
                 let classes = [];
                 for (let classId in this.availableClasses) {

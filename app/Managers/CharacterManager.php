@@ -50,6 +50,10 @@ class CharacterManager
         $this->setCharacterSpells($character, $input['spells']);
     }
 
+    private function storeNPC(array $input)
+    {
+    }
+
     /**
      * @param Character $character
      * @param $proficiencies
@@ -104,10 +108,6 @@ class CharacterManager
                 ]);
             }
         }
-    }
-
-    private function storeNPC(array $input)
-    {
     }
 
     /**

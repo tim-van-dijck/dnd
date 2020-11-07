@@ -37,6 +37,8 @@ class CharacterRequest extends FormRequest
             'classes.*.subclass_id' => 'required|integer|exists:subclasses,id',
             'classes.*.level' => 'required|integer|between:1,20',
 
+            'background_id' => 'nullable|exists:backgrounds,id',
+
             'proficiencies' => 'required',
             'proficiencies.languages' => 'sometimes|array',
             'proficiencies.languages.*' => 'required|integer|exists:languages,id',

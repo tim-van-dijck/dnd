@@ -41,12 +41,15 @@ export const Characters = {
                 });
         },
         find({commit}, id) {
-            return axios.get(`/campaign/characters/${id}?includes=classes,race,subrace,proficiencies,languages`)
+            return axios.get(`/campaign/characters/${id}?includes=classes,race,subrace,proficiencies,languages,spells`)
                 .then((response) => {
                     return response.data.data;
                 });
         },
         store({commit, dispatch}, character) {
+            if (character.background_id === 0) {
+                character.background_id = null;
+            }
             return axios.post(`/campaign/characters`, character)
                 .then((response) => {
                     commit('SET_CHARACTER', response.data);
@@ -59,6 +62,9 @@ export const Characters = {
                 });
         },
         update({commit}, data) {
+            if (data.character.background_id === 0) {
+                data.character.background_id = null;
+            }
             return axios.post(`/campaign/characters/${data.id}`, data.character)
                 .then((response) => {
                     commit('SET_CHARACTER', response.data)
@@ -93,6 +99,10 @@ export const Characters = {
             if (index) {
                 state.characters.splice(index, 1);
             }
+        },
+
+        SET_ERRORS(state, errors) {
+            Vue.set(state, 'errors', errors || {});
         },
 
         SET_BACKGROUNDS(state, backgrounds) {

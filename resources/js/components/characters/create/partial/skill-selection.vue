@@ -2,26 +2,13 @@
     <div class="skills">
         <div class="uk-accordion-title"><h2>Skills</h2></div>
         <div class="uk-accordion-content">
-            <div class="racial" v-if="raceSkills.length > 0">
-                <h4>Racial skill proficiencies</h4>
+            <div class="known uk-margin-bottom" v-if="known.length > 0">
                 <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                    <div v-for="skill in raceSkills">
+                    <div v-for="skill in known">
                         <div class="uk-card uk-card-body uk-card-primary">
                             <div class="uk-card-title">{{ skill.name }} ({{ skill.origin }})</div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="class-based">
-                <h4>Class-based</h4>
-                <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
-                    <template v-for="skills in classSkills">
-                        <div v-for="skill in skills.known">
-                            <div class="uk-card uk-card-body uk-card-primary">
-                                <div class="uk-card-title">{{ skill.name }}</div>
-                            </div>
-                        </div>
-                    </template>
                     <div v-for="(skill, index) in (selection || [])">
                         <div class="uk-card uk-card-body uk-card-primary">
                             <div class="uk-card-title">{{ skill.name }} ({{ skill.origin }})</div>
@@ -32,14 +19,17 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="class-based">
                 <div class="class" v-for="(charClass, classIndex) in classes"
                      v-if="charClass.class_id && availableClasses[charClass.class_id].skill_choices > (classSelected[charClass.class_id] || 0)">
-                    <h5>{{ availableClasses[charClass.class_id].name }}</h5>
+                    <h4>Class: {{ availableClasses[charClass.class_id].name }}</h4>
                     <div class="uk-margin">
-                        <label :for="`skills_${classIndex}`">
+                        <label :for="`skills_${classIndex}`" :class="{'uk-text-danger': errors.hasOwnProperty('proficiencies.skills')}">
                             Choose {{ availableClasses[charClass.class_id].skill_choices - (classSelected[charClass.class_id] || 0) }} skill proficiencies
                         </label>
                         <select :name="`skills_${classIndex}`" :id="`skills_${classIndex}`" class="uk-select"
+                                :class="{'uk-form-danger': errors.hasOwnProperty('proficiencies.skills')}"
                                 @input="addSkillToClass(availableClasses[charClass.class_id], $event.target.value); $event.target.value = ''">
                             <option :value="null">- Make a choice -</option>
                             <option v-for="skill in classSkills[charClass.class_id].optional" :value="skill.id"
@@ -59,7 +49,7 @@
 
     export default {
         name: "skill-selection",
-        props: ['classes', 'race', 'subrace', 'value'],
+        props: ['background', 'classes', 'race', 'subrace', 'value'],
         created() {
             this.$set(this, 'selection', this.value || []);
         },
@@ -94,7 +84,7 @@
             }
         },
         computed: {
-            ...mapState('Characters', {'availableClasses': 'classes'}),
+            ...mapState('Characters', {'availableClasses': 'classes', 'errors': 'errors'}),
             raceSkills() {
                 let skills = [];
                 if (this.race) {
@@ -127,8 +117,9 @@
                                 if (item.type === 'Skills' && item.optional) {
                                     let canChoose = true;
                                     let duplicateClassSkill = this.selection.find((skill) => item.id == skill.id);
-                                    let duplicateRaceSkill = this.raceSkills.find((skill) => item.id == skill.id)
-                                    if (duplicateClassSkill || duplicateRaceSkill) {
+                                    let duplicateRaceSkill = this.raceSkills.find((skill) => item.id == skill.id);
+                                    let duplicateBackgroundSkill = this.backgroundSkills.find((skill) => item.id == skill.id);
+                                    if (duplicateClassSkill || duplicateRaceSkill || duplicateBackgroundSkill) {
                                         canChoose = false;
                                     }
                                     return canChoose;
@@ -139,6 +130,35 @@
                     }
                 }
                 return skills;
+            },
+            backgroundSkills() {
+                let skills = [];
+                if (this.background) {
+                    skills = copy(this.background.skills)
+                        .map((item) => {
+                            return {
+                                id: item.id,
+                                name: item.name,
+                                origin: this.background.name
+                            };
+                        });
+                }
+                return skills;
+            },
+            known() {
+                let known = [];
+                if (this.raceSkills) {
+                    known = known.concat(this.raceSkills);
+                }
+                if (this.classSkills) {
+                    for (let classId in this.classSkills) {
+                        known = known.concat(this.classSkills[classId].known);
+                    }
+                }
+                if (this.backgroundSkills) {
+                    known = known.concat(this.backgroundSkills);
+                }
+                return known;
             }
         },
         watch: {

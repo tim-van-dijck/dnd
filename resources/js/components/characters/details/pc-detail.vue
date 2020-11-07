@@ -13,10 +13,14 @@
                     <li :class="{'uk-active': tab === 'ideal'}">
                         <a @click.prevent="tab = 'ideal'">Personality</a>
                     </li>
+                    <li :class="{'uk-active': tab === 'spells'}">
+                        <a @click.prevent="tab = 'spells'">Spells</a>
+                    </li>
                 </ul>
                 <pc-detail-character-tab v-show="tab === 'character'" :character="character" />
                 <pc-detail-proficiency-tab v-show="tab === 'proficiency'" :proficiencies="character.proficiencies" />
-                <pc-detail-personality-tab v-show="tab === 'ideal'" v-model="character.personality" />
+                <pc-detail-personality-tab v-show="tab === 'ideal'" :personality="character.personality" />
+                <pc-detail-spells-tab v-show="tab === 'spells'" :spells="character.spells" />
             </div>
         </div>
     </div>
@@ -31,10 +35,11 @@
     import PcDetailCharacterTab from "./tabs/pc-detail-character-tab";
     import PcDetailProficiencyTab from "./tabs/pc-detail-proficiency-tab";
     import PcDetailPersonalityTab from "./tabs/pc-detail-personality-tab";
+    import PcDetailSpellsTab from "./tabs/pc-detail-spells-tab";
 
     export default {
         name: "pc-detail",
-        components: {PcDetailPersonalityTab, PcDetailCharacterTab,PcDetailProficiencyTab},
+        components: {PcDetailSpellsTab, PcDetailPersonalityTab, PcDetailCharacterTab,PcDetailProficiencyTab},
         props: ['id'],
         created() {
             this.$store.dispatch('Characters/find', this.id)

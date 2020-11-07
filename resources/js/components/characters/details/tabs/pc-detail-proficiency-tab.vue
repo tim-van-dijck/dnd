@@ -55,24 +55,13 @@
         </div>
         <div class="weapons-armor uk-margin">
             <h2>Weapons & armor</h2>
-            <div v-if="(proficiencies.armor && proficiencies.armor.length > 0) || (proficiencies.weapons && proficiencies.weapons.length > 0)"
-                 class="uk-child-width-1-2@s uk-child-width-1-3@l uk-child-width-1-4@xl uk-grid-small uk-grid-match" uk-grid>
-                <div v-for="armor in proficiencies.armor">
-                    <div class="uk-card uk-card-body uk-card-primary">
-                        <div class="uk-card-title">{{ armor.name }}</div>
-                        <p><em>({{ armor.origin }} proficiency)</em></p>
-                    </div>
-                </div>
-                <div v-for="weapon in proficiencies.weapons">
-                    <div class="uk-card uk-card-body uk-card-primary">
-                        <div class="uk-card-title">{{ weapon.name }}</div>
-                        <p><em>({{ weapon.origin }} proficiency)</em></p>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="uk-alert-primary" uk-alert>
-                This character doesn't have Instrument proficiencies
-            </div>
+            <ul class="uk-list">
+                <li v-if="armor.length > 0">
+                    {{ armor.join(', ') }}
+                </li>
+                <li v-if="weapons.length === 0">No weapon proficiencies</li>
+                <li v-else>{{ weapons.join(', ') }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -95,11 +84,13 @@
                 return this.proficiencies.skills.map((skill) => {
 
                 });
+            },
+            armor() {
+                return this.proficiencies.armor.map(item => item.name);
+            },
+            weapons() {
+                return this.proficiencies.weapons.map(item => item.name);
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

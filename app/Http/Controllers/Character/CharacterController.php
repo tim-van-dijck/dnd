@@ -52,6 +52,7 @@ class CharacterController extends Controller
      * Display the specified resource.
      *
      * @param CharacterRepository $characterRepository
+     * @param Request $request
      * @param Character $character
      * @return CharacterResource
      * @throws \Illuminate\Auth\Access\AuthorizationException

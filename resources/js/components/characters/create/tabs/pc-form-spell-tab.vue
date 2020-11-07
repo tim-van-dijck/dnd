@@ -7,7 +7,7 @@
                 <div v-if="level.spells.length > 0 || (index == 0 && raceCantrip)" class="spell-level" v-for="(level, index) in spellsKnown">
                     <h3>{{ level.title }}</h3>
                     <div class="uk-child-width-1-2@m uk-grid-small uk-grid-match" uk-grid>
-                        <div v-for="(spell, index) in level.spells">
+                        <div v-for="spell in level.spells">
                             <div class="uk-card uk-card-body uk-card-primary">
                                 <div class="uk-card-title">{{ spell.name }}</div>
                                 <button v-if="selection[spell.level > 0 ? 'spells' : 'cantrips'].find(item => spell.id == item.id)"

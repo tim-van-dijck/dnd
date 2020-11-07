@@ -4,15 +4,16 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="character" id="character-form" class="uk-form-stacked">
-                    <pc-form-navigation :character="character" :spellcaster="spellcaster" :tab="tab" @navigate="goToTab" />
+                    <pc-form-navigation :character="character" :spellcaster="spellcaster" :tab="tab" :errors="errors" @navigate="goToTab" />
 
                     <pc-form-details-tab v-show="tab === 'details'" v-model="character.info" @next="goToTab('class')" />
                     <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" @next="goToTab('background')" />
-                    <pc-form-background-tab v-show="tab === 'background'" v-model="character.background" @next="goToTab('proficiency')" />
+                    <pc-form-background-tab v-show="tab === 'background'" v-model="character.background_id" @next="goToTab('proficiency')" />
                     <pc-form-proficiency-tab v-show="tab === 'proficiency'" v-model="character.proficiencies"
-                        :info="character.info" :character-classes="character.classes" @next="goToTab('ability')" />
+                                             :info="character.info" :character-classes="character.classes"
+                                             :background-id="character.background_id" @next="goToTab('ability')" />
                     <pc-form-abilities-tab v-show="tab === 'ability'" v-model="character.ability_scores"
-                        :info="character.info" :character-classes="character.classes" @next="goToTab('personality')" />
+                                           :info="character.info" :character-classes="character.classes" @next="goToTab('personality')" />
                     <pc-form-personality-tab v-show="tab === 'personality'" :spellcaster="spellcaster"
                                              v-model="character.personality" @next="spellcaster ? goToTab('spells') : save" />
                     <pc-form-spell-tab v-if="spellcaster" v-show="tab === 'spells'" v-model="character.spells"
@@ -49,7 +50,8 @@
                         let char = {
                             info: character.info,
                             personality: character.personality,
-                            ability_scores: character.ability_scores
+                            ability_scores: character.ability_scores,
+                            background_id: character.background_id
                         }
                         char.info.race_id = character.race.id;
                         char.classes = [];
@@ -88,9 +90,13 @@
                         bond: '',
                         flaw: ''
                     },
-                    proficiencies: {}
+                    proficiencies: {},
+                    background_id: null
                 };
             }
+        },
+        mounted() {
+            this.$store.commit('Characters/SET_ERRORS', {});
         },
         data() {
             return {
@@ -104,12 +110,16 @@
                     let payload = {id: this.id, character: this.character}
                     this.$store.dispatch('Characters/update', payload)
                         .then((response) => {
-                            this.$router.push({name: 'pc-detail', params: {id: response.data.data.id}});
+                            if (Object.keys(this.errors).length === 0) {
+                                this.$router.push({name: 'pc-detail', params: {id: response.data.data.id}});
+                            }
                         });
                 } else {
                     this.$store.dispatch('Characters/store', this.character)
                         .then(() => {
-                            this.$router.push({name: 'player-characters'});
+                            if (Object.keys(this.errors).length === 0) {
+                                this.$router.push({name: 'player-characters'});
+                            }
                         });
                 }
             },
@@ -121,7 +131,7 @@
             ...mapState('Characters', ['characters', 'errors', 'classes', 'races']),
             title() {
                 if (this.id) {
-                    return 'Edit ' + (this.character ? this.character.info.name : 'character');
+                    return `Edit ${this.character ? this.character.info.name : 'character'}`;
                 } else {
                     return 'Add character';
                 }
