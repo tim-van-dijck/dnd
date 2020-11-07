@@ -1,0 +1,53 @@
+#pc-form {
+  .skills {
+    .racial,
+    .class-based,
+    .class-based .class {
+      margin-bottom: 2em;
+    }
+  }
+  #pc-form-nav {
+    margin-bottom: 2em;
+    .uk-button-group>button.uk-button {
+      @media (max-width: 1100px) {
+        font-size: 10px;
+      }
+    }
+  }
+}
+[id^="class-info-"] {
+  .class-description {
+    font-style: italic;
+    p {
+      margin-top: 0;
+      margin-bottom: .7em
+    }
+  }
+  .uk-drop {
+    //width: 500px;
+    .uk-card {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.32);
+    }
+  }
+}
+
+#proficiency-tab {
+  .uk-grid .uk-card.uk-card-body {
+    padding: 20px 30px;
+  }
+  .uk-accordion-title {
+    cursor: pointer;
+  }
+}
+
+#spellbook {
+  margin-bottom: 1em;
+}
+#spellbook-modal {
+  .filters {
+    margin: 2em 0;
+  }
+  #spell-list {
+    border-right: 1px solid #e5e5e5;
+  }
+}

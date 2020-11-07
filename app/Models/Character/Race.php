@@ -4,12 +4,15 @@ namespace App\Models\Character;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Race
  * @package App\Models\Character
  * @property int id
  * @property string name
+ * @property string description
  * @property int speed
  * @property string size
  * @property int optional_ability_bonuses
@@ -21,29 +24,32 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection|Proficiency[] proficiencies
  * @property Collection|Subrace[] subraces
  * @property Collection|RaceTrait[] traits
+ * @property Collection|AbilityBonus[] abilities
  */
 class Race extends Model
 {
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class);
+        return $this->morphToMany(Language::class, 'entity', 'language_morph', 'entity_id')
+            ->withPivot('optional');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function proficiencies()
     {
-        return $this->belongsToMany(Proficiency::class, 'proficiency_race', 'race_id', 'proficiency_id');
+        return $this->morphToMany(Proficiency::class, 'entity', 'proficiency_morph', 'entity_id')
+            ->withPivot('optional');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function subraces()
     {
@@ -51,10 +57,20 @@ class Race extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function traits()
     {
-        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'race_id', 'trait_id');
+        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'race_id', 'trait_id')
+            ->wherePivot('subrace_id', '=', null)
+            ->withPivot('optional');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function abilities()
+    {
+        return $this->hasMany(AbilityBonus::class);
     }
 }

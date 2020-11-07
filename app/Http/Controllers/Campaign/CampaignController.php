@@ -39,7 +39,7 @@ class CampaignController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|string|max:191',
-            'description' => 'string'
+            'description' => 'string|nullable'
         ]);
 
         $campaign = $campaignManager->create($request->input());

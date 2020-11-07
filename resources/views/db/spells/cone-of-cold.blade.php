@@ -1,0 +1,2 @@
+<p>A blast of cold air erupts from your hands. Each creature in a 60-foot cone must make a constitution saving throw. A creature takes 8d8 cold damage on a failed save, or half as much damage on a successful one.</p>
+<p>A creature killed by this spell becomes a frozen statue until it thaws.</p>

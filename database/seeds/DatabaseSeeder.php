@@ -23,9 +23,10 @@ class DatabaseSeeder extends Seeder
          $this->call(RacesTableSeeder::class);
          $this->call(SubracesTableSeeder::class);
 
+         $this->call(BackgroundsTableSeeder::class);
+
          $this->call(WeaponPropertiesTableSeeder::class);
          $this->call(WeaponsTableSeeder::class);
-
          $this->call(ArmorTableSeeder::class);
 
          $this->call(SpellsTableSeeder::class);

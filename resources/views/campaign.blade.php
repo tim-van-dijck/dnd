@@ -7,6 +7,7 @@
     <title>D&D</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
     <link href="/css/app.css" rel="stylesheet">
+    <script type="text/javascript" src="/js/app.js"></script>
     <script src="https://kit.fontawesome.com/8c4a80dd98.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -39,6 +40,5 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/js/app.js"></script>
 </body>
 </html>

@@ -39,6 +39,11 @@ class CreateUser extends Command
      */
     public function handle()
     {
+        if (!in_array(env('APP_ENV'), ['development', 'local'])) {
+            if (User::count() > 0) {
+                $this->error('This command is not allowed on this environment');
+            }
+        }
         $name = $this->ask('Name:');
         $email = $this->ask('E-mail address:');
         $password = $this->secret('Password');

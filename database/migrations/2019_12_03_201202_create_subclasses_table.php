@@ -17,8 +17,8 @@ class CreateSubclassesTable extends Migration
             $table->increments('id');
             $table->integer('class_id', false, true);
             $table->string('name');
-            $table->string('subclass_flavor');
             $table->text('description');
+            $table->boolean('spellcaster')->default(false);
 
             $table->foreign('class_id')->references('id')->on('classes')
                 ->onUpdate('cascade')

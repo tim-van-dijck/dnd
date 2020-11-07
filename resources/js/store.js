@@ -5,6 +5,7 @@ import {Notes} from './modules/notes';
 import {Permissions} from './modules/permissions';
 import {Quests} from './modules/quests';
 import {Roles} from './modules/roles';
+import {Spells} from "./modules/spells";
 import {Users} from './modules/users';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -12,10 +13,11 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 let store = new Vuex.Store({
-    modules: {Characters, Locations, Messages, Notes, Permissions, Quests, Roles, Users},
+    modules: {Characters, Locations, Messages, Notes, Permissions, Quests, Roles, Spells, Users},
     state: {
         campaign: {},
         errors: {},
+        languages: null,
         logs: [],
         user: {
             permissions: {}
@@ -28,6 +30,12 @@ let store = new Vuex.Store({
                     commit('SET_CAMPAIGN', response.data);
                 });
         },
+        loadLanguages({commit}) {
+            return axios.get('/languages')
+                .then((response) => {
+                    commit('SET_LANGUAGES', response.data);
+                })
+        },
         loadLogs({commit}) {
             return axios.get('/campaign/logs')
                 .then((response) => {
@@ -38,12 +46,20 @@ let store = new Vuex.Store({
             return axios.get('/campaign/me')
                 .then((response) => {
                     commit('SET_USER', response.data);
+                })
+                .catch((error) => {
+                    if ([401,403,404].includes(error.response.status)) {
+                        window.location = '/';
+                    }
                 });
         }
     },
     mutations: {
         SET_CAMPAIGN(state, campaign) {
             state.campaign = campaign;
+        },
+        SET_LANGUAGES(state, languages) {
+            state.languages = languages
         },
         SET_LOGS(state, logs) {
             state.logs = logs;

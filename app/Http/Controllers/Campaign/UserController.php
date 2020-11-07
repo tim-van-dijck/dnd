@@ -62,6 +62,11 @@ class UserController extends Controller
         $userRepository->updateRole($campaignId, $user, $request->input('role'));
     }
 
+    public function destroy(User $user)
+    {
+        $user->revokeRoles(Session::get('campaign_id'));
+    }
+
     public function me()
     {
         $permissions = AuthService::campaignPermissions(Session::get('campaign_id'));

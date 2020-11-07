@@ -56,10 +56,11 @@ class InviteUser extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->greeting('Hi there!')
-                    ->line("You've been invited to the campaign $this->campaign by $this->inviter")
-                    ->action($this->newUser ? 'Register' : 'Go to campaign', $this->link)
-                    ->line('Have fun!');
+            ->subject("You've been invited for a D&D Campaign!")
+            ->greeting('Hi there!')
+            ->line("You've been invited to the campaign $this->campaign by $this->inviter")
+            ->action($this->newUser ? 'Register' : 'Go to campaign', $this->link)
+            ->line('Have fun!');
     }
 
     /**

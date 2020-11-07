@@ -2,9 +2,13 @@
 
 namespace App\Models\Character;
 
+use App\Models\Magic\Spell;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class Subrace
@@ -22,29 +26,33 @@ use Illuminate\Support\Carbon;
  * @property Collection|Proficiency[] proficiencies
  * @property Race race
  * @property Collection|RaceTrait[] traits
+ * @property Collection|AbilityBonus[] abilities
+ * @property Collection|Spell[] spells
  */
 class Subrace extends Model
 {
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function languages()
     {
-        return $this->belongsToMany(Language::class, 'proficiency_race', 'subrace_id', 'proficiency_id');
+        return $this->morphToMany(Language::class, 'entity', 'language_morph', 'entity_id')
+            ->withPivot('optional');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function proficiencies()
     {
-        return $this->belongsToMany(Proficiency::class, 'proficiency_race', 'subrace_id', 'proficiency_id');
+        return $this->morphToMany(Proficiency::class, 'entity', 'proficiency_morph', 'entity_id')
+            ->withPivot('optional');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function race()
     {
@@ -52,10 +60,28 @@ class Subrace extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function traits()
     {
-        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'subrace_id', 'trait_id');
+        return $this->belongsToMany(RaceTrait::class, 'race_trait', 'subrace_id', 'trait_id')
+            ->withPivot('optional');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function abilities()
+    {
+        return $this->hasMany(AbilityBonus::class);
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public function spells()
+    {
+        return $this->morphToMany(Spell::class, 'entity', 'spell_morph', 'entity_id')
+            ->withPivot(['optional', 'required_level']);
     }
 }

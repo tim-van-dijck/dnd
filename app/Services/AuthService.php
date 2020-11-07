@@ -37,11 +37,11 @@ class AuthService
             ])
             ->count() > 0;
 
-        $private = $model->private ?? false;
+        $private = $model ? ($model->private ?? false) : false;
+
         if ($rolePermission && !$private) {
             return true;
-        }
-        if ($model) {
+        } elseif ($model) {
             return self::hasOverridePermission($campaignId, $user->id, $entity, $model->id, $permission);
         }
         return false;
@@ -174,5 +174,20 @@ class AuthService
             $userPermission->delete = $permissionSet['delete'];
             $userPermission->save();
         }
+    }
+
+    public static function setPrivateEntity(int $campaignId, string $entity, int $entityId, $userId)
+    {
+        $userPermission = UserPermission::firstOrNew([
+            'campaign_id' => $campaignId,
+            'entity' => $entity,
+            'entity_id' => $entityId,
+            'user_id' => $userId
+        ]);
+        $userPermission->view = true;
+        $userPermission->create = true;
+        $userPermission->edit = true;
+        $userPermission->delete = true;
+        $userPermission->save();
     }
 }

@@ -1,4 +1,5 @@
 require('./bootstrap');
+
 import Icons from 'uikit/dist/js/uikit-icons';
 import UIkit from 'uikit';
 import Vue from 'vue';
@@ -16,25 +17,31 @@ import store from './store';
 import Messages from './components/layout/messages';
 import Navigation from './components/layout/navigation';
 
-if (document.getElementById('app')) {
-    store.dispatch('loadCampaign')
-        .catch((error) => {
-            if (error.response.status === 403) {
-                document.location.href = '/';
-            }
-        });
-    store.dispatch('loadUser')
-        .then(() => {
-            const vm = new Vue({
-                el: '#app',
-                router,
-                store,
-                components: {Messages, Navigation}
+window.copy = function(item) {
+    return JSON.parse(JSON.stringify(item));
+}
+
+window.onload = () => {
+    if (document.getElementById('app')) {
+        store.dispatch('loadCampaign')
+            .catch((error) => {
+                if (error.response.status === 403) {
+                    document.location.href = '/';
+                }
             });
-        })
-        .catch((error) => {
-            if (error.response.status === 403) {
-                document.location.href = '/';
-            }
-        });
+        store.dispatch('loadUser')
+            .then(() => {
+                const vm = new Vue({
+                    el: '#app',
+                    router,
+                    store,
+                    components: {Messages, Navigation}
+                });
+            })
+            .catch((error) => {
+                if (error.response.status === 403) {
+                    document.location.href = '/';
+                }
+            });
+    }
 }

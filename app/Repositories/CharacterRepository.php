@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\CharacterTypes;
 use App\Models\Campaign\Quest;
 use App\Models\Character\Character;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 
 class CharacterRepository
@@ -27,7 +28,7 @@ class CharacterRepository
      * @param int $pageSize
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function get(int $campaignId, array $filters, int $page = 1, int $pageSize = 20)
+    public function get(int $campaignId, array $filters, array $includes, int $page = 1, int $pageSize = 20)
     {
         $type = $filters['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
         $query = Character::query()->where([
@@ -49,27 +50,38 @@ class CharacterRepository
         } else {
             $query->where('user_permissions.view', 1);
         }
+        if (!empty($includes)) {
+            foreach ($includes as $include) {
+                $query->with($include);
+            }
+            $query->with($includes);
+        }
         return $query->paginate($pageSize, ['characters.*'], 'page[number]', $page);
     }
 
     /**
      * @param int $campaignId
      * @param array $input
+     *
+     * @return Character
      */
-    public function store(int $campaignId, array $input)
+    public function store(int $campaignId, array $input): Character
     {
-        $character = new Character();
+        $character = new Character($input);
         $character->campaign_id = $campaignId;
         $character->race_id = $input['race_id'];
-        $character->name = $input['name'];
-        $character->type = $input['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : $input['type'];
-        $character->title = $input['title'];
-        $character->age = $input['age'];
-        $character->dead = !empty($input['dead']);
-        $character->bio = $input['bio'];
+        if (!empty($input['subrace_id'])) {
+            $character->subrace_id = $input['subrace_id'];
+        }
+        $character->private = !empty($input['private']);
         $character->save();
 
+        if ($character->private) {
+            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
+        }
+
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'created');
+        return $character;
     }
 
     /**
@@ -77,9 +89,9 @@ class CharacterRepository
      * @param int $characterId
      * @return Character
      */
-    public function find(int $campaignId, int $characterId): Character
+    public function find(int $campaignId, int $characterId, array $includes = []): Character
     {
-        return Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->firstOrFail();
+        return Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->with($includes)->firstOrFail();
     }
 
     public function update(int $campaignId, int $characterId, array $data)
@@ -95,7 +107,11 @@ class CharacterRepository
     public function destroy(int $campaignId, int $characterId)
     {
         /** @var Character $character */
-        $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->findOrFail();
+        $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->firstOrFail();
+        $character->languages()->sync([]);
+        $character->proficiencies()->sync([]);
+        $character->classes()->sync([]);
+        $character->spells()->sync([]);
         $character->delete();
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
     }

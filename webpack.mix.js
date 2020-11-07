@@ -11,5 +11,23 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+    module: {
+        rules: [
+            {
+                test: /\.svg$/,
+                use: [
+                    {
+                        loader: "vue-svg-loader",
+                        options: { /* ... */ }
+                    }
+                ]
+            }
+        ]
+    }
+});
+
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
+
+mix.copyDirectory('node_modules/tinymce/skins', 'public/skins');
