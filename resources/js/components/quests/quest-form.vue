@@ -16,32 +16,41 @@
                         <div class="uk-width-1-2">
                             <h2>Details</h2>
                             <div class="uk-margin">
-                                <label for="title" class="uk-form-label">Title</label>
-                                <input id="title" name="title" type="text" class="uk-input" v-model="quest.title">
+                                <label for="title" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('title')}">Title</label>
+                                <input id="title" name="title" type="text" class="uk-input"
+                                       :class="{'uk-form-danger': errors.hasOwnProperty('title')}" v-model="quest.title">
                             </div>
                             <div class="uk-margin">
-                                <label for="location" class="uk-form-label">Location</label>
+                                <label for="location" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('location_id')}">Location</label>
                                 <v-select id="location" name="location"
-                                          @search="onSearch" :options="locations"
+                                          :class="{'uk-form-danger': errors.hasOwnProperty('location_id')}"
+                                          @search="onSearch" :options="locations" :reduce="item => item.value"
                                           v-model="quest.location_id">
                                 </v-select>
                             </div>
                             <div class="uk-margin">
-                                <label for="description" class="uk-form-label">Description</label>
-                                <html-editor id="description" name="description" v-model="quest.description"></html-editor>
+                                <label for="description" class="uk-form-label"
+                                       :class="{'uk-text-danger': errors.hasOwnProperty('description')}">Description</label>
+                                <html-editor id="description" name="description"
+                                             :class="{'uk-form-danger': errors.hasOwnProperty('description')}"
+                                             v-model="quest.description"></html-editor>
                             </div>
                             <div class="uk-margin">
-                                <label for="private" class="uk-form-label">
-                                    <input id="private" name="private" type="checkbox" class="uk-checkbox" v-model="quest.private">
+                                <label for="private" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('private')}">
+                                    <input id="private" name="private" type="checkbox" class="uk-checkbox"
+                                           :class="{'uk-form-danger': errors.hasOwnProperty('private')}"
+                                           v-model="quest.private">
                                     Private
                                 </label>
                             </div>
                         </div>
                         <div class="uk-width-1-2">
-                            <h2>Objectives</h2>
+                            <h2 :class="{'uk-text-danger': Object.keys(errors).filter(field => field.includes('objectives')).length > 0}">Objectives</h2>
                             <div class="uk-card uk-card-body uk-card-secondary objective" v-for="(objective, index) in quest.objectives">
                                 <div class="uk-margin">
-                                    <input type="text" class="uk-input" v-model="objective.name">
+                                    <input type="text" class="uk-input"
+                                           :class="{'uk-form-danger': errors.hasOwnProperty(`objectives.${index}.name`)}"
+                                           v-model="objective.name">
                                 </div>
                                 <div class="uk-margin">
                                     <label :for="`optional_${index}`">
@@ -145,12 +154,15 @@
                 } else {
                     promise = this.$store.dispatch('Quests/store', quest)
                 }
-                promise.then(() => {
-                    if (!this.errors || Object.keys(this.errors).length === 0) {
+                promise
+                    .then(() => {
                         this.$store.dispatch('Quests/load');
                         this.$router.push({name: 'quests'});
-                    }
-                });
+                    })
+                    .catch((error) => {
+                        this.$store.commit('Quests/SET_ERRORS', error.response.data.errors);
+                        this.$store.dispatch('Messages/error', error.response.data.message, {root: true});
+                    });
             },
             onSearch(query, loading) {
                 if (query.length > 2) {

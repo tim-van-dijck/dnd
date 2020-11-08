@@ -15,33 +15,38 @@
                     <div v-show="tab === 'details'" uk-grid>
                         <div class="uk-width-1-2">
                             <div class="uk-margin">
-                                <label for="name" class="uk-form-label">Name</label>
-                                <input id="name" title="name" type="text" class="uk-input" v-model="location.name">
+                                <label for="name" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('name')}">Name*</label>
+                                <input id="name" title="name" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('name')}"
+                                       v-model="location.name">
                             </div>
                             <div class="uk-margin">
-                                <label for="type" class="uk-form-label">Type</label>
-                                <input id="type" name="type" type="text" class="uk-input" v-model="location.type">
+                                <label for="type" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('type')}">Type*</label>
+                                <input id="type" name="type" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('type')}"
+                                       v-model="location.type">
                             </div>
                             <div class="uk-margin">
-                                <label for="location" class="uk-form-label">Location</label>
-                                <v-select id="location" name="location" class="uk-select"
+                                <label for="location" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('location_id')}">Location</label>
+                                <v-select id="location" name="location_id" class="uk-select"
+                                          :class="{'uk-form-danger': errors.hasOwnProperty('location_id')}"
                                           @search="onSearch" :options="locations"
+                                          :reduce="item => item.value"
                                           v-model="location.location_id">
                                 </v-select>
                             </div>
                             <div class="uk-margin">
-                                <label for="map" class="uk-form-label">Map</label>
+                                <label for="map" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('map')}">Map</label>
                                 <img class="preview-image" v-if="map" :src="map" alt="Uploaded map image" width="300" height="300">
-                                <input id="map" name="map" type="file" @change="onFileChange">
+                                <input id="map" name="map" type="file" :class="{'uk-form-danger': errors.hasOwnProperty('map')}" @change="onFileChange">
                             </div>
                             <hr>
                             <div class="uk-margin uk-form-controls">
-                                <input id="private" name="private" type="checkbox" class="uk-checkbox" v-model="location.private">
-                                <label for="private">Private</label>
+                                <input id="private" name="private" type="checkbox" class="uk-checkbox"
+                                       :class="{'uk-form-danger': errors.hasOwnProperty('private')}" v-model="location.private">
+                                <label for="private" :class="{'uk-text-danger': errors.hasOwnProperty('private')}">Private</label>
                             </div>
                         </div>
                         <div class="uk-width-1-2">
-                            <label for="description" class="uk-form-label">Description</label>
+                            <label for="description" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('description')}">Description</label>
                             <html-editor id="description" name="description" v-model="location.description" height="600">
                             </html-editor>
                         </div>
@@ -136,11 +141,14 @@
                     promise = this.$store.dispatch('Locations/store', {location})
                 }
 
-                promise.then(() => {
-                    if (this.errors == null || Object.keys(this.errors).length === 0) {
+                promise
+                    .then(() => {
                         this.$router.push({name: 'locations'});
-                    }
-                });
+                    })
+                    .catch((error) => {
+                        this.$store.commit('Locations/SET_ERRORS', error.response.data.errors);
+                        this.$store.dispatch('Messages/error', error.response.data.message, {root: true});
+                    });
             },
             onSearch(query, loading) {
                 if (query.length > 2) {

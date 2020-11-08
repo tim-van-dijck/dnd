@@ -50,10 +50,6 @@ export const Locations = {
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Location saved!', {root: true});
-                })
-                .catch((error) => {
-                    commit('SET_ERRORS', error.response.data.errors);
-                    dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         },
         update({dispatch, commit}, data) {
@@ -67,10 +63,6 @@ export const Locations = {
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Location saved!', {root: true});
-                })
-                .catch((error) => {
-                    commit('SET_ERRORS', error.response.data.errors);
-                    dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         },
         destroy({dispatch}, location) {

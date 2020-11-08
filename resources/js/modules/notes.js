@@ -45,10 +45,6 @@ export const Notes = {
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Note saved!', {root: true});
-                })
-                .catch((error) => {
-                    commit('SET_ERRORS', error.response.data.errors);
-                    dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         },
         update({commit, dispatch}, data) {
@@ -58,10 +54,6 @@ export const Notes = {
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Note saved!', {root: true});
-                })
-                .catch((error) => {
-                    commit('SET_ERRORS', error.response.data.errors);
-                    dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         },
         destroy({dispatch}, note) {

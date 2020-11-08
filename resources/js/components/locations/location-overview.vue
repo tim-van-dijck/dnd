@@ -56,7 +56,7 @@
                         name: 'location',
                         title: 'Location',
                         format(location) {
-                            return location || 'N/A';
+                            return location ? location.name || 'N/A' : 'N/A';
                         }
                     }
                 ]

@@ -45,11 +45,7 @@ export const Quests = {
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Quest saved!', {root: true});
-                })
-                .catch((error) => {
-                    commit('SET_ERRORS', error.response.data.errors);
-                    dispatch('Messages/error', error.response.data.message, {root: true});
-                })
+                });
         },
         update({commit, dispatch}, data) {
             let payload = data.quest;
@@ -58,11 +54,7 @@ export const Quests = {
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Quest saved!', {root: true});
-                })
-                .catch((error) => {
-                    commit('SET_ERRORS', error.response.data.errors);
-                    dispatch('Messages/error', error.response.data.message, {root: true});
-                })
+                });
         },
         destroy({dispatch}, quest) {
             return axios.delete(`/campaign/quests/${quest.id}`)

@@ -74,7 +74,7 @@ class CharacterRequest extends FormRequest
             'info.name' => 'required|string',
             'info.alignment' => 'required|string|in:LG,NG,CG,LN,TN,CN,LE,NE,CE',
             'info.race_id' => 'required|integer|exists:races,id',
-            'info.subrace_id' => 'sometimes|integer|exists:subraces,id',
+            'info.subrace_id' => 'required|integer|exists:subraces,id',
             'info.age' => 'sometimes|integer',
             'info.dead' => 'boolean',
             'info.private' => 'boolean',

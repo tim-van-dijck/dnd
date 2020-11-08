@@ -34,7 +34,7 @@
     export default {
         name: "NPCOverview",
         created() {
-            this.$store.dispatch('Characters/loadCharacters', 'npc');
+            this.$store.dispatch('Characters/load', 'npc');
             this.$store.dispatch('Characters/loadRaces');
         },
         computed: {

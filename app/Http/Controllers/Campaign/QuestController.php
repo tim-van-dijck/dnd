@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Campaign;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\QuestRequest;
 use App\Http\Resources\QuestResource;
 use App\Models\Campaign\Quest;
 use App\Models\Campaign\QuestObjective;
 use App\Repositories\QuestRepository;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class QuestController extends Controller
 {
@@ -36,26 +40,15 @@ class QuestController extends Controller
      * @param QuestRepository $questRepository
      * @param Request $request
      * @return void
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws ValidationException
+     * @throws AuthorizationException
      */
-    public function store(QuestRepository $questRepository, Request $request)
+    public function store(QuestRepository $questRepository, QuestRequest $request)
     {
         $this->authorize('create', Quest::class);
-        $this->validate($request, [
-            'title' => 'required|string|max:191',
-            'description' => 'string',
-            'location_id' => 'int|in:locations,id',
-            'objectives' => 'required|array|min:1',
-            'objectives.*.name' => 'required|string|max:191',
-            'objectives.*.optional' => 'required|boolean',
-            'permissions' => 'sometimes|nullable|array',
-            'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
-            'permissions.*.edit' => 'required|boolean',
-            'permissions.*.delete' => 'required|boolean',
-        ]);
-        $questRepository->store(Session::get('campaign_id'), $request->input());
+        $campaignId = Session::get('campaign_id');
+        $request->validate($request->rules());
+        $questRepository->store($campaignId, $request->input());
     }
 
     /**
@@ -63,7 +56,7 @@ class QuestController extends Controller
      *
      * @param Quest $quest
      * @return Quest
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function show(Quest $quest): Quest
     {
@@ -82,25 +75,12 @@ class QuestController extends Controller
      * @param Request $request
      * @param Quest $quest
      * @return void
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws AuthorizationException|ValidationException
      */
-    public function update(QuestRepository $questRepository, Request $request, Quest $quest)
+    public function update(QuestRepository $questRepository, QuestRequest $request, Quest $quest)
     {
         $this->authorize('update', $quest);
-        $this->validate($request, [
-            'title' => 'required|string|max:191',
-            'description' => 'string',
-            'location_id' => 'int|in:locations,id',
-            'objectives' => 'required|array|min:1',
-            'objectives.*.name' => 'required|string|max:191',
-            'objectives.*.optional' => 'required|boolean',
-            'permissions' => 'sometimes|nullable|array',
-            'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
-            'permissions.*.edit' => 'required|boolean',
-            'permissions.*.delete' => 'required|boolean',
-        ]);
+        $request->validate($request->rules());
         $questRepository->update(Session::get('campaign_id'), $quest, $request->input());
     }
 
@@ -110,7 +90,7 @@ class QuestController extends Controller
      * @param QuestRepository $questRepository
      * @param Quest $quest
      * @return void
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function destroy(QuestRepository $questRepository, Quest $quest)
     {
@@ -123,7 +103,7 @@ class QuestController extends Controller
      * @param int $questId
      * @param int $objectiveId
      * @return QuestObjective
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function toggleObjectiveStatus(Request $request, int $questId, int $objectiveId)
     {

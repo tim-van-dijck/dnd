@@ -13,7 +13,7 @@
                 <div class="uk-accordion-content">
                     <div class="uk-margin">
                         <label :for="`class_${index}`" class="uk-form-label"
-                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.class_id`)}">Class</label>
+                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.class_id`)}">Class*</label>
                         <select :id="`class_${index}`" :name="`class_${index}`" class="uk-select"
                                 :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.class_id`)}"
                                 v-model="charClass.class_id" @input="charClass.subclass_id = null">
@@ -23,7 +23,7 @@
                     </div>
                     <div class="uk-margin">
                         <label :for="`subclass_${index}`" class="uk-form-label"
-                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}">Subclass</label>
+                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}">Subclass*</label>
                         <select :id="`subclass_${index}`" :name="`subclass_${index}`" class="uk-select"
                                 :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}"
                                 v-model="charClass.subclass_id"
@@ -34,7 +34,7 @@
                     </div>
                     <div class="uk-margin">
                         <label for="level" class="uk-form-label"
-                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.level`)}">Level</label>
+                               :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.level`)}">Level*</label>
                         <input id="level" type="number" name="level" class="uk-input"min="1" max="20"
                                :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.level`)}"
                                v-model="charClass.level" />

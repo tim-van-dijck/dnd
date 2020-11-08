@@ -25,7 +25,7 @@ export const Messages = {
                 if (index != null) {
                     state.messages.splice(index,1);
                 }
-            }, 5000)
+            }, 5000);
         }
     }
 };

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Campaign;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LocationRequest;
 use App\Http\Resources\LocationResource;
 use App\Models\Campaign\Location;
 use App\Repositories\LocationRepository;
@@ -10,7 +11,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class LocationController extends Controller
@@ -18,7 +21,7 @@ class LocationController extends Controller
     /**
      * @param LocationRepository $locationRepository
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(LocationRepository $locationRepository, Request $request)
     {
@@ -31,25 +34,13 @@ class LocationController extends Controller
 
     /**
      * @param LocationRepository $locationRepository
-     * @param Request $request
-     * @throws ValidationException
-     * @throws AuthorizationException
+     * @param LocationRequest $request
+     * @throws ValidationException|AuthorizationException|FileNotFoundException
      */
-    public function store(LocationRepository $locationRepository, Request $request)
+    public function store(LocationRepository $locationRepository, LocationRequest $request)
     {
         $this->authorize('create', Location::class);
-        $this->validate($request, [
-            'name' => 'required|string',
-            'type' => 'required|string',
-            'description' => 'string',
-            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192',
-            'permissions' => 'sometimes|nullable|array',
-            'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
-            'permissions.*.edit' => 'required|boolean',
-            'permissions.*.delete' => 'required|boolean',
-        ]);
-
+        $request->validate($request->rules());
         $locationRepository->store(Session::get('campaign_id'), $request->input(), $request->file('map', null));
     }
 
@@ -69,26 +60,14 @@ class LocationController extends Controller
 
     /**
      * @param LocationRepository $locationRepository
-     * @param Request $request
+     * @param LocationRequest $request
      * @param Location $location
-     * @throws AuthorizationException
-     * @throws FileNotFoundException
-     * @throws ValidationException
+     * @throws AuthorizationException|FileNotFoundException
      */
-    public function update(LocationRepository $locationRepository, Request $request, Location $location)
+    public function update(LocationRepository $locationRepository, LocationRequest $request, Location $location)
     {
         $this->authorize('update', $location);
-        $this->validate($request, [
-            'name' => 'required|string',
-            'type' => 'required|string',
-            'description' => 'string',
-            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192',
-            'permissions' => 'sometimes|nullable|array',
-            'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
-            'permissions.*.edit' => 'required|boolean',
-            'permissions.*.delete' => 'required|boolean',
-        ]);
+        $request->validate($request->rules());
         $locationRepository
             ->update(Session::get('campaign_id'), $location, $request->input(), $request->file('map', null));
     }

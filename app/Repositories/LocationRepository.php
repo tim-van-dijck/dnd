@@ -72,12 +72,9 @@ class LocationRepository
         $location->location_id = $input['location_id'] ?? null;
         $location->name = $input['name'];
         $location->type = $input['type'];
-        $location->description = $input['description'];
-        if ($map) {
-            $location->map = $this->saveImage($map);
-        } else {
-            $location->map = '';
-        }
+        $location->map = $map ? $this->saveImage($map) : '';
+        $location->description = $input['description']?? '';
+        $location->private = !empty($data['private']);
         $location->save();
 
         if (array_key_exists('permissions', $input)) {
@@ -102,7 +99,7 @@ class LocationRepository
         $location->location_id = $input['location_id'] ?? null;
         $location->name = $input['name'];
         $location->type = $input['type'];
-        $location->description = $input['description'];
+        $location->description = $input['description'] ?? '';
         $location->private = !empty($input['private']);
         if ($map) {
             $location->map = $this->saveImage($map, $location);

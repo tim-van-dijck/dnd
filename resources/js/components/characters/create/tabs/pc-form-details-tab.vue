@@ -4,7 +4,7 @@
             <div class="uk-width-1-2">
                 <race-info-modal />
                 <div class="uk-margin">
-                    <label for="race" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.race_id')}">Race</label>
+                    <label for="race" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.race_id')}">Race*</label>
                     <select id="race" name="race" class="uk-select" :class="{'uk-form-danger': this.errors.hasOwnProperty('info.race_id')}"
                             v-model="info.race_id" @input="info.subrace_id = null">
                         <option :value="null">- Choose a race -</option>
@@ -12,7 +12,7 @@
                     </select>
                 </div>
                 <div class="uk-margin">
-                    <label for="subrace" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.subrace_id')}">Subrace</label>
+                    <label for="subrace" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.subrace_id')}">Subrace*</label>
                     <select id="subrace" name="subrace" class="uk-select" :class="{'uk-form-danger': this.errors.hasOwnProperty('info.subrace_id')}"
                             v-model="info.subrace_id" :disabled="subraces.length == 0">
                         <option :value="null">- Choose a subrace -</option>
@@ -21,12 +21,12 @@
                 </div>
                 <hr>
                 <div class="uk-margin">
-                    <label for="name" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.name')}">Name</label>
+                    <label for="name" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.name')}">Name*</label>
                     <input id="name" title="name" type="text" class="uk-input"
                            :class="{'uk-form-danger': this.errors.hasOwnProperty('info.name')}" v-model="info.name">
                 </div>
                 <div class="uk-margin">
-                    <label for="alignment" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.alignment')}">Alignment</label>
+                    <label for="alignment" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.alignment')}">Alignment*</label>
                     <select id="alignment" name="alignment" class="uk-select"
                             :class="{'uk-form-danger': this.errors.hasOwnProperty('info.alignment')}" v-model="info.alignment">
                         <option :value="null">- Choose an alignment -</option>

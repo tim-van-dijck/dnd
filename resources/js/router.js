@@ -26,6 +26,7 @@ import UserOverview from './components/users/user-overview';
 import UserForm from './components/users/user-form';
 
 import VueRouter from "vue-router";
+import ComingSoon from "./components/ComingSoon";
 
 let routes = [
     {
@@ -159,7 +160,7 @@ let routes = [
         path: '/inventory',
         name: 'inventory',
         props: true,
-        component: LocationOverview
+        component: ComingSoon
     },
 
     {

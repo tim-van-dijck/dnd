@@ -5,6 +5,8 @@ namespace App\Models\Campaign;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Location
@@ -14,9 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null location_id
  * @property string name
  * @property string type
+ * @property string map
  * @property string description
+ * @property bool private
  * @property Carbon created_at
  * @property Carbon updated_at
+ *
  * @property Location location
  * @property Collection locations
  */
@@ -25,7 +30,7 @@ class Location extends Model
     protected $dates = ['created_at', 'updated_at'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function campaign()
     {
@@ -33,7 +38,7 @@ class Location extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function location()
     {
@@ -41,7 +46,7 @@ class Location extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function locations()
     {

@@ -14,12 +14,14 @@
                     </ul>
                     <div v-show="tab === 'details'">
                         <div class="uk-margin">
-                            <label for="name" class="uk-form-label">Name</label>
-                            <input id="name" name="name" type="text" class="uk-input" v-model="note.name">
+                            <label for="name" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('name')}">Name*</label>
+                            <input id="name" name="name" type="text" class="uk-input"
+                                   :class="{'uk-form-danger': errors.hasOwnProperty('name')}"
+                                   v-model="note.name">
                         </div>
                         <div class="uk-margin">
-                            <label for="content" class="uk-form-label">Content</label>
-                            <html-editor id="content" name="content" height="800" v-model="note.content"></html-editor>
+                            <label for="content" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('content')}">Content*</label>
+                            <html-editor id="note-content" name="note-content" height="800" v-model="note.content"></html-editor>
                         </div>
                         <div class="uk-margin">
                             <label for="private" class="uk-form-label">
@@ -95,6 +97,10 @@
                             this.$router.push({name: 'notes'});
                         }
                     })
+                    .catch((error) => {
+                        this.$store.commit('Notes/SET_ERRORS', error.response.data.errors);
+                        this.$store.dispatch('Messages/error', error.response.data.message, {root: true});
+                    });
             }
         },
         computed: {
