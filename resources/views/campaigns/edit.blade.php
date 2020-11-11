@@ -12,7 +12,7 @@
                     <input id="name" name="name" type="text" class="uk-input {{ $errors->has('name') ? 'uk-form-danger': '' }}" value="{{ old('name', $campaign->name) }}">
                 </div>
                 <div class="uk-margin">
-                    <label for="description" class="uk-form-label {{ $errors->has('name') ? 'uk-form-danger': '' }}">Description</label>
+                    <label for="description" class="uk-form-label {{ $errors->has('name') ? 'uk-text-danger': '' }}">Description</label>
                     <textarea id="description" name="description">{{ old('description', $campaign->description) }}</textarea>
                 </div>
                 <p class="uk-margin">

@@ -23,6 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/backgrounds', 'Character\ApiController@backgrounds');
     Route::get('/spells', 'Magic\SpellController@index');
 
+    Route::get('/profile', 'UserController@profile')->name('profile.index');
+    Route::post('/profile', 'UserController@save')->name('profile.save');
+
     Route::get('/permissions', 'Campaign\RoleController@permissions');
     Route::resource('/campaigns', 'Campaign\CampaignController');
     Route::group(['prefix' => '/campaign'], function () {
