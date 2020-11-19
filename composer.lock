@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "292a4fc924eb4e3ba8504c2f67010885",
+    "content-hash": "3e55d6499edbef269c033e7956229d51",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4124,16 +4124,16 @@
         },
         {
             "name": "tim-van-dijck/dnd-seeds",
-            "version": "v0.13-alpha",
+            "version": "v0.14-alpha",
             "source": {
                 "type": "git",
                 "url": "git@github.com:tim-van-dijck/dnd-seeds.git",
-                "reference": "71238cfa56d81b151b5c8675d1085c8f79928f06"
+                "reference": "fabb8c7341f0a6a8551488ef3f8778d5908f0e3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tim-van-dijck/dnd-seeds/zipball/71238cfa56d81b151b5c8675d1085c8f79928f06",
-                "reference": "71238cfa56d81b151b5c8675d1085c8f79928f06",
+                "url": "https://api.github.com/repos/tim-van-dijck/dnd-seeds/zipball/fabb8c7341f0a6a8551488ef3f8778d5908f0e3a",
+                "reference": "fabb8c7341f0a6a8551488ef3f8778d5908f0e3a",
                 "shasum": ""
             },
             "require": {
@@ -4163,10 +4163,10 @@
             ],
             "description": "Library of DB Seeders for the Dungeons & Diaries application based on WotC content",
             "support": {
-                "source": "https://github.com/tim-van-dijck/dnd-seeds/tree/v0.13-alpha",
+                "source": "https://github.com/tim-van-dijck/dnd-seeds/tree/v0.14-alpha",
                 "issues": "https://github.com/tim-van-dijck/dnd-seeds/issues"
             },
-            "time": "2020-11-19T07:22:04+00:00"
+            "time": "2020-11-19T07:30:18+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
