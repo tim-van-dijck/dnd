@@ -1,7 +1,8 @@
-<form class="toggle-class" action="/password/reset" hidden>
+<form class="toggle-class" action="/password/email" method="post" hidden>
+    @csrf
     <div class="uk-margin-small">
         <div class="uk-inline uk-width-1-1">
-            <input class="uk-input" placeholder="E-mail" required type="text">
+            <input class="uk-input" placeholder="E-mail" name="email" required type="text">
             <i class="uk-form-icon uk-form-icon-flip fas fa-envelope"></i>
         </div>
     </div>
