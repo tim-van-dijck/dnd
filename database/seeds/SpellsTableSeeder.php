@@ -49,7 +49,7 @@ class SpellsTableSeeder extends Seeder
             [
                 "name" => "Melf's Acid Arrow",
                 "desc" => "A shimmering green arrow streaks toward a target within range and bursts in a spray of acid. Make a ranged spell attack against the target. On a hit, the target takes 4d4 acid damage immediately and 2d4 acid damage at the end of its next turn. On a miss, the arrow splashes the target with acid for half as much of the initial damage and no damage at the end of its next turn.",
-                "higher_levels" => "When you cast this spell using a spell slot of 3rd level or higher, the damage (both initial and later) increases by 1d4 for each slot level above 2nd.",
+                "higher_level" => "When you cast this spell using a spell slot of 3rd level or higher, the damage (both initial and later) increases by 1d4 for each slot level above 2nd.",
                 "range" => "90 feet",
                 "components" => ["V", "S", "M"],
                 "material" => "Powdered rhubarb leaf and an adder's stomach.",
@@ -3038,7 +3038,6 @@ class SpellsTableSeeder extends Seeder
                 "subclasses" => ["College of Lore", "Circle of the Land"]
             ],
             [
-                "index" => 201,
                 "name" => "Mending",
                 "desc" => "This spell repairs a single break or tear in an object you touch, such as a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no longer than 1 foot in any dimension, you mend it, leaving no trace of the former damage. This spell can physically repair a magic item or construct, but the spell can't restore magic to such an object.",
                 "range" => "Touch",

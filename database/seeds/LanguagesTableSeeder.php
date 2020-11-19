@@ -2,7 +2,6 @@
 
 use App\Models\Character\Language;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
 
 class LanguagesTableSeeder extends Seeder
 {

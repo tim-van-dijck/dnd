@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @package App\Models\Character
  * @property int id
  * @property int class_id
+ * @property int subclass_id
  * @property int level
  * @property int cantrips_known
  * @property int spells_known
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array class_specific
  *
  * @property CharacterClass class
+ * @property Subclass|null subclass
  */
 class ClassLevel extends Model
 {
@@ -40,5 +42,13 @@ class ClassLevel extends Model
     public function class()
     {
         return $this->belongsTo(CharacterClass::class, 'class_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function subclass()
+    {
+        return $this->belongsTo(Subclass::class, 'subclass_id');
     }
 }

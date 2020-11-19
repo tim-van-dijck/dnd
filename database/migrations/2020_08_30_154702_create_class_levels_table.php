@@ -16,6 +16,7 @@ class CreateClassLevelsTable extends Migration
         Schema::create('class_levels', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('class_id');
+            $table->unsignedInteger('subclass_id')->nullable();
             $table->unsignedTinyInteger('level');
             $table->unsignedTinyInteger('cantrips_known');
             $table->unsignedTinyInteger('spells_known');

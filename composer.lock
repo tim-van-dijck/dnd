@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe159d85c489eeea09f1056422c4022f",
+    "content-hash": "292a4fc924eb4e3ba8504c2f67010885",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4123,6 +4123,52 @@
             "time": "2020-07-13T06:12:54+00:00"
         },
         {
+            "name": "tim-van-dijck/dnd-seeds",
+            "version": "v0.13-alpha",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:tim-van-dijck/dnd-seeds.git",
+                "reference": "71238cfa56d81b151b5c8675d1085c8f79928f06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tim-van-dijck/dnd-seeds/zipball/71238cfa56d81b151b5c8675d1085c8f79928f06",
+                "reference": "71238cfa56d81b151b5c8675d1085c8f79928f06",
+                "shasum": ""
+            },
+            "require": {
+                "php": "7.4.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TimvanDijck\\DndSeeds\\DndSeedsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TimvanDijck\\DndSeeds\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tim van Dijck",
+                    "email": "tim.van.dijck@hotmail.com"
+                }
+            ],
+            "description": "Library of DB Seeders for the Dungeons & Diaries application based on WotC content",
+            "support": {
+                "source": "https://github.com/tim-van-dijck/dnd-seeds/tree/v0.13-alpha",
+                "issues": "https://github.com/tim-van-dijck/dnd-seeds/issues"
+            },
+            "time": "2020-11-19T07:22:04+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v3.6.7",
             "source": {
@@ -6237,7 +6283,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "tim-van-dijck/dnd-seeds": 15
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -6245,5 +6293,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

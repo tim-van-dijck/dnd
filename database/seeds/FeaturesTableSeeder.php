@@ -87,7 +87,7 @@ class FeaturesTableSeeder extends Seeder
      * @param array $featureArray
      * @return Feature
      */
-    public function getFeature(array $featureArray): Feature
+    private function getFeature(array $featureArray): Feature
     {
         $feature = Feature::where('name', $featureArray['name'])->first();
         if ($feature == null) {
@@ -110,7 +110,7 @@ class FeaturesTableSeeder extends Seeder
      * @param string $entity
      * @param int $entityId
      */
-    public function handleChoices(Feature $feature, array $choices, string $entity, int $entityId)
+    private function handleChoices(Feature $feature, array $choices, string $entity, int $entityId)
     {
         $sync = [];
         foreach ($choices as $choice) {
@@ -1965,7 +1965,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Wholeness of Body',
-                'description' => 'You gain the ability to heal yourself. As an action, you can regain hit points equal to three times your monk leveI. Vou musl finish a long rest before you can use this feature again.',
+                'description' => 'You gain the ability to heal yourself. As an action, you can regain hit points equal to three times your monk leveI. You musl finish a long rest before you can use this feature again.',
                 'subclasses' => ['Way of the Open Hand' => ['level' => 6]]
             ],
             [

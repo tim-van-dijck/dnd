@@ -275,6 +275,10 @@
                 for (let charClass of this.characterClasses) {
                     if (charClass.class_id) {
                         levels[charClass.class_id] = this.classes[charClass.class_id].levels[charClass.level];
+                        let subclass = this.classes[charClass.class_id].subclasses.find(item => item.id == charClass.subclass_id);
+                        if (charClass.subclass_id && subclass && subclass.levels.hasOwnProperty(charClass.level)) {
+                            levels[charClass.class_id] = subclass.levels[charClass.level];
+                        }
                     }
                 }
                 return levels;

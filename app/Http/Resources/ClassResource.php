@@ -29,6 +29,9 @@ class ClassResource extends JsonResource
         $levels = $this->resource->levels->toArray();
         if (!empty($levels)) {
             $class['levels'] = $this->formatLevels($levels);
+            foreach ($class['subclasses'] as &$subclass) {
+                $subclass['levels'] = $this->formatLevels($subclass['levels']);
+            }
         }
         if ($request->has('include') && strpos($request->query('include', ''), 'features') !== false) {
             /** @var FeatureRepository $featureRepository */
@@ -39,7 +42,7 @@ class ClassResource extends JsonResource
             foreach ($class['subclasses'] as &$subclass) {
                 /** @var FeatureRepository $featureRepository */
                 $featureRepository = resolve(FeatureRepository::class);
-                $subclass['features'] = $featureRepository->subclassFeatures($class['id'])->toArray();
+                $subclass['features'] = $featureRepository->subclassFeatures($subclass['id'])->toArray();
             }
         }
         return $class;

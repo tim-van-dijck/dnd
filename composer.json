@@ -1,10 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "tim-van-dijck/dnd",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "D&D Campaign Manager",
     "keywords": [
-        "framework",
-        "laravel"
+        "D&D",
+        "Dungeons",
+        "Dragons",
+        "Campaign"
     ],
     "license": "MIT",
     "require": {
@@ -13,7 +15,8 @@
         "aws/aws-sdk-php": "^3.138",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "6.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "tim-van-dijck/dnd-seeds": "^0.13.0@alpha"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
@@ -59,5 +62,11 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:tim-van-dijck/dnd-seeds.git"
+        }
+    ]
 }

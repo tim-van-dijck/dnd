@@ -61,4 +61,12 @@ class Subclass extends Model
         return $this->morphToMany(Spell::class, 'entity', 'spell_morph', 'entity_id')
             ->withPivot(['optional', 'required_level']);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function levels()
+    {
+        return $this->hasMany(ClassLevel::class, 'subclass_id');
+    }
 }

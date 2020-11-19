@@ -53,11 +53,11 @@
                         <div v-show="active.tab === 'subclasses'">
                             <ul uk-tab>
                                 <li :class="{'uk-active': active.subclass == subclass.id}" v-for="subclass in activeClass.subclasses">
-                                    <a href="#" @click.prevent="active.subclass = subclass.id">
+                                    <a href="#" @click.prevent="setActiveSubclass(subclass.id)">
                                         {{ subclass.name }}
                                         <span v-if="!activeClass.spellcaster && subclass.spellcaster">
-                                    (<i class="fas fa-hand-sparkles" title="Spellcasting subclass"></i>)
-                                </span>
+                                            (<i class="fas fa-hand-sparkles" title="Spellcasting subclass"></i>)
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
@@ -75,7 +75,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-2-3">
+                                    <div v-if="activeSubclassFeature" class="uk-width-2-3">
                                         <h4>{{ activeSubclassFeature.name }}</h4>
                                         <div v-html="activeSubclassFeature.description"></div>
                                     </div>
@@ -116,6 +116,11 @@
                 this.active.subclass = subclass.id;
                 this.active.tab = 'description';
                 this.active.feature = charClass.features[0].id;
+                this.active.subFeature = subclass.features[0].id;
+            },
+            setActiveSubclass(subclassId) {
+                let subclass = this.activeClass.subclasses.find(item => item.id === subclassId);
+                this.active.subclass = subclassId;
                 this.active.subFeature = subclass.features[0].id;
             }
         },

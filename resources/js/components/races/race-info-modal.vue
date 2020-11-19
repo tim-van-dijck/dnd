@@ -62,7 +62,7 @@
                             <div v-show="active.tab === 'subraces'">
                                 <ul uk-tab>
                                     <li :class="{'uk-active': active.subrace == subrace.id}" v-for="subrace in activeRace.subraces">
-                                        <a href="#" @click.prevent="active.subrace = subrace.id">{{ subrace.name }}</a>
+                                        <a href="#" @click.prevent="setActiveSubrace(subrace.id)">{{ subrace.name }}</a>
                                     </li>
                                 </ul>
                                 <div v-if="active.subrace == subrace.id" class="subrace-info" v-for="subrace in activeRace.subraces">
@@ -89,7 +89,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="uk-width-2-3">
+                                        <div v-if="activeSubraceTrait" class="uk-width-2-3">
                                             <h4>{{ activeSubraceTrait.name }}</h4>
                                             <div v-html="activeSubraceTrait.description"></div>
                                         </div>
@@ -139,7 +139,15 @@
                     let subrace = race.subraces[0];
                     this.active.subrace = subrace.id;
                     this.active.subTrait = subrace.traits[0].id;
+                } else {
+                    this.active.subrace = null;
+                    this.active.subTrait = null;
                 }
+            },
+            setActiveSubrace(subraceId) {
+                let subrace = this.activeRace.subraces.find(item => item.id === subraceId);
+                this.active.subrace = subraceId;
+                this.active.subTrait = subrace.traits[0].id;
             }
         },
         computed: {
