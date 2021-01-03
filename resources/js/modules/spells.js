@@ -156,11 +156,15 @@ export const Spells = {
         }
     },
     actions: {
-        load: ({commit}) => {
-            return axios.get('/spells')
-                .then((response) => {
-                    commit('SET_SPELLS', response.data);
-                });
+        load: ({state, commit}, force) => {
+            if (force || state.spells === null) {
+                return axios.get('/spells')
+                    .then((response) => {
+                        commit('SET_SPELLS', response.data);
+                    });
+            } else {
+                return Promise.resolve();
+            }
         },
     },
     mutations: {

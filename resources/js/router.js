@@ -199,7 +199,7 @@ let routes = [
         name: 'role-edit',
         props: true,
         component: RoleForm
-    },
+    }
 ];
 
 let router = new VueRouter({routes});

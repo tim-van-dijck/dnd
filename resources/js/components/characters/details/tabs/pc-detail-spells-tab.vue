@@ -1,6 +1,8 @@
 <template>
     <div>
-        <pc-spellbook></pc-spellbook>
+        <button uk-toggle="target: #spellbook-modal" class="uk-button uk-button-secondary" type="button">
+            <i class="fas fa-book"></i> Spellbook
+        </button>
         <div class="uk-width-2-3@s spells-known" v-if="spells.cantrips.length > 0 || spells.spells.length > 0">
             <div v-if="level.spells.length > 0" class="spell-level" v-for="level in levels">
                 <h3>{{ level.title }}</h3>
@@ -8,7 +10,7 @@
                     <div v-for="spell in level.spells">
                         <div class="uk-card uk-card-body uk-card-primary">
                             <div class="uk-card-title">{{ spell.name }}</div>
-                            <p>({{spell.school}})</p>
+                            <p>({{ spell.school }})</p>
                         </div>
                     </div>
                 </div>
@@ -18,10 +20,8 @@
 </template>
 
 <script>
-    import PcSpellbook from "../../create/partial/pc-spellbook";
     export default {
         name: "pc-detail-spells-tab",
-        components: {PcSpellbook},
         props: ['spells'],
         created() {
             this.$store.dispatch('Spells/load');

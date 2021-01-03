@@ -48,8 +48,8 @@
         <div class="bar-bottom">
             <ul class="uk-subnav uk-flex uk-flex-center uk-child-width-1-5" data-uk-grid>
                 <li><a href="/campaigns" title="Home"><i class="fas fa-home fa-fw"></i></a></li>
-                <li><a href="/settings" title="Settings"><i class="fas fa-sliders-h fa-fw"></i></a></li>
-                <li><a href="/dice" title="Roll dice"><i class="fas fa-dice-d20 fa-fw"></i></a></li>
+                <li><a href="/profile" title="Settings"><i class="fas fa-sliders-h fa-fw"></i></a></li>
+                <li><spellbook-button icon name="spellbook-modal"></spellbook-button></li>
                 <li>
                     <a href="/logout" title="Sign out" @click.prevent="logout">
                         <i class="fas fa-sign-out-alt fa-fw"></i>
@@ -57,14 +57,18 @@
                 </li>
             </ul>
         </div>
+        <spellbook-modal />
     </aside>
 </template>
 
 <script>
     import {mapState} from 'vuex';
+    import SpellbookModal from "../spells/partials/spellbook-modal";
+    import SpellbookButton from "../spells/partials/spellbook-button";
 
     export default {
         name: "Navigation",
+        components: {SpellbookButton, SpellbookModal},
         methods: {
             logout() {
                 axios.post('/logout')

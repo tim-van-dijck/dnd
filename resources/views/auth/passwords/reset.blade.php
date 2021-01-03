@@ -22,8 +22,8 @@
                 </div>
                 @error('password')
                 <span class="uk-text-danger uk-text-small uk-align-right">
-                                {{  $errors->first('password') }}
-                            </span>
+                    {{  $errors->first('password') }}
+                </span>
                 @enderror
             </div>
             <div class="uk-margin-small">
@@ -34,8 +34,8 @@
                 </div>
                 @error('password_confirmation')
                 <span class="uk-text-danger uk-text-small uk-align-right">
-                                {{ $errors->first('password_confirmation') }}
-                            </span>
+                    {{ $errors->first('password_confirmation') }}
+                </span>
                 @enderror
             </div>
             <div class="uk-margin">

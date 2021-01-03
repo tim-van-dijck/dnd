@@ -1,6 +1,6 @@
 <template>
     <div id="spell-tab">
-        <pc-spellbook />
+        <spellbook-button icon button name="spellbook-modal">Spellbook</spellbook-button>
         <div uk-grid>
             <div class="uk-width-2-3@s spells-known" v-if="selection.cantrips.length > 0 || selection.spells.length > 0">
                 <h2>Spells known</h2>
@@ -78,11 +78,11 @@
 
 <script>
     import {mapState} from "vuex";
-    import PcSpellbook from "../partial/pc-spellbook";
+    import SpellbookButton from "../../../spells/partials/spellbook-button";
 
     export default {
         name: "pc-form-spell-tab",
-        components: {PcSpellbook},
+        components: {SpellbookButton},
         props: ['info', 'characterClasses', 'value'],
         created() {
             this.$store.dispatch('Spells/load');
