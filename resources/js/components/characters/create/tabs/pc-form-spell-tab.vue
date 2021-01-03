@@ -15,7 +15,7 @@
                                         @click.prevent="removeSpell(spell.level > 0 ? 'spells' : 'cantrips', spell.origin_type, spell.origin_id, spell.id)">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                                <p>({{spell.origin_name}})</p>
+                                <p>({{ spell.origin_name }})</p>
                             </div>
                         </div>
                     </div>
@@ -226,6 +226,18 @@
                                     return selection == null && item.level === level;
                                 })
                                 .sort((a, b) =>  a.name < b.name ? -1 : 1);
+
+                            if (charClass.subclass) {
+                                if (charClass.subclass.spells) {
+                                    let subclassSpells = charClass.subclass.spells.filter(item => {
+                                        let selection = this.selection[level > 0 ? 'spells' : 'cantrips'].find(selected => selected.id == item.id);
+                                        return selection == null && item.level === level;
+                                    })
+                                    levelSpells.items[charClass.id] = levelSpells.items[charClass.id]
+                                        .concat(subclassSpells)
+                                        .sort((a, b) =>  a.name < b.name ? -1 : 1);
+                                }
+                            }
                         }
                     }
                     classSpells[level] = levelSpells;
@@ -266,6 +278,9 @@
                             chosenClass.currentLevel = {};
                         }
                         chosenClasses.push(chosenClass);
+                        if (charClass.subclass_id) {
+                            chosenClass.subclass = chosenClass.subclasses.find(item => item.id == charClass.subclass_id);
+                        }
                     }
                 }
                 return chosenClasses;

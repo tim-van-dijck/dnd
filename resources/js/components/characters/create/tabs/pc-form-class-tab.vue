@@ -26,8 +26,8 @@
                                :class="{'uk-text-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}">Subclass*</label>
                         <select :id="`subclass_${index}`" :name="`subclass_${index}`" class="uk-select"
                                 :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.subclass_id`)}"
-                                v-model="charClass.subclass_id"
-                                :disabled="charClass.class_id == null || availableClasses[charClass.class_id].subclasses.length == 0">
+                                :disabled="charClass.class_id == null || availableClasses[charClass.class_id].subclasses.length == 0 || availableClasses[charClass.class_id].subclass_level > charClass.level"
+                                v-model="charClass.subclass_id">
                             <option :value="null">- Choose a subclass -</option>
                             <option v-for="subclass in subclasses[charClass.class_id]" :value="subclass.id">{{ subclass.name }}</option>
                         </select>
@@ -39,14 +39,12 @@
                                :class="{'uk-form-danger': errors.hasOwnProperty(`classes.${index}.level`)}"
                                v-model="charClass.level" />
                     </div>
-                    <a v-if="classes.length > 1"
-                       class="uk-text-danger uk-float-right" @click.prevent="removeClass(index)">
+                    <a v-if="classes.length > 1" class="uk-text-danger uk-float-right" @click.prevent="removeClass(index)">
                         <i class="fa fa-trash"></i>
                     </a>
                 </div>
             </div>
-            <button class="uk-align-center uk-button uk-button-primary uk-button-round"
-                    @click.prevent="addClass">
+            <button class="uk-align-center uk-button uk-button-primary uk-button-round" @click.prevent="addClass">
                 <i class="fas fa-plus fa-fw"></i>
             </button>
         </div>

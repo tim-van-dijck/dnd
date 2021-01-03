@@ -32,6 +32,7 @@ class ClassesTableSeeder extends Seeder
             $charClass->name = $classArray['name'];
             $charClass->description = $classArray['description'];
             $charClass->subclass_flavor = $classArray['subclass_flavor'];
+            $charClass->subclass_level = $classArray['subclass_level'];
             $charClass->hit_die = $classArray['hit_die'];
             $charClass->saving_throws = $classArray['saving_throws'];
             $charClass->spellcaster = $classArray['spellcaster'];
@@ -106,6 +107,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Barbarian',
                 'description' => view('db.classes.barbarian.description')->render(),
                 'subclass_flavor' => 'Primal Paths',
+                'subclass_level' => 3,
                 'hit_die' => 12,
                 'proficiency_choices' => [
                     [
@@ -524,6 +526,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Bard',
                 'description' => view('db.classes.bard.description')->render(),
                 'subclass_flavor' => 'Bard Colleges',
+                'subclass_level' => 3,
                 'hit_die' => 8,
                 'proficiency_choices' => [
                     [
@@ -897,6 +900,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Cleric',
                 'description' => view('db.classes.cleric.description')->render(),
                 'subclass_flavor' => 'Divine Domains',
+                'subclass_level' => 1,
                 'hit_die' => 8,
                 'proficiency_choices' => [
                     [
@@ -1235,6 +1239,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Druid',
                 'description' => view('db.classes.druid.description')->render(),
                 'subclass_flavor' => 'Druid Circles',
+                'subclass_level' => 2,
                 'hit_die' => 8,
                 'proficiency_choices' => [
                     [
@@ -1588,6 +1593,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Fighter',
                 'description' => view('db.classes.fighter.description')->render(),
                 'subclass_flavor' => 'Martial Archetypes',
+                'subclass_level' => 3,
                 'hit_die' => 10,
                 'proficiency_choices' => [
                     [
@@ -1926,6 +1932,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Monk',
                 'description' => view('db.classes.monk.description')->render(),
                 'subclass_flavor' => 'Monastic Traditions',
+                'subclass_level' => 3,
                 'hit_die' => 8,
                 'proficiency_choices' => [
                     [
@@ -2394,6 +2401,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Paladin',
                 'description' => view('db.classes.paladin.description')->render(),
                 'subclass_flavor' => 'Sacred Oaths',
+                'subclass_level' => 3,
                 'hit_die' => 10,
                 'proficiency_choices' => [
                     [
@@ -2732,6 +2740,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Ranger',
                 'description' => view('db.classes.ranger.description')->render(),
                 'subclass_flavor' => 'Ranger Archetypes',
+                'subclass_level' => 3,
                 'hit_die' => 10,
                 'proficiency_choices' => [
                     [
@@ -3070,6 +3079,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Rogue',
                 'description' => view('db.classes.rogue.description')->render(),
                 'subclass_flavor' => 'Roguish Archetypes',
+                'subclass_level' => 3,
                 'hit_die' => 8,
                 'proficiency_choices' => [
                     [
@@ -3488,6 +3498,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Sorcerer',
                 'description' => view('db.classes.sorcerer.description')->render(),
                 'subclass_flavor' => 'Sorcerous Origins',
+                'subclass_level' => 1,
                 'hit_die' => 6,
                 'proficiency_choices' => [
                     [
@@ -3886,6 +3897,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Warlock',
                 'description' => view('db.classes.warlock.description')->render(),
                 'subclass_flavor' => 'Otherworldly Patrons',
+                'subclass_level' => 1,
                 'hit_die' => 8,
                 'proficiency_choices' => [
                     [
@@ -4292,6 +4304,7 @@ class ClassesTableSeeder extends Seeder
                 'name' => 'Wizard',
                 'description' => view('db.classes.wizard.description')->render(),
                 'subclass_flavor' => 'Arcane Traditions',
+                'subclass_level' => 2,
                 'hit_die' => 6,
                 'proficiency_choices' => [
                     [

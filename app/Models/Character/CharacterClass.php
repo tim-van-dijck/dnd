@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property string name
  * @property string description
  * @property string subclass_flavor
+ * @property int subclass_level
  * @property int hit_die
  * @property int instrument_choices
  * @property int skill_choices

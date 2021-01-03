@@ -145,7 +145,7 @@ export default {
             if (this.character.info.hasOwnProperty('race_id') && this.character.info.race_id != null) {
                 enabled.push('class');
                 for (let chosenClass of this.character.classes) {
-                    if (chosenClass.class_id != null && chosenClass.subclass_id != null) {
+                    if (chosenClass.class_id != null) {
                         enabled = enabled.concat(['ability', 'proficiency', 'personality', 'background']);
                         if (this.spellcaster) {
                             enabled.push('spells')
