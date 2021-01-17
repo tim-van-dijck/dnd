@@ -3,7 +3,7 @@
         <h1>{{ title }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <form v-if="character" id="character-form" class="uk-form-stacked">
+                <form v-if="character && Object.keys(classes).length > 0 && Object.keys(races).length > 0" id="character-form" class="uk-form-stacked">
                     <pc-form-navigation :character="character" :spellcaster="spellcaster" :tab="tab" :errors="errors" @navigate="goToTab" />
 
                     <pc-form-details-tab v-show="tab === 'details'" v-model="character.info" @next="goToTab('class')" />
@@ -28,7 +28,8 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
+    import {mapState} from "vuex";
+    import CharacterFormatter from "../../../lib/CharacterFormatter";
     import PcFormDetailsTab from "./tabs/pc-form-details-tab";
     import PcFormClassTab from "./tabs/pc-form-class-tab";
     import PcFormProficiencyTab from "./tabs/pc-form-proficiency-tab";
@@ -47,25 +48,7 @@
             if (this.id) {
                 this.$store.dispatch('Characters/find', this.id)
                     .then((character) => {
-                        let char = {
-                            info: character.info,
-                            personality: character.personality,
-                            ability_scores: character.ability_scores,
-                            background_id: character.background_id
-                        }
-                        char.info.race_id = character.race.id;
-                        char.classes = [];
-                        for (let charClass of character.classes) {
-                            char.classes.push({
-                                class_id: charClass.id,
-                                level: charClass.level,
-                                subclass_id: charClass.subclass ? charClass.subclass.id || null : null
-                            });
-                        }
-                        if (character.race.subrace) {
-                            char.info.subrace_id = character.race.subrace.id;
-                        }
-                        this.$set(this, 'character', char);
+                        this.$set(this, 'character', CharacterFormatter.format(character));
                     });
             } else {
                 this.character = {
@@ -106,22 +89,18 @@
         },
         methods: {
             save() {
+                let promise;
                 if (this.id) {
                     let payload = {id: this.id, character: this.character}
-                    this.$store.dispatch('Characters/update', payload)
-                        .then((response) => {
-                            if (Object.keys(this.errors).length === 0) {
-                                this.$router.push({name: 'pc-detail', params: {id: response.data.data.id}});
-                            }
-                        });
+                    promise = this.$store.dispatch('Characters/update', payload);
                 } else {
-                    this.$store.dispatch('Characters/store', this.character)
-                        .then(() => {
-                            if (Object.keys(this.errors).length === 0) {
-                                this.$router.push({name: 'player-characters'});
-                            }
-                        });
+                    promise = this.$store.dispatch('Characters/store', this.character);
                 }
+                promise.then((character) => {
+                    if (Object.keys(this.errors).length === 0) {
+                        this.$router.push({name: 'pc-detail', params: {id: character.id}});
+                    }
+                });
             },
             goToTab(tab) {
                 this.tab = tab;

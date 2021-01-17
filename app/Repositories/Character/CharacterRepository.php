@@ -1,26 +1,17 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Character;
 
 use App\Enums\CharacterTypes;
 use App\Models\Campaign\Quest;
 use App\Models\Character\Character;
+use App\Repositories\LogRepository;
 use App\Services\AuthService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
 class CharacterRepository
 {
-    /** @var LogRepository */
-    private $logRepository;
-
-    /**
-     * CharacterRepository constructor.
-     */
-    public function __construct()
-    {
-        $this->logRepository = app(LogRepository::class);
-    }
-
     /**
      * @param int $campaignId
      * @param array $filters
@@ -73,6 +64,7 @@ class CharacterRepository
         if (!empty($input['subrace_id'])) {
             $character->subrace_id = $input['subrace_id'];
         }
+        $character->background_id = $input['background_id'];
         $character->private = !empty($input['private']);
         $character->save();
 
@@ -80,7 +72,6 @@ class CharacterRepository
             AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
         }
 
-        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'created');
         return $character;
     }
 
@@ -94,9 +85,31 @@ class CharacterRepository
         return Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->with($includes)->firstOrFail();
     }
 
-    public function update(int $campaignId, int $characterId, array $data)
+    /**
+     * @param int $campaignId
+     * @param int $characterId
+     * @param array $input
+     * @return Character
+     * @throws ModelNotFoundException
+     */
+    public function update(int $campaignId, int $characterId, array $input): Character
     {
-//        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'updated');
+        $character = $this->find($campaignId, $characterId);
+        $character->fill($input);
+
+        $character->race_id = $input['race_id'];
+        if (!empty($input['subrace_id'])) {
+            $character->subrace_id = $input['subrace_id'];
+        }
+        $character->background_id = $input['background_id'];
+        $character->private = !empty($input['private']);
+        $character->save();
+
+        if ($character->private) {
+            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
+        }
+
+        return $character;
     }
 
     /**
@@ -107,12 +120,15 @@ class CharacterRepository
     public function destroy(int $campaignId, int $characterId)
     {
         /** @var Character $character */
-        $character = Character::where(['campaign_id' => $campaignId, 'id' => $characterId])->firstOrFail();
+        $character = $this->find($campaignId, $characterId);
         $character->languages()->sync([]);
         $character->proficiencies()->sync([]);
         $character->classes()->sync([]);
         $character->spells()->sync([]);
         $character->delete();
-        $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
+
+        /** @var LogRepository $logRepository */
+        $logRepository = resolve(LogRepository::class);
+        $logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
     }
 }

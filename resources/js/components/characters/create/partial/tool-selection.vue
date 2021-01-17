@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </div>
-            <div class="class-based" v-if="classToolCount > 0">
+            <div class="class-based" v-if="Object.keys(availableClasses).length > 0 && classToolCount > 0">
                 <div class="class" v-for="(charClass, classIndex) in classes"
                      v-if="charClass.class_id != null && availableClasses[charClass.class_id].tool_choices > (classSelected[charClass.class_id] || 0)">
                     <h4>{{ availableClasses[charClass.class_id].name }}</h4>
@@ -48,7 +48,16 @@
         name: "tool-selection",
         props: ['background', 'classes', 'race', 'subrace', 'value'],
         created() {
-            this.$set(this, 'selection', this.value || {});
+            this.$set(this, 'selection', this.value || []);
+            for (let selected of this.selection) {
+                if (selected.origin_type === 'class') {
+                    if (this.classSelected.hasOwnProperty(selected.origin_id)) {
+                        this.classSelected[selected.origin_id]++;
+                    } else {
+                        this.classSelected[selected.origin_id] = 1;
+                    }
+                }
+            }
         },
         data() {
             return {
@@ -104,6 +113,9 @@
                 return tools;
             },
             classTools() {
+                if (Object.keys(this.availableClasses).length == 0) {
+                    return {};
+                }
                 let tools = {};
                 for (let chosenClass of this.classes) {
                     if (chosenClass.class_id) {

@@ -7,7 +7,7 @@ use App\Http\Requests\CharacterRequest;
 use App\Http\Resources\CharacterResource;
 use App\Managers\CharacterManager;
 use App\Models\Character\Character;
-use App\Repositories\CharacterRepository;
+use App\Repositories\Character\CharacterRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -41,11 +41,12 @@ class CharacterController extends Controller
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(CharacterManager $characterManager, CharacterRequest $request)
+    public function store(CharacterManager $characterManager, CharacterRequest $request): CharacterResource
     {
         $this->authorize('create', Character::class);
         $request->validate($request->rules());
-        $characterManager->store(Session::get('campaign_id'), $request->input());
+        $character = $characterManager->store(Session::get('campaign_id'), $request->input());
+        return new CharacterResource($character);
     }
 
     /**
@@ -67,14 +68,18 @@ class CharacterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param CharacterManager $characterManager
+     * @param CharacterRequest $request
      * @param Character $character
      * @return void
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Character $character)
+    public function update(CharacterManager $characterManager, CharacterRequest $request, Character $character): CharacterResource
     {
         $this->authorize('update', $character);
+        $request->validate($request->rules());
+        $character = $characterManager->update(Session::get('campaign_id'), $character->id, $character->type, $request->input());
+        return new CharacterResource($character);
     }
 
     /**

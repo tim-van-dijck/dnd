@@ -55,6 +55,7 @@ export const Characters = {
                     commit('SET_CHARACTER', response.data);
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Character saved!', {root: true});
+                    return response.data.data;
                 })
                 .catch((error) => {
                     commit('SET_ERRORS', error.response.data.errors);
@@ -65,9 +66,10 @@ export const Characters = {
             if (data.character.background_id === 0) {
                 data.character.background_id = null;
             }
-            return axios.post(`/campaign/characters/${data.id}`, data.character)
+            return axios.put(`/campaign/characters/${data.id}`, data.character)
                 .then((response) => {
-                    commit('SET_CHARACTER', response.data)
+                    commit('SET_CHARACTER', response.data);
+                    return response.data.data;
                 });
         },
         destroy({commit}, character) {

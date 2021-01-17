@@ -38,7 +38,7 @@
             <div class="uk-width-3-4" v-if="spell">
                 <h3>
                     {{ spell.name }}
-                    <span v-if="level > 0" class="uk-text-small">(level {{ spell.level }} {{ spell.school }} spell)</span>
+                    <span v-if="spell.level > 0" class="uk-text-small">(level {{ spell.level }} {{ spell.school }} spell)</span>
                     <span v-else class="uk-text-small">({{ spell.school }} cantrip)</span>
                 </h3>
                 <ul class="uk-list">

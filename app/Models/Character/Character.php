@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int campaign_id
  * @property int race_id
  * @property int|null subrace_id
+ * @property int|null background_id
  * @property string name
  * @property string title
  * @property string type
@@ -34,6 +35,7 @@ use Illuminate\Support\Carbon;
  *
  * @property Race race
  * @property Subrace subrace
+ * @property Background background
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
@@ -62,6 +64,14 @@ class Character extends Model
     public function subrace()
     {
         return $this->belongsTo(Subrace::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function background()
+    {
+        return $this->belongsTo(Background::class);
     }
 
     /**

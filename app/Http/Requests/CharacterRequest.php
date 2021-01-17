@@ -34,7 +34,7 @@ class CharacterRequest extends FormRequest
         return array_merge($this->generalRules(), [
             'classes' => 'required|array|min:1',
             'classes.*.class_id' => 'required|integer|exists:classes,id',
-            'classes.*.subclass_id' => 'required|integer|exists:subclasses,id',
+            'classes.*.subclass_id' => 'nullable|integer|exists:subclasses,id',
             'classes.*.level' => 'required|integer|between:1,20',
 
             'background_id' => 'nullable|exists:backgrounds,id',
@@ -74,11 +74,11 @@ class CharacterRequest extends FormRequest
             'info.name' => 'required|string',
             'info.alignment' => 'required|string|in:LG,NG,CG,LN,TN,CN,LE,NE,CE',
             'info.race_id' => 'required|integer|exists:races,id',
-            'info.subrace_id' => 'required|integer|exists:subraces,id',
+            'info.subrace_id' => 'nullable|integer|exists:subraces,id',
             'info.age' => 'sometimes|integer',
             'info.dead' => 'boolean',
             'info.private' => 'boolean',
-            'info.bio' => 'sometimes|string',
+            'info.bio' => 'nullable|sometimes|string',
             'personality' => 'sometimes'
         ];
     }
@@ -86,7 +86,7 @@ class CharacterRequest extends FormRequest
     private function npcRules(): array
     {
         return array_merge($this->generalRules(), [
-            'info.title' => 'string',
+            'info.title' => 'nullable|string',
             'info.type' => 'sometimes|string',
         ]);
     }

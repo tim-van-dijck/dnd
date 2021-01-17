@@ -86,9 +86,15 @@
                 });
             },
             armor() {
+                if (!this.proficiencies.hasOwnProperty('armor')) {
+                    return [];
+                }
                 return this.proficiencies.armor.map(item => item.name);
             },
             weapons() {
+                if (!this.proficiencies.hasOwnProperty('weapons')) {
+                    return [];
+                }
                 return this.proficiencies.weapons.map(item => item.name);
             }
         }

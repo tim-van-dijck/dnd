@@ -100,14 +100,16 @@
             }
         },
         created() {
-            this.abilities = this.value || {
-                STR: 3,
-                DEX: 3,
-                CON: 3,
-                INT: 3,
-                WIS: 3,
-                CHA: 3
-            };
+            if (this.value) {
+                this.abilities = {
+                    STR: (this.value.STR || 3) - (this.bonuses.STR || 0),
+                    DEX: (this.value.DEX || 3) - (this.bonuses.DEX || 0),
+                    CON: (this.value.CON || 3) - (this.bonuses.CON || 0),
+                    INT: (this.value.INT || 3) - (this.bonuses.INT || 0),
+                    WIS: (this.value.WIS || 3) - (this.bonuses.WIS || 0),
+                    CHA: (this.value.CHA || 3) - (this.bonuses.CHA || 0)
+                }
+            }
         },
         methods: {
             addAbilityBonus(value) {

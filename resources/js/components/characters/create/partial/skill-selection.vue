@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <div class="class-based">
+            <div class="class-based" v-if="Object.keys(availableClasses).length > 0">
                 <div class="class" v-for="(charClass, classIndex) in classes"
                      v-if="charClass.class_id && availableClasses[charClass.class_id].skill_choices > (classSelected[charClass.class_id] || 0)">
                     <h4>Class: {{ availableClasses[charClass.class_id].name }}</h4>
@@ -51,7 +51,20 @@
         name: "skill-selection",
         props: ['background', 'classes', 'race', 'subrace', 'value'],
         created() {
-            this.$set(this, 'selection', this.value || []);
+            if (this.value.length > 0) {
+                let selection = [];
+                for (let selected of this.value) {
+                    if (selected.origin_type === 'class') {
+                        selection.push(selected);
+                        if (this.classSelected.hasOwnProperty(selected.origin_id)) {
+                            this.classSelected[selected.origin_id]++;
+                        } else {
+                            this.classSelected[selected.origin_id] = 1;
+                        }
+                    }
+                }
+                this.$set(this, 'selection', selection);
+            }
         },
         data() {
             return {
@@ -107,6 +120,9 @@
                 return skills;
             },
             classSkills() {
+                if (Object.keys(this.availableClasses).length == 0) {
+                    return {};
+                }
                 let skills = {};
                 for (let chosenClass of this.classes) {
                     if (chosenClass.class_id) {

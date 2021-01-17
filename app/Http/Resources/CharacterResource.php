@@ -29,14 +29,15 @@ class CharacterResource extends JsonResource
             'id' => $this->resource->id,
             'info' => [
                 'name' => $this->resource->name,
-                'title' => $this->resource->title,
+                'title' => $this->resource->title ?? '',
                 'type' => $this->resource->type,
                 'age' => $this->resource->age,
                 'alignment' => $this->resource->alignment,
                 'dead' => $this->resource->dead ?? false,
                 'private' => $this->resource->private ?? false,
-                'bio' => $this->resource->bio,
+                'bio' => $this->resource->bio ?? ''
             ],
+            'background_id' => $this->resource->background_id ?? null,
             'ability_scores' => $this->resource->ability_scores
         ];
 
@@ -136,7 +137,8 @@ class CharacterResource extends JsonResource
             $proficiencies[strtolower($proficiency->type)][] = [
                 'id' => $proficiency->id,
                 'name' => $proficiency->name,
-                'origin' => OriginTypes::getOrigin($proficiency->pivot->origin_type)
+                'origin_type' => OriginTypes::getOrigin($proficiency->pivot->origin_type),
+                'origin_id' => $proficiency->pivot->origin_id
             ];
         }
         return $proficiencies;

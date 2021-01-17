@@ -85,7 +85,13 @@
         components: {SpellbookButton},
         props: ['info', 'characterClasses', 'value'],
         created() {
-            this.$store.dispatch('Spells/load');
+            this.$store.dispatch('Spells/load')
+                .then(() => {
+                    if (this.value) {
+                        this.$set(this.selection, 'cantrips', this.value.cantrips.map(spell => this.formatSpell(spell)));
+                        this.$set(this.selection, 'spells', this.value.spells.map(spell => this.formatSpell(spell)));
+                    }
+                });
         },
         data() {
             return {
@@ -97,6 +103,38 @@
             }
         },
         methods: {
+            formatSpell(spell) {
+                let formatted = copy(spell);
+                switch (formatted.origin_type) {
+                    case 'background':
+                        let background = this.backgrounds.find(item => item.id == formatted.origin_id);
+                        formatted.origin_name = background ? background.name || 'Background' : 'Background';
+                        break;
+                    case 'class':
+                        formatted.origin_name = this.classes[formatted.origin_id] ? this.classes[formatted.origin_id].name || 'Class' : 'Class';
+                        break;
+                    case 'subclass':
+                        let selectedClass = this.classes.find((item) => {
+                            let sub = item.subclasses.find(subclass => subclass.id == formatted.origin_id);
+                            return sub != null;
+                        });
+                        if (selectedClass) {
+                            let subclass = selectedClass.subclasses.find(subclass => subclass.id == formatted.origin_id);
+                            formatted.origin_name = subclass ? subclass.name || 'Subclass' : 'Subclass';
+                        } else {
+                            formatted.origin_name = 'Subclass';
+                        }
+                        break;
+                    case 'race':
+                        formatted.origin_name = (this.race || {}).id === spell.origin_id ? this.race.name || 'Race' : 'Race';
+                        break;
+                    case 'subrace':
+                        formatted.origin_name = (this.subrace || {}).id === spell.origin_id ? this.subrace.name || 'Race' : 'Race';
+                        break;
+                }
+
+                return formatted;
+            },
             selectSpell(level, charClass, id) {
                 let spell = this.classSpells[level].items[charClass.id].find(item => item.id == id);
                 if (spell) {
@@ -162,7 +200,7 @@
             }
         },
         computed: {
-            ...mapState('Characters', ['races', 'classes']),
+            ...mapState('Characters', ['backgrounds', 'classes', 'races']),
             ...mapState('Spells', ['spells', 'multiclassTable']),
             subrace() {
                 if (this.info.race_id && this.info.subrace_id) {

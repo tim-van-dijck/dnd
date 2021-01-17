@@ -10,7 +10,7 @@
         <p v-else class="uk-text-center">
             <i class="fas fa-sync fa-spin fa-2x"></i>
         </p>
-        <div v-if="selection > 0" id="active-background">
+        <div v-if="selected" id="active-background">
             <h2>{{ selected.name }}</h2>
             <ul>
                 <li><b>Skill Proficiencies:</b> {{ selected.skills }}</li>

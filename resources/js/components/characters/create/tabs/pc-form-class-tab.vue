@@ -3,7 +3,7 @@
         <button class="uk-button uk-button-secondary uk-margin-bottom" @click.prevent="openModal">
             Class list
         </button>
-        <div uk-accordion="active: 0">
+        <div v-if="Object.keys(availableClasses).length > 0" uk-accordion="active: 0">
             <div class="accordion" v-for="(charClass, index) in classes">
                 <div class="uk-accordion-title">
                     Level {{ charClass.level }}

@@ -46,6 +46,24 @@
         name: "pc-form-proficiency-tab",
         components: {LanguageSelection, InstrumentSelection, ToolSelection, SkillSelection},
         props: ['backgroundId', 'characterClasses', 'info', 'value'],
+        created() {
+            if (Object.keys(this.value || {}).length > 0) {
+                let choices = {
+                    languages: this.value.languages || [],
+                    instruments: [],
+                    skills: [],
+                    tools: [],
+                }
+                for (let type in this.value) {
+                    if (['instruments', 'skills', 'tools'].includes(type)) {
+                        for (let proficiency of this.value[type]) {
+                            choices[type].push(this.formatProficiency(proficiency));
+                        }
+                    }
+                }
+                this.$set(this, 'choices', choices);
+            }
+        },
         data() {
             return {
                 choices: {
@@ -54,6 +72,40 @@
                     skills: [],
                     tools: []
                 }
+            }
+        },
+        methods: {
+            formatProficiency(proficiency) {
+                let formatted = copy(proficiency);
+                switch (formatted.origin_type) {
+                    case 'background':
+                        let background = this.backgrounds.find(item => item.id == formatted.origin_id);
+                        formatted.origin = background ? background.name || 'Background' : 'Background';
+                        break;
+                    case 'class':
+                        formatted.origin = this.classes[formatted.origin_id] ? this.classes[formatted.origin_id].name || 'Class' : 'Class';
+                        break;
+                    case 'subclass':
+                        let selectedClass = this.classes.find((item) => {
+                            let sub = item.subclasses.find(subclass => subclass.id == formatted.origin_id);
+                            return sub != null;
+                        });
+                        if (selectedClass) {
+                            let subclass = selectedClass.subclasses.find(subclass => subclass.id == formatted.origin_id);
+                            formatted.origin = subclass ? subclass.name || 'Subclass' : 'Subclass';
+                        } else {
+                            formatted.origin = 'Subclass';
+                        }
+                        break;
+                    case 'race':
+                        formatted.origin = (this.race || {}).id === proficiency.origin_id ? this.race.name || 'Race' : 'Race';
+                        break;
+                    case 'subrace':
+                        formatted.origin = (this.subrace || {}).id === proficiency.origin_id ? this.subrace.name || 'Race' : 'Race';
+                        break;
+                }
+
+                return formatted;
             }
         },
         computed: {
