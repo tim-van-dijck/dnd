@@ -59,7 +59,7 @@
                                         <option v-if="!chosen(charClass, feature.id, choice.id, index)"
                                                 v-for="choice in feature.choices"
                                                 :value="choice.id"
-                                                :selected="(charClass.features[feature.id] || {})[index] == choice.id">{{ choice.name }}</option>
+                                                :selected="((charClass.features || {})[feature.id] || {})[index] == choice.id">{{ choice.name }}</option>
                                     </select>
                                 </div>
                             </div>

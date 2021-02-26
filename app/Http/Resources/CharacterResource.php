@@ -76,19 +76,24 @@ class CharacterResource extends JsonResource
 
     public function getRace(): array
     {
+        $traits = $this->resource->race->traits;
         $race = [
             'id' => $this->resource->race->id,
             'name' => $this->resource->race->name,
+            'description' => $this->resource->race->description,
             'speed' => $this->resource->race->speed,
             'size' => $this->resource->race->size,
+            'traits' => $this->resource->race->traits
         ];
         if ($this->resource->subrace) {
+            $traits = $traits->merge($this->resource->subrace->traits);
             $race['subrace'] = [
                 'id' => $this->resource->subrace->id,
                 'name' => $this->resource->subrace->name,
-                'description' => $this->resource->subrace->description
+                'description' => $this->resource->subrace->description,
             ];
         }
+        $race['traits'] = $traits;
         return $race;
     }
 

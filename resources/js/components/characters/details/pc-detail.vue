@@ -7,6 +7,9 @@
                     <li :class="{'uk-active': tab === 'character'}">
                         <a @click.prevent="tab = 'character'">Character</a>
                     </li>
+                    <li :class="{'uk-active': tab === 'race'}">
+                        <a @click.prevent="tab = 'race'">Race</a>
+                    </li>
                     <li :class="{'uk-active': tab === 'class'}">
                         <a @click.prevent="tab = 'class'">Class</a>
                     </li>
@@ -21,6 +24,7 @@
                     </li>
                 </ul>
                 <pc-detail-character-tab v-show="tab === 'character'" :character="character" />
+                <pc-detail-race-tab v-show="tab === 'race'" :race="character.race" />
                 <pc-detail-class-tab v-show="tab === 'class'" :classes="character.classes" />
                 <pc-detail-proficiency-tab v-show="tab === 'proficiency'" :proficiencies="character.proficiencies" />
                 <pc-detail-personality-tab v-show="tab === 'ideal'" :personality="character.personality" />
@@ -41,12 +45,18 @@
     import PcDetailPersonalityTab from "./tabs/pc-detail-personality-tab";
     import PcDetailSpellsTab from "./tabs/pc-detail-spells-tab";
     import PcDetailClassTab from "./tabs/pc-detail-class-tab";
+    import PcDetailRaceTab from "./tabs/pc-detail-race-tab";
 
     export default {
         name: "pc-detail",
         components: {
+            PcDetailRaceTab,
             PcDetailClassTab,
-            PcDetailSpellsTab, PcDetailPersonalityTab, PcDetailCharacterTab,PcDetailProficiencyTab},
+            PcDetailSpellsTab,
+            PcDetailPersonalityTab,
+            PcDetailCharacterTab,
+            PcDetailProficiencyTab
+        },
         props: ['id'],
         created() {
             this.$store.dispatch('Characters/find', this.id)

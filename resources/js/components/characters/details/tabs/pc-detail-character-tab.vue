@@ -18,10 +18,6 @@
                 <b>Age</b>
                 <span>{{ character.info.age }}</span>
             </div>
-            <div class="uk-width uk-margin">
-                <h2>Race Traits</h2>
-                <div class="uk-alert-primary" uk-alert>These aren't available yet.</div>
-            </div>
         </div>
         <div class="uk-width-1-1@s uk-width-1-2@l uk-width-2-3@xl">
             <h2>Ability Scores</h2>
@@ -36,6 +32,8 @@
                     </p>
                 </div>
             </div>
+        </div>
+        <div class="uk-width">
             <h2>Bio</h2>
             <div v-if="character.info.bio && character.info.bio.length > 0"
                  class="uk-card uk-card-body uk-card-secondary"

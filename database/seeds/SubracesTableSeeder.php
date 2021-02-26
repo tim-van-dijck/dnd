@@ -236,7 +236,6 @@ class SubracesTableSeeder extends Seeder
                 "racial_trait_options" => []
             ],
             [
-                "index" => 4,
                 "name" => "Rock Gnome",
                 "race" => "Gnome",
                 "desc" => "As a rock gnome, you have a natural inventiveness and hardiness beyond that of other gnomes.",
@@ -252,7 +251,128 @@ class SubracesTableSeeder extends Seeder
                 "language_options" => [],
                 "racial_traits" => ["Artificer's Lore", "Tinker"],
                 "racial_trait_options" => []
-            ]
+            ],
+
+            [
+                "name" => "Black Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Black Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Acid Damage Resistance", "Breath Weapon (Black Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Blue Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Blue Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Lightning Damage Resistance", "Breath Weapon (Blue Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Brass Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Brass Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Fire Damage Resistance", "Breath Weapon (Brass Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Bronze Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Bronze Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Lightning Damage Resistance", "Breath Weapon (Bronze Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Copper Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Copper Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Acid Damage Resistance", "Breath Weapon (Copper Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Gold Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Gold Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Fire Damage Resistance", "Breath Weapon (Gold Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Green Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Green Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Poison Damage Resistance", "Breath Weapon (Green Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Red Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Red Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Fire Damage Resistance", "Breath Weapon (Red Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "Silver Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a Silver Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Cold Damage Resistance", "Breath Weapon (Silver Dragon)"],
+                "racial_trait_options" => []
+            ],
+            [
+                "name" => "White Dragon Ancestry",
+                "race" => "Dragonborn",
+                "desc" => "You have a White Dragon ancestor, which determines your breath weapon and damage resistance.",
+                "ability_bonuses" => [],
+                "starting_proficiencies" => [],
+                "starting_proficiency_options" => [],
+                "languages" => [],
+                "language_options" => [],
+                "racial_traits" => ["Cold Damage Resistance", "Breath Weapon (White Dragon)"],
+                "racial_trait_options" => []
+            ],
         ];
     }
 }

@@ -307,9 +307,7 @@ class RacesTableSeeder extends Seeder
                 "languages" => ["Common", "Draconic"],
                 "language_options" => [],
                 "traits" => [
-                    "Draconic Ancestry",
-                    "Breath Weapon",
-                    "Damage Resistance"
+                    "Draconic Ancestry"
                 ],
                 "trait_options" => []
             ],

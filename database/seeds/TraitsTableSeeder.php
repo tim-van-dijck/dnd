@@ -89,10 +89,6 @@ class TraitsTableSeeder extends Seeder
                 "desc" => "You have draconic ancestry. Choose one type of dragon from the Draconic Ancestry table. Your breath weapon and damage resistance are determined by the dragon type, as shown in the table."
             ],
             [
-                "name" => "Breath Weapon",
-                "desc" => view('db.traits.breath-weapon')->render()
-            ],
-            [
                 "name" => "Damage Resistance",
                 "desc" => "You have resistance to the damage type associated with your draconic ancestry."
             ],
@@ -131,6 +127,68 @@ class TraitsTableSeeder extends Seeder
             [
                 "name" => "Infernal Legacy",
                 "desc" => "You know the thaumaturgy cantrip. When you reach 3rd level, you can cast the hellish rebuke spell as a 2nd-level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5h level, you can cast the darkness spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells."
+            ],
+
+            [
+                "name" => "Acid Damage Resistance",
+                "desc" => "You have resistance to Acid damage."
+            ],
+            [
+                "name" => "Lightning Damage Resistance",
+                "desc" => "You have resistance to Lightning damage."
+            ],
+            [
+                "name" => "Fire Damage Resistance",
+                "desc" => "You have resistance to Fire damage."
+            ],
+            [
+                "name" => "Poison Damage Resistance",
+                "desc" => "You have resistance to Poison damage."
+            ],
+            [
+                "name" => "Cold Damage Resistance",
+                "desc" => "You have resistance to Cold damage."
+            ],
+
+            [
+                "name" => "Breath Weapon (Black Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '5 by 30ft. line', 'type' => 'Acid', 'save' => 'Dexterity'])
+            ],
+            [
+                "name" => "Breath Weapon (Blue Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '5 by 30ft. line', 'type' => 'Lightning', 'save' => 'Dexterity'])
+            ],
+            [
+                "name" => "Breath Weapon (Brass Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '5 by 30ft. line', 'type' => 'Fire', 'save' => 'Dexterity'])
+            ],
+            [
+                "name" => "Breath Weapon (Bronze Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '5 by 30ft. line', 'type' => 'Lightning', 'save' => 'Dexterity'])
+            ],
+            [
+                "name" => "Breath Weapon (Copper Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '5 by 30ft. line', 'type' => 'Acid', 'save' => 'Dexterity'])
+            ],
+            [
+                "name" => "Breath Weapon (Gold Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '15ft. cone', 'type' => 'Fire', 'save' => 'Constitution'])
+            ],
+            [
+                "name" => "Breath Weapon (Green Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '15ft. cone', 'type' => 'Poison', 'save' => 'Constitution'])
+            ],
+            [
+                "name" => "Breath Weapon (Red Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '15ft. cone', 'type' => 'Fire', 'save' => 'Constitution'])
+            ],
+            [
+                "name" => "Breath Weapon (Silver Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '15ft. cone', 'type' => 'Cold', 'save' => 'Constitution'])
+            ],
+            [
+                "name" => "Breath Weapon (White Dragon)",
+                "desc" => view('db.traits.breath-weapon', ['area' => '15ft. cone', 'type' => 'Cold', 'save' => 'Constitution'])
             ]
         ];
     }
