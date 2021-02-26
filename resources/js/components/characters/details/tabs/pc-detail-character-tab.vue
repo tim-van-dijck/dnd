@@ -19,14 +19,8 @@
                 <span>{{ character.info.age }}</span>
             </div>
             <div class="uk-width uk-margin">
-                <h2>Classes</h2>
-                <div class="uk-card uk-card-body uk-card-secondary" v-for="charClass in character.classes">
-                    <div class="uk-card-title">
-                        Level {{ charClass.level }}
-                        {{ charClass.subclass ? charClass.subclass.name : '' }}
-                        {{ charClass.name }}
-                    </div>
-                </div>
+                <h2>Race Traits</h2>
+                <div class="uk-alert-primary" uk-alert>These aren't available yet.</div>
             </div>
         </div>
         <div class="uk-width-1-1@s uk-width-1-2@l uk-width-2-3@xl">

@@ -115,4 +115,9 @@ class Character extends Model
     {
         return $this->belongsToMany(Spell::class)->withPivot(['origin_type', 'origin_id']);
     }
+
+    public function features()
+    {
+        return $this->belongsToMany(Feature::class)->withPivot(['feature_parent_id']);
+    }
 }

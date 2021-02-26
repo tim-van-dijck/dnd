@@ -5,11 +5,13 @@ namespace App\Http\Resources;
 use App\Enums\OriginTypes;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterClass;
+use App\Models\Character\Feature;
 use App\Models\Character\Proficiency;
 use App\Models\Character\Race;
 use App\Models\Character\Subclass;
 use App\Models\Character\Subrace;
 use App\Models\Magic\Spell;
+use App\Services\Character\Helpers\CharacterFeatureHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CharacterResource extends JsonResource
@@ -94,11 +96,19 @@ class CharacterResource extends JsonResource
     {
         $classes = [];
         foreach ($this->resource->classes as $charClass) {
+            $features = CharacterFeatureHelper::getCharacterClassFeatures(
+                $this->resource->id,
+                $charClass->id,
+                $charClass->pivot->level,
+                $charClass->pivot->subclass_id
+            );
+
             $classes[] = [
                 'id' => $charClass->id,
                 'name' => $charClass->name,
                 'subclass' => $charClass->subclasses->find($charClass->pivot->subclass_id),
                 'level' => $charClass->pivot->level,
+                'features' => $features
             ];
         }
         return $classes;

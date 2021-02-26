@@ -125,6 +125,7 @@ class CharacterRepository
         $character->proficiencies()->sync([]);
         $character->classes()->sync([]);
         $character->spells()->sync([]);
+        $character->features()->sync([]);
         $character->delete();
 
         /** @var LogRepository $logRepository */

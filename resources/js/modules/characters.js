@@ -97,7 +97,7 @@ export const Characters = {
             }
         },
         REMOVE_CHARACTER(state, character) {
-            let index = state.characters.findIndex((item) => item.id == character.id);
+            let index = state.characters.data.findIndex((item) => item.id == character.id);
             if (index) {
                 state.characters.splice(index, 1);
             }

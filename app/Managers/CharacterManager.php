@@ -4,13 +4,10 @@
 namespace App\Managers;
 
 use App\Enums\OriginTypes;
-use App\Models\Character\Background;
 use App\Models\Character\Character;
-use App\Models\Character\CharacterClass;
-use App\Models\Character\Race;
-use App\Models\Character\Subrace;
 use App\Repositories\Character\CharacterRepository;
 use App\Repositories\LogRepository;
+use App\Services\Character\Helpers\CharacterFeatureHelper;
 use App\Services\Character\Helpers\CharacterProficiencyHelper;
 
 class CharacterManager
@@ -72,6 +69,7 @@ class CharacterManager
     private function savePlayerCharacter(int $campaignId, array $input, int $characterId = null): Character
     {
         $characterInput = array_merge($input['info'], [
+            'age' => $input['info']['age'] ?? '',
             'type' => 'player',
             'trait' => $input['personality']['trait'] ?? '',
             'ideal' => $input['personality']['ideal'] ?? '',
@@ -87,7 +85,9 @@ class CharacterManager
         }
         $this->setCharacterClasses($character, $input['classes']);
         $this->setCharacterProficiencies($character, $input['proficiencies']);
-        $this->setCharacterSpells($character, $input['spells']);
+        if (!empty($input['spells'])) {
+            $this->setCharacterSpells($character, $input['spells']);
+        }
         return $character;
     }
 
@@ -141,6 +141,7 @@ class CharacterManager
             $sync[$classInput['class_id']] = $classData;
         }
         $character->classes()->sync($sync);
+        CharacterFeatureHelper::sync($character, $classes);
     }
 
     /**

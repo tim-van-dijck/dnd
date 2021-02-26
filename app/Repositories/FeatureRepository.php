@@ -19,18 +19,25 @@ class FeatureRepository
             ->join('feature_morph AS fm', 'fm.feature_id', '=', 'features.id')
             ->where([
                 'fm.entity_type' => CharacterClass::class,
-                'fm.entity_id' => $classId
+                'fm.entity_id' => $classId,
+                'optional' => 0
             ])
             ->whereNull('fc.id')
-            ->get(['features.*', 'fm.level']);
+            ->get(['features.*', 'fm.level', 'fm.choose']);
+
         foreach ($features as &$feature) {
             if ($feature->choose > 0) {
-                $choices = Feature::join('feature_choices AS fc', 'fc.feature_id', '=', 'features.id')
+                $choices = Feature::join('feature_choices AS fc', 'fc.choice_id', '=', 'features.id')
+                    ->join('feature_morph AS fm', 'fm.feature_id', '=', 'features.id')
                     ->where([
+                        'fm.entity_type' => CharacterClass::class,
+                        'fm.entity_id' => $classId,
                         'fc.entity' => CharacterClass::class,
                         'fc.entity_id' => $classId,
-                        'fc.feature_id' => $feature->id
+                        'fc.feature_id' => $feature->id,
+                        'optional' => 1
                     ])
+                    ->groupBy(['features.id', 'fm.level'])
                     ->get(['features.*', 'fm.level']);
                 $feature->choices = $choices;
             }
@@ -48,18 +55,24 @@ class FeatureRepository
             ->join('feature_morph AS fm', 'fm.feature_id', '=', 'features.id')
             ->where([
                 'fm.entity_type' => Subclass::class,
-                'fm.entity_id' => $subclassId
+                'fm.entity_id' => $subclassId,
+                'optional' => 0
             ])
             ->whereNull('fc.id')
             ->get(['features.*', 'fm.level']);
         foreach ($features as &$feature) {
-            $choices = Feature::select()
-                ->join('feature_choices AS fc', 'fc.feature_id', '=', 'features.id')
+            $choices = Feature::join('feature_choices AS fc', 'fc.choice_id', '=', 'features.id')
+                ->join('feature_morph AS fm', 'fm.feature_id', '=', 'features.id')
                 ->where([
+                    'fm.entity_type' => Subclass::class,
+                    'fm.entity_id' => $subclassId,
                     'fc.entity' => Subclass::class,
                     'fc.entity_id' => $subclassId,
-                    'fc.feature_id' => $feature->id
-                ])->get(['features.*', 'fm.level']);
+                    'fc.feature_id' => $feature->id,
+                    'optional' => 1
+                ])
+                ->groupBy(['features.id', 'fm.level'])
+                ->get(['features.*', 'fm.level']);
             $feature->choices = $choices;
         }
         return $features;
