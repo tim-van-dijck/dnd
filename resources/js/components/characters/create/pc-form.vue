@@ -15,7 +15,7 @@
                     <pc-form-abilities-tab v-show="tab === 'ability'" v-model="character.ability_scores"
                                            :info="character.info" :character-classes="character.classes" @next="goToTab('personality')" />
                     <pc-form-personality-tab v-show="tab === 'personality'" :spellcaster="spellcaster"
-                                             v-model="character.personality" @next="spellcaster ? goToTab('spells') : save" />
+                                             v-model="character.personality" @next="nextOrSave(spellcaster, 'spells')" />
                     <pc-form-spell-tab v-if="spellcaster" v-show="tab === 'spells'" v-model="character.spells"
                                        :info="character.info" :character-classes="character.classes" @next="save" />
                 </form>
@@ -88,6 +88,13 @@
             }
         },
         methods: {
+            nextOrSave(condition, next) {
+                if (condition) {
+                    this.goToTab(next);
+                } else {
+                    this.save();
+                }
+            },
             save() {
                 let promise;
                 if (this.id) {
@@ -122,18 +129,18 @@
 
                 if (this.character.info.race_id) {
                     for (let index in this.races) {
-                        if (this.races[index].id == this.character.info.race_id) {
-                            let race = this.races[index];
-                            if (race.traits.find(item => item.name.includes('Cantrip'))) {
-                                return true;
-                            }
-                            if (this.character.info.subrace_id) {
-                                let subrace = race.subraces.find(sub => sub.id = this.character.info.subrace_id);
-                                if (subrace.traits.find(item => item.name.includes('Cantrip')) != null) {
-                                    return true;
-                                }
-                            }
-                        }
+                        // if (this.races[index].id == this.character.info.race_id) {
+                        //     let race = this.races[index];
+                        //     if (race.traits.find(item => item.name.includes('Cantrip'))) {
+                        //         return true;
+                        //     }
+                        //     if (this.character.info.subrace_id) {
+                        //         let subrace = race.subraces.find(sub => sub.id = this.character.info.subrace_id);
+                        //         if (subrace.traits.find(item => item.name.includes('Cantrip')) != null) {
+                        //             return true;
+                        //         }
+                        //     }
+                        // }
                     }
                 }
 

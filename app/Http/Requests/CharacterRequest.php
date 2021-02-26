@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Character\CharacterClass;
+use App\Models\Character\Feature;
+use App\Models\Character\Subclass;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CharacterRequest extends FormRequest
 {
@@ -31,11 +35,10 @@ class CharacterRequest extends FormRequest
 
     private function pcRules(): array
     {
-        return array_merge($this->generalRules(), [
-            'classes' => 'required|array|min:1',
-            'classes.*.class_id' => 'required|integer|exists:classes,id',
-            'classes.*.subclass_id' => 'nullable|integer|exists:subclasses,id',
-            'classes.*.level' => 'required|integer|between:1,20',
+        return array_merge(
+            $this->generalRules(),
+            $this->classRules(),
+            [
 
             'background_id' => 'nullable|exists:backgrounds,id',
 
@@ -89,5 +92,58 @@ class CharacterRequest extends FormRequest
             'info.title' => 'nullable|string',
             'info.type' => 'sometimes|string',
         ]);
+    }
+
+    private function classRules()
+    {
+        $rules = [
+            'classes' => 'required|array|min:1',
+            'classes.*.class_id' => 'required|integer|exists:classes,id',
+            'classes.*.subclass_id' => 'nullable|integer|exists:subclasses,id',
+            'classes.*.level' => 'required|integer|between:1,20',
+        ];
+        $input = $this->input('classes', []);
+        if (!empty($classes)) {
+            foreach ($input as $class) {
+                $features = Feature::join('feature_morph AS fm', 'fm.feature_id', '=', 'features.id')
+                    ->where([
+                        ['fm.entity_type', '=', CharacterClass::class],
+                        ['fm.entity_id', '=', $class['class_id']],
+                        ['fm.level', '<=', $class['level']],
+                        ['fm.choose', '>', 1],
+                        ['optional', '=', 0]
+                    ])
+                    ->orWhere([
+                        ['fm.entity_type', '=', Subclass::class],
+                        ['fm.entity_id', '=', $class['subclass_id']],
+                        ['fm.level', '<=', $class['level']],
+                        ['fm.choose', '>', 1],
+                        ['optional', '=', 0]
+                    ])
+                    ->groupBy(['f.id', 'fm.entity_id', 'fm.choose'])
+                    ->get(['f.id', 'fm.entity_id', 'fm.choose']);
+                if (!empty($features)) {
+                    $rules["classes.{$class['class_id']}.features"] = 'required|array';
+                    foreach ($features as $feature) {
+                        $rules["classes.{$class['class_id']}.features.{$feature->id}"] = [
+                            'required',
+                            'array',
+                            "size:{$feature->choose}"
+                        ];
+                        $choiceIds = Feature::join('feature_choices AS fc', 'fc.choice_id', '=', 'f.id')
+                            ->where('fc.feature_id', $feature->id)
+                            ->groupBy('fc.choice_id')
+                            ->get(['fc.choice_id'])
+                            ->pluck('fc.choice_id')
+                            ->toArray();
+
+                        $rules["classes.{$class['class_id']}.features.{$feature->id}.*"] = [
+                            Rule::in($choiceIds)
+                        ];
+                    }
+                }
+            }
+        }
+        return $rules;
     }
 }

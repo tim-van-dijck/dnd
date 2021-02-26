@@ -2,7 +2,7 @@
     <div class="skills">
         <div class="uk-accordion-title"><h2>Skills</h2></div>
         <div class="uk-accordion-content">
-            <div class="known uk-margin-bottom" v-if="known.length > 0">
+            <div class="uk-margin-bottom">
                 <div class="uk-child-width-1-3@m uk-child-width-1-2@s uk-grid-small uk-grid-match" uk-grid>
                     <div v-for="skill in known">
                         <div class="uk-card uk-card-body uk-card-primary">
