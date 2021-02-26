@@ -9,7 +9,7 @@ export default {
             spells: character.spells
         }
         char.info.race_id = character.race.id;
-        char.info.subrace_id = character.subrace ? character.subrace.id : null;
+        char.info.subrace_id = character.race.subrace ? character.race.subrace.id : null;
         char.classes = this.formatClasses(character.classes);
         return char;
     },
