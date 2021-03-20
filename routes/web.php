@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/logs', 'Campaign\CampaignController@logs');
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
+        Route::get('characters/{character}/sheet', 'Character\CharacterController@sheet');
         Route::resource('quests', 'Campaign\QuestController')->except(['create', 'edit']);
         Route::post('quests/{questId}/objectives/{objectiveId}/toggle', 'Campaign\QuestController@toggleObjectiveStatus');
         Route::resource('notes', 'Campaign\NoteController')->except(['create', 'edit']);

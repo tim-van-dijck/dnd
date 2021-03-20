@@ -12,7 +12,10 @@
                 <td class="uk-width-small">
                     <ul class="uk-iconnav">
                         <li v-for="action in actions">
-                            <a :href="action.to || '/'" :class="action.classes || ''" @click.prevent="$emit(action.name, row)">
+                            <a v-if="action.to" :href="getTo(action.to, row)">
+                                <i :class="`fas fa-${action.icon}`"></i>
+                            </a>
+                            <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" v-else>
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
                         </li>
@@ -70,6 +73,13 @@
                     value = value[key];
                 }
                 return value;
+            },
+            getTo(to, row) {
+                if (typeof to === 'string') {
+                    return to;
+                } else if (typeof to === 'function') {
+                    return to(row) || '/';
+                }
             }
         },
         computed: {
