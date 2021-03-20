@@ -1375,7 +1375,7 @@ class FeaturesTableSeeder extends Seeder
                 'optional' => true
             ],
             [
-                'name' => 'Bewitching Whispers',
+                'name' => 'Eldritch Invocation: Bewitching Whispers',
                 'description' => 'You can cast compulsion once using a Warlock spell slot. You can\'t do so again until you finish a long rest.',
                 'classes' => ['Warlock' => ['level' => 7]],
                 'optional' => true
