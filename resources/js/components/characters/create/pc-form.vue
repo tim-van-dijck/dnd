@@ -127,23 +127,6 @@
                     return false;
                 }
 
-                if (this.character.info.race_id) {
-                    for (let index in this.races) {
-                        // if (this.races[index].id == this.character.info.race_id) {
-                        //     let race = this.races[index];
-                        //     if (race.traits.find(item => item.name.includes('Cantrip'))) {
-                        //         return true;
-                        //     }
-                        //     if (this.character.info.subrace_id) {
-                        //         let subrace = race.subraces.find(sub => sub.id = this.character.info.subrace_id);
-                        //         if (subrace.traits.find(item => item.name.includes('Cantrip')) != null) {
-                        //             return true;
-                        //         }
-                        //     }
-                        // }
-                    }
-                }
-
                 for (let characterClass of this.character.classes) {
                     if (characterClass.class_id) {
                         let chosenClass = this.classes[characterClass.class_id];

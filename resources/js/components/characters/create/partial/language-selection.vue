@@ -46,7 +46,7 @@
             if ((this.value || []).length > 0) {
                 for (let language of this.value) {
                     let known = this.languages.known.find((item) => item.id == parseInt(language));
-                    if (known == null) {
+                    if (known != null) {
                         this.selection.push(parseInt(language));
                     }
                 }

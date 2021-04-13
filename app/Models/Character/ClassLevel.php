@@ -35,7 +35,7 @@ class ClassLevel extends Model
     protected $casts = [
         'class_specific' => 'array'
     ];
-
+    
     /**
      * @return BelongsTo
      */

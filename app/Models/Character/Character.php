@@ -25,7 +25,7 @@ use Illuminate\Support\Carbon;
  * @property bool dead
  * @property bool private
  * @property string bio
- * @property string ability_scores
+ * @property array ability_scores
  * @property string trait
  * @property string ideal
  * @property string bond

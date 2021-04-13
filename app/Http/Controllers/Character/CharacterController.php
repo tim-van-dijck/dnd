@@ -8,7 +8,9 @@ use App\Http\Resources\CharacterResource;
 use App\Managers\CharacterManager;
 use App\Models\Character\Character;
 use App\Repositories\Character\CharacterRepository;
+use App\Services\Character\CharacterSheetBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 
 class CharacterController extends Controller
@@ -63,6 +65,20 @@ class CharacterController extends Controller
         $this->authorize('view', $character);
         $includes = $request->has('includes') ? explode(',', $request->query('includes')) : [];
         return new CharacterResource($characterRepository->find(Session::get('campaign_id'), $character->id, $includes));
+    }
+
+    /**
+     * Export the specified character as a PDF Character Sheet.
+     *
+     * @param CharacterRepository $characterRepository
+     * @param Character $character
+     * @return Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function sheet(CharacterSheetBuilder $builder, Character $character): Response
+    {
+        $this->authorize('view', $character);
+        return $builder->getSheet($character);
     }
 
     /**

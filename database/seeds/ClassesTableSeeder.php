@@ -36,6 +36,7 @@ class ClassesTableSeeder extends Seeder
             $charClass->hit_die = $classArray['hit_die'];
             $charClass->saving_throws = $classArray['saving_throws'];
             $charClass->spellcaster = $classArray['spellcaster'];
+            $charClass->spellcasting_ability = $classArray['spellcasting_ability'];
             $charClass->save();
 
             $this->setProficiencies($charClass, $classArray);
@@ -894,7 +895,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'CHA'
             ],
             [
                 'name' => 'Cleric',
@@ -1233,7 +1235,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'WIS'
             ],
             [
                 'name' => 'Druid',
@@ -1587,7 +1590,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'WIS'
             ],
             [
                 'name' => 'Fighter',
@@ -2734,7 +2738,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'CHA'
             ],
             [
                 'name' => 'Ranger',
@@ -3073,7 +3078,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'WIS'
             ],
             [
                 'name' => 'Rogue',
@@ -3891,7 +3897,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'CHA'
             ],
             [
                 'name' => 'Warlock',
@@ -4298,7 +4305,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'CHA'
             ],
             [
                 'name' => 'Wizard',
@@ -4649,7 +4657,8 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'spellcaster' => true
+                'spellcaster' => true,
+                'spellcasting_ability' => 'INT'
             ]
         ];
     }
