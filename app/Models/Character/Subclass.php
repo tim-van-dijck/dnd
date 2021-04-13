@@ -33,7 +33,7 @@ class Subclass extends Model
      */
     public function characterClass()
     {
-        return $this->belongsTo(CharacterClass::class, ' class_id');
+        return $this->belongsTo(CharacterClass::class, 'class_id');
     }
 
     /**

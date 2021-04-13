@@ -9,7 +9,6 @@ use App\Managers\CharacterManager;
 use App\Models\Character\Character;
 use App\Repositories\Character\CharacterRepository;
 use App\Services\Character\CharacterSheetBuilder;
-use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;

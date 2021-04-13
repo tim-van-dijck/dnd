@@ -10,14 +10,15 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "7.4.*",
+        "php": "8.0.*",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.138",
-        "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "6.*",
         "laravel/tinker": "^1.0",
-        "tim-van-dijck/dnd-seeds": "^0.14.0@alpha"
+        "tim-van-dijck/dnd-seeds": "^0.14.0@alpha",
+        "fpdf/fpdf": "1.*",
+        "tmw/fpdm": "2.9.2"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

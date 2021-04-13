@@ -101,26 +101,24 @@ class CharacterManager
      */
     private function setCharacterProficiencies(Character $character, array $proficiencies)
     {
-        if (!empty($proficiencies['languages'])) {
-            $languages = $character->race->languages()
-                ->wherePivot('optional', 0)
-                ->pluck('languages.id');
-            if ($character->subrace_id) {
-                $languages->merge(
-                    $character->subrace->languages()
-                        ->wherePivot('optional', 0)
-                        ->pluck('languages.id')
-                );
-            }
-            if ($character->background_id) {
-                $languages->merge(
-                    $character->background->languages()
-                        ->wherePivot('optional', 0)
-                        ->pluck('languages.id')
-                );
-            }
-            $character->languages()->sync($languages->merge($proficiencies['languages'])->toArray());
+        $languages = $character->race->languages()
+            ->wherePivot('optional', 0)
+            ->pluck('languages.id');
+        if ($character->subrace_id) {
+            $languages->merge(
+                $character->subrace->languages()
+                    ->wherePivot('optional', 0)
+                    ->pluck('languages.id')
+            );
         }
+        if ($character->background_id) {
+            $languages->merge(
+                $character->background->languages()
+                    ->wherePivot('optional', 0)
+                    ->pluck('languages.id')
+            );
+        }
+        $character->languages()->sync($languages->merge($proficiencies['languages'] ?? [])->toArray());
         CharacterProficiencyHelper::saveProficiencies($character, $proficiencies);
     }
 
