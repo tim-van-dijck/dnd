@@ -76,7 +76,7 @@ class CharacterSheetBuilder
         }
         return [
             'ClassLevel' => $character->classes->first()->name . " lvl. $level",
-            'Background' => $character->background->name,
+            'Background' => $character->background_id ? $character->background->name : '',
             'PlayerName' => '',
             'CharacterName' => $character->name,
             'CharacterName 2' => $character->name,
