@@ -14,7 +14,7 @@ class CharacterSheetBuilder
 {
     public function getSheet(Character $character)
     {
-        $pdf = new FPDM(storage_path('app/character-sheet.pdf'));
+        $pdf = new FPDM(resource_path('pdf/character-sheet.pdf'));
         $pdf->Load($this->getData($character), true);
         $pdf->Merge();
         $pdf->Output('I', "Character Sheet {$character->name}.pdf");
