@@ -45,6 +45,14 @@ class ClassResource extends JsonResource
                 $subclass['features'] = $featureRepository->subclassFeatures($subclass['id'])->toArray();
             }
         }
+        if ($request->has('include') && strpos($request->query('include', ''), 'spells') !== false) {
+            $class['spells'] = $this->resource->spells->pluck('id')->toArray();
+        }
+        if ($request->has('include') && strpos($request->query('include', ''), 'spells') !== false) {
+            foreach ($class['subclasses'] as &$subclass) {
+                $subclass['spells'] = collect($subclass['spells'])->pluck('id')->toArray();
+            }
+        }
         return $class;
     }
 

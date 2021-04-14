@@ -247,7 +247,7 @@
                 for (let level = 0; level < 10; level++) {
                     let levelSpells = {
                         title: this.getTitle(level),
-                        items: []
+                        items: {}
                     }
                     let type = level > 0 ? 'spells' : 'cantrips';
                     for (let charClass of this.chosenClasses) {
@@ -258,18 +258,18 @@
                             canSelect = this.spellsAvailable.maxSpellLevel >= level && charClass.currentLevel[`${type}_known`] > 0;
                         }
                         if (canSelect) {
-                            levelSpells.items[charClass.id] = this.classes[charClass.id].spells
+                            levelSpells.items[charClass.id] = this.spells
                                 .filter(item => {
                                     let selection = this.selection[level > 0 ? 'spells' : 'cantrips'].find(selected => selected.id == item.id);
-                                    return selection == null && item.level === level;
+                                    return selection == null && item.level === level && this.classes[charClass.id].spells.includes(item.id);
                                 })
                                 .sort((a, b) =>  a.name < b.name ? -1 : 1);
 
                             if (charClass.subclass) {
                                 if (charClass.subclass.spells) {
-                                    let subclassSpells = charClass.subclass.spells.filter(item => {
+                                    let subclassSpells = this.spells.filter(item => {
                                         let selection = this.selection[level > 0 ? 'spells' : 'cantrips'].find(selected => selected.id == item.id);
-                                        return selection == null && item.level === level;
+                                        return selection == null && item.level === level && charClass.subclass.spells.includes(item.id);
                                     })
                                     levelSpells.items[charClass.id] = levelSpells.items[charClass.id]
                                         .concat(subclassSpells)
