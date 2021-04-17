@@ -12,7 +12,7 @@
                 <td class="uk-width-small">
                     <ul class="uk-iconnav">
                         <li v-for="action in actions">
-                            <a v-if="action.to" :href="getTo(action.to, row)">
+                            <a v-if="action.to" :href="getTo(action.to, row)" :target="action.newTab ? '_blank' : 'self'">
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
                             <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" v-else>

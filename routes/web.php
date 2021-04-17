@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/campaigns', 'Campaign\CampaignController');
     Route::group(['prefix' => '/campaign'], function () {
         Route::get('/', 'Campaign\CampaignController@currentCampaign');
+        Route::get('/search', 'Campaign\CampaignController@search');
         Route::get('/logs', 'Campaign\CampaignController@logs');
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);

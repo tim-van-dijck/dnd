@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div v-if="location">
         <h1>{{ location.name }}</h1>
         <div class="uk-section uk-section-default">
-            <div v-if="this.location" class="uk-container padded">
+            <div class="uk-container padded">
                 <div uk-grid>
                     <div class="uk-width-1-2">
                         <div class="uk-margin">
@@ -35,11 +35,11 @@
                         </router-link>
                     </p>
             </div>
-            <p v-else class="uk-text-center">
-                <i class="fas fa-2x fa-sync fa-spin"></i>
-            </p>
         </div>
     </div>
+    <p v-else class="uk-text-center">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </p>
 </template>
 
 <script>

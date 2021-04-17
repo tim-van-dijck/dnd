@@ -10,6 +10,7 @@ use App\Repositories\CampaignRepository;
 use App\Repositories\LogRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class CampaignController extends Controller
@@ -117,5 +118,38 @@ class CampaignController extends Controller
     {
         $campaignId = Session::get('campaign_id');
         return LogResource::collection($logRepository->recentActivity($campaignId));
+    }
+
+    public function search(Request $request)
+    {
+        $queryString = $request->query('query', '');
+
+        $chars = DB::table('characters')
+            ->selectRaw('characters.id AS id, characters.name AS label, type AS type')
+            ->where('campaign_id', Session::get('campaign_id'))
+            ->where('characters.name', 'LIKE', "%$queryString%");
+
+        $locations = DB::table('locations')
+            ->selectRaw('locations.id AS id, locations.name AS label, "location" AS type')
+            ->where('campaign_id', Session::get('campaign_id'))
+            ->where('locations.name', 'LIKE', "%$queryString%");
+
+        $notes = DB::table('notes')
+            ->selectRaw('notes.id AS id, notes.name AS label, "note" AS type')
+            ->where('campaign_id', Session::get('campaign_id'))
+            ->where(function ($query) use ($queryString) {
+                $query->where('notes.name', 'LIKE', "%$queryString%")
+                    ->orWhere('notes.content', 'LIKE', "%$queryString%");
+            });
+
+        $quests = DB::table('quests')
+            ->selectRaw('quests.id AS id, quests.title AS label, "quest" AS type')
+            ->where('campaign_id', Session::get('campaign_id'))
+            ->where(function ($query) use ($queryString) {
+                $query->where('quests.title', 'LIKE', "%$queryString%")
+                    ->orWhere('quests.description', 'LIKE', "%$queryString%");
+            });
+
+        return $chars->union($locations)->union($notes)->union($quests)->get();
     }
 }

@@ -3,7 +3,7 @@
         <i v-if="icon" class="fas fa-book fa-fw"></i>
         <slot></slot>
     </button>
-    <a v-else href="" title="Spellbook" :uk-toggle="`target: #${name}`">
+    <a v-else href="/" title="Spellbook" :uk-toggle="`target: #${name}`">
         <i v-if="icon" class="fas fa-book fa-fw"></i>
         <slot></slot>
     </a>

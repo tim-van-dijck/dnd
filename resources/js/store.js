@@ -52,6 +52,12 @@ let store = new Vuex.Store({
                         window.location = '/';
                     }
                 });
+        },
+        logout({}) {
+            axios.post('/logout')
+                .then(() => {
+                    document.location.href = '/';
+                });
         }
     },
     mutations: {

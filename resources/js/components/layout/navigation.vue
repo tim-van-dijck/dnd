@@ -47,11 +47,11 @@
         </div>
         <div class="bar-bottom">
             <ul class="uk-subnav uk-flex uk-flex-center uk-child-width-1-5" data-uk-grid>
-                <li><a href="/campaigns" title="Home"><i class="fas fa-home fa-fw"></i></a></li>
+                <li><router-link :to="{name: 'dashboard'}" title="Home"><i class="fas fa-home fa-fw"></i></router-link></li>
                 <li><a href="/profile" title="Settings"><i class="fas fa-sliders-h fa-fw"></i></a></li>
                 <li><spellbook-button icon name="spellbook-modal"></spellbook-button></li>
                 <li>
-                    <a href="/logout" title="Sign out" @click.prevent="logout">
+                    <a href="/logout" title="Sign out" @click.prevent="$store.dispatch('logout')">
                         <i class="fas fa-sign-out-alt fa-fw"></i>
                     </a>
                 </li>

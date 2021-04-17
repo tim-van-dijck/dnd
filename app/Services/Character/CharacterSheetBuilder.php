@@ -166,6 +166,11 @@ class CharacterSheetBuilder
                 $result .= "$trait->name\n";
             }
         }
+
+        if (!empty($result)) {
+            $result .= "\n";
+        }
+
         foreach ($character->classes as $class) {
             $features = CharacterFeatureHelper::getCharacterClassFeatures(
                 $character->id,

@@ -38,7 +38,7 @@
                     {name: 'destroy', icon: 'trash', classes: 'uk-text-danger'},
                     {name: 'edit', icon: 'edit'},
                     {name: 'view', icon: 'eye'},
-                    {name: 'sheet', to: (row) => `/campaign/characters/${row.id}/sheet`, icon: 'file'}
+                    {name: 'sheet', to: (row) => `/campaign/characters/${row.id}/sheet`, icon: 'file', newTab: true}
                 ],
                 columns: [
                     {title: 'Name', name: 'info.name'},

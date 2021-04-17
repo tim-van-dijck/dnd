@@ -16,6 +16,7 @@ import store from './store';
 
 import Messages from './components/layout/messages';
 import Navigation from './components/layout/navigation';
+import HeaderNavbar from './components/layout/header-navbar';
 
 window.copy = function(item) {
     return JSON.parse(JSON.stringify(item));
@@ -35,7 +36,7 @@ window.onload = () => {
                     el: '#app',
                     router,
                     store,
-                    components: {Messages, Navigation}
+                    components: {HeaderNavbar, Messages, Navigation}
                 });
             })
             .catch((error) => {

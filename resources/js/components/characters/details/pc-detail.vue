@@ -1,6 +1,9 @@
 <template>
     <div id="pc-detail" v-if="character">
-        <h1>{{ character.info.name }} <span v-if="character.info.private" title="This character is private">(<i class="fas fa-user-secret"></i>)</span></h1>
+        <h1>
+            <router-link class="uk-link-text" :to="{name: character.info.type == 'player' ? 'player-characters' : 'npcs'}"><i class="fas fa-chevron-left"></i></router-link>
+            {{ character.info.name }} <span v-if="character.info.private" title="This character is private">(<i class="fas fa-user-secret"></i>)</span>
+        </h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <ul class="uk-tab">
