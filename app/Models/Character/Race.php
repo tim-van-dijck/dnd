@@ -71,6 +71,6 @@ class Race extends Model
      */
     public function abilities()
     {
-        return $this->hasMany(AbilityBonus::class);
+        return $this->hasMany(AbilityBonus::class)->whereNull('subrace_id');
     }
 }
