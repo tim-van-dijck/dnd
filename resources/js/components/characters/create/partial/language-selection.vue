@@ -39,18 +39,23 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
         name: "language-selection",
         props: ['background', 'race', 'subrace', 'value'],
         created() {
-            if ((this.value || []).length > 0) {
-                for (let language of this.value) {
-                    let known = this.languages.known.find((item) => item.id == parseInt(language));
-                    if (known != null) {
-                        this.selection.push(parseInt(language));
+            this.$store.dispatch('loadLanguages')
+                .then(() => {
+                    if ((this.value || []).length > 0) {
+                        for (let language of this.value) {
+                            let known = this.languages.known.find((item) => item.id == parseInt(language));
+                            if (known == null) {
+                                this.selection.push(parseInt(language));
+                            }
+                        }
                     }
-                }
-            }
+                })
         },
         data() {
             return {
@@ -63,10 +68,11 @@
                 $event.target.value = '';
             },
             removeLanguage(languageId) {
-                this.selection.splice(this.selection.indexOf(languageId), 1)
+                this.selection.splice(this.selection.indexOf(languageId), 1);
             }
         },
         computed: {
+            ...mapState({'availableLanguages': 'languages'}),
             languages() {
                 let languages = {
                     known: [],
@@ -75,8 +81,7 @@
                 if (this.race) {
                     for (let language of this.race.languages) {
                         if (language.optional) {
-                            let alreadyChosen = this.selection.includes(language.id);
-                            if (!alreadyChosen) {
+                            if (!this.selection.includes(language.id)) {
                                 languages.optional.push(language);
                             }
                         } else {
@@ -98,6 +103,26 @@
                         }
                     }
                 }
+
+                if (this.background && this.background.language_choices > 0) {
+                    let backgroundChoices = 0;
+                    for (let selection of this.selection) {
+                        if (this.race && (this.race.languages || []).find(item => item.id === selection)) {
+                            continue;
+                        }
+                        if (this.subrace && (this.subrace.languages || []).find(item => item.id === selection)) {
+                            continue;
+                        }
+                        backgroundChoices++;
+                    }
+                    if (backgroundChoices < this.background.language_choices) {
+                        languages.optional = (this.availableLanguages || [])
+                            .filter((language) => {
+                                let notKnown = languages.known.find(item => item.id === language.id) == null
+                                return !this.selection.includes(language.id) && notKnown;
+                            });
+                    }
+                }
                 return languages;
             },
             optionalLanguages() {
@@ -115,19 +140,8 @@
             },
             selectedLanguages() {
                 let known = [];
-                if (this.race) {
-                    for (let language of this.race.languages) {
-                        if (this.selection.includes(language.id)) {
-                            known.push(language);
-                        }
-                    }
-                    if (this.subrace) {
-                        for (let language of this.subrace.languages) {
-                            if (this.selection.includes(language.id)) {
-                                known.push(language);
-                            }
-                        }
-                    }
+                for (let languageId of this.selection) {
+                    known.push(this.availableLanguages.find(language => language.id === languageId));
                 }
                 return known;
             }

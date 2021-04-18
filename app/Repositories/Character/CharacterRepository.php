@@ -29,7 +29,7 @@ class CharacterRepository
             ->leftJoin('user_permissions', function ($join) {
                 $join->on('characters.id', '=', 'user_permissions.entity_id')
                     ->where([
-                        'user_permissions.entity' => 'quest',
+                        'user_permissions.entity' => 'character',
                         'user_permissions.user_id' => Auth::user()->id
                     ]);
             });

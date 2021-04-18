@@ -7,6 +7,7 @@ use App\Enums\OriginTypes;
 use App\Models\Character\Character;
 use App\Repositories\Character\CharacterRepository;
 use App\Repositories\LogRepository;
+use App\Services\AuthService;
 use App\Services\Character\Helpers\CharacterFeatureHelper;
 use App\Services\Character\Helpers\CharacterProficiencyHelper;
 
@@ -55,6 +56,11 @@ class CharacterManager
         } else {
             $character = $this->saveNPC($input, $characterId);
         }
+
+        if (array_key_exists('permissions', $input)) {
+            AuthService::setCustomPermissions($campaignId, 'character', $character->id, $input['permissions']);
+        }
+
         $this->logRepository->store($campaignId, 'character', $character->id, $character->name, 'updated');
         return $character->refresh();
     }

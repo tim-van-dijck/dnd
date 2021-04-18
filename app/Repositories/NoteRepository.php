@@ -34,7 +34,7 @@ class NoteRepository
             ->leftJoin('user_permissions', function ($join) {
                 $join->on('notes.id', '=', 'user_permissions.entity_id')
                     ->where([
-                        'user_permissions.entity' => 'quest',
+                        'user_permissions.entity' => 'note',
                         'user_permissions.user_id' => Auth::user()->id
                     ]);
             });

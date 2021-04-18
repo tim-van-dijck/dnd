@@ -39,7 +39,7 @@ class LocationRepository
             ->leftJoin('user_permissions', function ($join) {
                 $join->on('locations.id', '=', 'user_permissions.entity_id')
                     ->where([
-                        'user_permissions.entity' => 'quest',
+                        'user_permissions.entity' => 'location',
                         'user_permissions.user_id' => Auth::user()->id
                     ]);
             });

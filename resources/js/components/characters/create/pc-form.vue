@@ -4,20 +4,39 @@
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="character && Object.keys(classes).length > 0 && Object.keys(races).length > 0" id="character-form" class="uk-form-stacked">
-                    <pc-form-navigation :character="character" :spellcaster="spellcaster" :tab="tab" :errors="errors" @navigate="goToTab" />
+                    <ul v-if="$store.getters.can('edit', 'role')" uk-tab>
+                        <li :class="{'uk-active': page === 'form'}">
+                            <a href="" @click.prevent="page = 'form'">Details</a>
+                        </li>
+                        <li :class="{'uk-active': page === 'permissions'}">
+                            <a href="" @click.prevent="page = 'permissions'">Permissions</a>
+                        </li>
+                    </ul>
+                    <pc-form-navigation v-show="page === 'form'"
+                                        :character="character" :spellcaster="spellcaster"
+                                        :tab="tab" :errors="errors"
+                                        @navigate="goToTab" />
 
-                    <pc-form-details-tab v-show="tab === 'details'" v-model="character.info" @next="goToTab('class')" />
-                    <pc-form-class-tab v-show="tab === 'class'" v-model="character.classes" @next="goToTab('background')" />
-                    <pc-form-background-tab v-show="tab === 'background'" v-model="character.background_id" @next="goToTab('proficiency')" />
-                    <pc-form-proficiency-tab v-show="tab === 'proficiency'" v-model="character.proficiencies"
+                    <pc-form-details-tab v-show="page === 'form' && tab === 'details'" v-model="character.info"
+                                         @next="goToTab('class')" />
+                    <pc-form-class-tab v-show="page === 'form' && tab === 'class'" v-model="character.classes"
+                                       @next="goToTab('background')" />
+                    <pc-form-background-tab v-show="page === 'form' && tab === 'background'" v-model="character.background_id"
+                                            @next="goToTab('proficiency')" />
+                    <pc-form-proficiency-tab v-show="page === 'form' && tab === 'proficiency'" v-model="character.proficiencies"
                                              :info="character.info" :character-classes="character.classes"
                                              :background-id="character.background_id" @next="goToTab('ability')" />
-                    <pc-form-abilities-tab v-show="tab === 'ability'" v-model="character.ability_scores"
-                                           :info="character.info" :character-classes="character.classes" @next="goToTab('personality')" />
-                    <pc-form-personality-tab v-show="tab === 'personality'" :spellcaster="spellcaster"
+                    <pc-form-abilities-tab v-show="page === 'form' && tab === 'ability'" v-model="character.ability_scores"
+                                           :info="character.info" :character-classes="character.classes"
+                                           @next="goToTab('personality')" />
+                    <pc-form-personality-tab v-show="page === 'form' && tab === 'personality'" :spellcaster="spellcaster"
                                              v-model="character.personality" @next="nextOrSave(spellcaster, 'spells')" />
-                    <pc-form-spell-tab v-if="spellcaster" v-show="tab === 'spells'" v-model="character.spells"
+                    <pc-form-spell-tab v-if="spellcaster" v-show="page === 'form' && tab === 'spells'" v-model="character.spells"
                                        :info="character.info" :character-classes="character.classes" @next="save" />
+
+                    <permissions-form v-show="page === 'permissions' && $store.getters.can('edit', 'role')"
+                                      entity="character" :id="id"
+                                      v-model="character.permissions" />
                 </form>
                 <p v-else class="uk-text-center">
                     <i class="fas fa-2x fa-sync fa-spin"></i>
@@ -38,6 +57,7 @@
     import PcFormSpellTab from "./tabs/pc-form-spell-tab";
     import PcFormNavigation from "./partial/pc-form-navigation";
     import PcFormBackgroundTab from "./tabs/pc-form-background-tab";
+    import PermissionsForm from "../../partial/permissions-form";
 
     export default {
         name: "pc-form",
@@ -84,7 +104,8 @@
         data() {
             return {
                 character: null,
-                tab: 'details'
+                tab: 'details',
+                page: 'form'
             }
         },
         methods: {
@@ -143,6 +164,7 @@
             }
         },
         components: {
+            PermissionsForm,
             PcFormBackgroundTab,
             PcFormNavigation,
             PcFormSpellTab,
