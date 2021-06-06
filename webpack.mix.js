@@ -1,4 +1,7 @@
+const path = require('path');
 const mix = require('laravel-mix');
+
+require('laravel-mix-alias')
 
 /*
  |--------------------------------------------------------------------------
@@ -11,7 +14,15 @@ const mix = require('laravel-mix');
  |
  */
 
+
 mix.webpackConfig({
+    resolve: {
+        alias: {
+            '@': path.join(__dirname, '/resources/js'),
+            'Admin': path.join(__dirname, '/resources/js/admin'),
+            'Campaign': path.join(__dirname, '/resources/js/campaign')
+        }
+    },
     module: {
         rules: [
             {
@@ -27,7 +38,9 @@ mix.webpackConfig({
     }
 });
 
-mix.js('resources/js/app.js', 'public/js')
+mix
+    .js('resources/js/admin/app.js', 'public/js/admin.js').vue()
+    .js('resources/js/campaign/app.js', 'public/js').vue()
     .sass('resources/sass/app.scss', 'public/css');
 
 mix.copyDirectory('node_modules/tinymce/skins', 'public/skins');

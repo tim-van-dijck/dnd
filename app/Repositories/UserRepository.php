@@ -13,12 +13,30 @@ use Illuminate\Support\Str;
 class UserRepository
 {
     /**
+     * @param array $filters
+     * @param int $page
+     * @param int $pageSize
+     * @return LengthAwarePaginator
+     */
+    public function get(array $filters, int $page, int $pageSize): LengthAwarePaginator
+    {
+        $query = User::query();
+        if (!empty($filters['query'])) {
+            $query->where(function ($query) use ($filters) {
+                return $query->where('name', 'LIKE', "%{$filters['query']}%")
+                    ->orWhere('name', 'LIKE', "%{$filters['query']}%");
+            });
+        }
+        return $query->paginate($pageSize, ['*'], 'page[number]', $page);
+    }
+
+    /**
      * @param int $campaignId
      * @param int $page
      * @param int $pageSize
      * @return LengthAwarePaginator
      */
-    public function get(int $campaignId, int $page, int $pageSize): LengthAwarePaginator
+    public function getByCampaign(int $campaignId, int $page, int $pageSize): LengthAwarePaginator
     {
         return User::join('role_user', 'role_user.user_id', '=', 'users.id')
             ->join('roles', function ($join) use ($campaignId) {

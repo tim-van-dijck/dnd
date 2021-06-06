@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index(UserRepository $userRepository, Request $request)
     {
         $page = $request->query('page');
-        $users = $userRepository->get(Session::get('campaign_id'), $page['number'] ?? 1, $page['size'] ?? 10);
+        $users = $userRepository->getByCampaign(Session::get('campaign_id'), $page['number'] ?? 1, $page['size'] ?? 10);
         return UserResource::collection($users);
     }
 

@@ -11,6 +11,13 @@ class LocationPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability)
+    {
+        if ($user->admin) {
+            return true;
+        }
+    }
+
     public function viewAny(User $user)
     {
         return AuthService::userHasCampaignPermission($user, null, 'location', 'view');

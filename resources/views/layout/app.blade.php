@@ -39,12 +39,8 @@
     <div id="content" class="uk-width-1-1" uk-height-viewport="expand: true">
         <div class="uk-container uk-container-expand">
             @yield('content')
-            <footer class="uk-section uk-section-small uk-text-center">
-                <hr>
-                <p class="uk-text-small uk-text-center">
-                    &copy; Copyright {{ date('Y') }} - <a href="https://timvandijck.com">Created by ne spast</a>
-                </p>
-            </footer>
+            @component('partial.footer')
+            @endcomponent
         </div>
     </div>
     @yield('js')

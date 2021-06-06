@@ -52,6 +52,7 @@ class CreateUser extends Command
         $user->name = $name;
         $user->email = $email;
         $user->password = bcrypt($password);
+        $user->admin = true;
         $user->email_verified_at = Carbon::now();
         $user->save();
     }

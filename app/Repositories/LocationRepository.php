@@ -14,8 +14,7 @@ use Illuminate\Support\Str;
 
 class LocationRepository
 {
-    /** @var LogRepository */
-    private $logRepository;
+    private LogRepository $logRepository;
 
     /**
      * LocationRepository constructor.

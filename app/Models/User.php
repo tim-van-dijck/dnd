@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string name
  * @property string email
  * @property string password
+ * @property boolean admin
  * @property string remember_token
  * @property string invite_code
  * @property Carbon|string email_verified_at

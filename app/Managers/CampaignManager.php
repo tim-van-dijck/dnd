@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CampaignManager
 {
-    /** @var CampaignRepository */
-    private $campaignRepository;
+    private CampaignRepository $campaignRepository;
 
     /**
      * CampaignManager constructor.

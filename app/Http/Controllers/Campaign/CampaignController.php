@@ -8,24 +8,32 @@ use App\Managers\CampaignManager;
 use App\Models\Campaign\Campaign;
 use App\Repositories\CampaignRepository;
 use App\Repositories\LogRepository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class CampaignController extends Controller
 {
     /**
      * @param CampaignRepository $campaignRepository
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function index(CampaignRepository $campaignRepository)
+    public function index(CampaignRepository $campaignRepository): View
     {
-        $campaigns = $campaignRepository->index(Auth::user()->id);
+        $campaigns = $campaignRepository->getByUserId(Auth::user()->id);
         return view('campaigns.index', ['campaigns' => $campaigns]);
     }
 
-    public function create()
+    /**
+     * @return View
+     */
+    public function create(): View
     {
         return view('campaigns.create');
     }
@@ -33,10 +41,10 @@ class CampaignController extends Controller
     /**
      * @param Request $request
      * @param CampaignManager $campaignManager
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Illuminate\Validation\ValidationException
+     * @return RedirectResponse
+     * @throws ValidationException
      */
-    public function store(Request $request, CampaignManager $campaignManager)
+    public function store(Request $request, CampaignManager $campaignManager): RedirectResponse
     {
         $this->validate($request, [
             'name' => 'required|string|max:191',
@@ -50,9 +58,9 @@ class CampaignController extends Controller
 
     /**
      * @param Campaign $campaign
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function show(Campaign $campaign)
+    public function show(Campaign $campaign): RedirectResponse
     {
         if (Auth::user()->can('view', $campaign)) {
             Session::put('campaign_id', $campaign->id);
@@ -61,9 +69,9 @@ class CampaignController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function currentCampaign()
+    public function currentCampaign(): JsonResponse
     {
         /** @var Campaign $campaign */
         $campaign = Campaign::findOrFail(Session::get('campaign_id'));
@@ -79,9 +87,9 @@ class CampaignController extends Controller
 
     /**
      * @param Campaign $campaign
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function edit(Campaign $campaign)
+    public function edit(Campaign $campaign): View
     {
         return view('campaigns.edit', ['campaign' => $campaign]);
     }
@@ -90,10 +98,10 @@ class CampaignController extends Controller
      * @param Request $request
      * @param CampaignRepository $campaignRepository
      * @param Campaign $campaign
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return RedirectResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, CampaignRepository $campaignRepository, Campaign $campaign)
+    public function update(Request $request, CampaignRepository $campaignRepository, Campaign $campaign): RedirectResponse
     {
         $this->validate($request, [
            'name' => 'required|string',
@@ -104,13 +112,13 @@ class CampaignController extends Controller
     }
 
     /**
-     * @param CampaignManager $campaignManager
+     * @param CampaignRepository $campaignRepository
      * @param Campaign $campaign
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function destroy(CampaignManager $campaignManager, Campaign $campaign)
+    public function destroy(CampaignRepository $campaignRepository, Campaign $campaign): RedirectResponse
     {
-        $campaignManager->destroy($campaign);
+        $campaignRepository->destroy($campaign);
         return redirect()->route('campaigns.index');
     }
 

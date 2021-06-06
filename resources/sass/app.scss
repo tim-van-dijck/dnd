@@ -35,7 +35,7 @@ $card-secondary-color-mode: dark;
   padding-top: 30px;
 }
 @media screen and (min-width: 960px){
-  #app {
+  #app, #admin-app {
     #content {
       /* equal to left-col width */
       margin-left: 240px;

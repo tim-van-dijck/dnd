@@ -10,6 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+use Illuminate\Support\Facades\Route;
+
 Auth::routes(['verify' => true]);
 
 Route::get('{token}/register', 'InviteController@invitation')->name('invitation');
@@ -21,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/classes', 'Character\ApiController@classes');
     Route::get('/languages', 'Character\ApiController@languages');
     Route::get('/backgrounds', 'Character\ApiController@backgrounds');
-    Route::get('/spells', 'Magic\SpellController@index');
+    Route::get('/spells', 'Magic\SpellController@all');
 
     Route::get('/profile', 'UserController@profile')->name('profile.index');
     Route::post('/profile', 'UserController@save')->name('profile.save');
@@ -44,5 +47,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('users', 'Campaign\UserController')->except(['create', 'store', 'edit']);
         Route::post('users/invite', 'Campaign\UserController@invite')->name('users.invite');
         Route::get('me', 'Campaign\UserController@me')->name('users.me');
+    });
+
+    Route::group(['prefix' => 'admin'], function () {
+        Route::get('/', 'AdminController@index')->name('admin');
+        Route::resource('campaigns', 'Admin\CampaignController')
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
+        Route::resource('users', 'Admin\UserController')
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
+        Route::resource('spells', 'Magic\SpellController')
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
     });
 });
