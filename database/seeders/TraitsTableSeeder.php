@@ -1,8 +1,9 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Character\RaceTrait;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
 
 class TraitsTableSeeder extends Seeder
 {

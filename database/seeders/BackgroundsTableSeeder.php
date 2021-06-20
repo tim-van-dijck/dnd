@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Character\Background;
 use App\Models\Character\Feature;
 use App\Models\Character\Proficiency;

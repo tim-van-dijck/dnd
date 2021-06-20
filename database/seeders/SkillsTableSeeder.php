@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Character\Skill;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;

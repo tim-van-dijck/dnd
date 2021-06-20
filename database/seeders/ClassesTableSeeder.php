@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Character\CharacterClass;
 use App\Models\Character\ClassLevel;
 use App\Models\Character\Proficiency;

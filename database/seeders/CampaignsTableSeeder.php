@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Campaign\Campaign;
 use Illuminate\Database\Seeder;
 

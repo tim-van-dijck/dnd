@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Models\Character\Background;
-use App\Models\Character\Proficiency;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BackgroundResource extends JsonResource

@@ -27,7 +27,7 @@ mix.webpackConfig({
     }
 });
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/js/app.js', 'public/js').vue();
+mix.sass('resources/sass/app.scss', 'public/css');
 
 mix.copyDirectory('node_modules/tinymce/skins', 'public/skins');

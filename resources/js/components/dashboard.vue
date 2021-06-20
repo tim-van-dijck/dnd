@@ -12,7 +12,7 @@
                     <ul v-if="logs && logs.length > 0" class="uk-list uk-list-divider">
                         <li v-for="log in logs">
                             <span v-html="log.message"></span>
-                            <span class="uk-display-inline-block uk-align-right uk-text-italic">({{ log.created_at }})</span>
+                            <span class="uk-display-inline-block uk-align-right uk-text-italic">({{ log.created_at|date }})</span>
                         </li>
                     </ul>
                     <div v-else class="uk-alert uk-alert-primary">
