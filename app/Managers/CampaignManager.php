@@ -31,7 +31,7 @@ class CampaignManager
         $adminRole->system = 1;
         $adminRole->save();
 
-        $permissions = Permission::whereIn('name', ['campaign', 'character', 'location', 'quest', 'note', 'user', 'role'])
+        $permissions = Permission::whereIn('name', ['campaign', 'character', 'location', 'quest', 'note', 'user', 'role', 'journal'])
             ->get();
         foreach ($permissions as $permission) {
             $adminRole->permissions()->attach($permission->id, ['view' => 1, 'create' => 1, 'edit' => 1, 'delete' => 1]);

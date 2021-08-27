@@ -22,9 +22,14 @@
                         <i class="fas fa-exclamation fa-fw"></i> Quests
                     </router-link>
                 </li>
+                <li v-if="$store.getters.can('view', 'journal')">
+                    <router-link :to="{name: 'journal'}">
+                        <i class="fas fa-book-open fa-fw"></i> Journal
+                    </router-link>
+                </li>
                 <li v-if="$store.getters.can('view', 'note')">
                     <router-link :to="{name: 'notes'}">
-                        <i class="fas fa-book-open fa-fw"></i> Notes
+                        <i class="fas fa-file-alt fa-fw"></i> Notes
                     </router-link>
                 </li>
                 <li>
