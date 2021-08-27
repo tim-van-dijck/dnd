@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('journal', 'Campaign\JournalController')
             ->except(['create', 'edit'])
             ->parameters(['journal' => 'journalEntry']);
+        Route::post('journal/sort', 'Campaign\JournalController@sort');
         Route::resource('quests', 'Campaign\QuestController')->except(['create', 'edit']);
         Route::post('quests/{questId}/objectives/{objectiveId}/toggle', 'Campaign\QuestController@toggleObjectiveStatus');
         Route::resource('notes', 'Campaign\NoteController')->except(['create', 'edit']);

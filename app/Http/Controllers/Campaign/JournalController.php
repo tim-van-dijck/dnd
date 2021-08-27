@@ -8,6 +8,7 @@ use App\Http\Resources\JournalEntryResource;
 use App\Models\Campaign\JournalEntry;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class JournalController extends Controller
@@ -89,5 +90,18 @@ class JournalController extends Controller
             ->decrement('order');
 
         $journalEntry->delete();
+    }
+
+    public function sort(Request $request)
+    {
+        $list = $request->input('list', []);
+        $entries = JournalEntry::whereIn('id', $list)->get()->keyBy('id');
+        foreach ($list as $key => $id) {
+            $entry = $entries[$id] ?? null;
+            if ($entry) {
+                $entry->order = $key + 1;
+                $entry->save();
+            }
+        }
     }
 }

@@ -58,6 +58,22 @@ export const Journal = {
                 .then(() => {
                     dispatch('Messages/success', 'Entry successfully deleted!', {root: true});
                 })
+        },
+        sort({state}, event) {
+            console.log(event);
+            if (state.entries === null) {
+                return;
+            }
+            let order = [];
+            for (let entry of state.entries) {
+                order.push(entry.id);
+            }
+            axios.post('/campaign/journal/sort', {list: order})
+                .then(() => {
+                    for (let entry of state.entries) {
+                        entry.order = order.find(item => item === entry.id)?.order;
+                    }
+                })
         }
     }
 }
