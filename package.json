@@ -1,22 +1,23 @@
 {
     "private": true,
     "scripts": {
-        "dev": "yarn run development",
+        "dev": "npx run development",
         "development": "mix",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
-        "prod": "yarn run production",
+        "prod": "npx run production",
         "production": "mix --production"
     },
     "devDependencies": {
         "axios": "^0.21",
         "cross-env": "^7.0.3",
-        "laravel-mix": "^4.0.7",
+        "laravel-mix": "^6.0.28",
         "lodash": "^4.17.21",
-        "resolve-url-loader": "^2.3.1",
+        "resolve-url-loader": "^4.0.0",
         "sass": "^1.32.8",
         "sass-loader": "^7.1.0",
+        "vue-loader": "^15.9.7",
         "vue-svg-loader": "^0.16.0",
         "vue-template-compiler": "^2.6.12"
     },
