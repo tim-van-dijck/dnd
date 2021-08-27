@@ -81,7 +81,9 @@
             this.$set(this, 'info', this.value);
             if (this.isOwner) {
                 this.$store.dispatch('Users/load');
-                this.info.owner_id = this.$store.state.user.id;
+                if (this.info.owner_id == null) {
+                    this.info.owner_id = this.$store.state.user.id;
+                }
             }
         },
         data() {
