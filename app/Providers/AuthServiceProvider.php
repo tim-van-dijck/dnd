@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Campaign\JournalEntry;
 use App\Models\Campaign\Campaign;
 use App\Models\Campaign\Location;
 use App\Models\Campaign\Note;
 use App\Models\Campaign\Quest;
 use App\Models\Campaign\Role;
 use App\Models\Character\Character;
+use App\Policies\JournalPolicy;
 use App\Policies\CampaignPolicy;
 use App\Policies\CharacterPolicy;
 use App\Policies\LocationPolicy;
@@ -26,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
          Campaign::class => CampaignPolicy::class,
          Character::class => CharacterPolicy::class,
+         JournalEntry::class => JournalPolicy::class,
          Location::class => LocationPolicy::class,
          Note::class => NotePolicy::class,
          Quest::class => QuestPolicy::class,

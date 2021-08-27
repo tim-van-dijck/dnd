@@ -17,6 +17,8 @@ use Illuminate\Support\Collection;
  */
 class Permission extends Model
 {
+    protected $fillable = ['name'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
