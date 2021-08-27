@@ -47,7 +47,6 @@
                         title: 'Completion',
                         name: 'objectives',
                         format(objectives) {
-                            console.log(objectives);
                             return `${objectives.filter((item) => item.status == 1).length}/${objectives.length}`
                         }
                     },

@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\JournalEntryRequest;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\Campaign\JournalEntry;
+use App\Services\AuthService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class JournalController extends Controller
 {
@@ -94,6 +97,10 @@ class JournalController extends Controller
 
     public function sort(Request $request)
     {
+        if (!AuthService::userHasCampaignPermission(Auth::user(), null, 'journal', 'edit')) {
+            abort(403);
+        }
+
         $list = $request->input('list', []);
         $entries = JournalEntry::whereIn('id', $list)->get()->keyBy('id');
         foreach ($list as $key => $id) {

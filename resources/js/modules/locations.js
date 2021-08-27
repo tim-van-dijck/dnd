@@ -35,7 +35,6 @@ export const Locations = {
                 });
         },
         find({}, id) {
-            console.log(id);
             return axios.get(`/campaign/locations/${id}`)
                 .then((response) => {
                     return response.data;

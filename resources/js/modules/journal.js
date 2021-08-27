@@ -31,7 +31,6 @@ export const Journal = {
                     dispatch('Messages/success', 'Entry saved!', {root: true});
                 })
                 .catch((error) => {
-                    console.log(error);
                     Vue.set(state, 'errors', error.response.data.errors || {});
                     dispatch('Messages/error', error.response.data.message, {root: true});
                 });
@@ -60,7 +59,6 @@ export const Journal = {
                 })
         },
         sort({state}, event) {
-            console.log(event);
             if (state.entries === null) {
                 return;
             }
