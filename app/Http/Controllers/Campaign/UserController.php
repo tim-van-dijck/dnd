@@ -74,7 +74,8 @@ class UserController extends Controller
             'id' => Auth::user()->id,
             'name' => Auth::user()->name,
             'email' => Auth::user()->email,
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'roles' => Auth::user()->roles
         ]);
     }
 }

@@ -14,7 +14,7 @@ class CharacterFeatureHelper
     {
         $sync = [];
         foreach ($classes as $class) {
-            foreach ($class['features'] as $featureId => $choices) {
+            foreach ($class['features'] ?? [] as $featureId => $choices) {
                 foreach ($choices as $choiceId) {
                     $sync[$choiceId] = [
                         'feature_parent_id' => $featureId,
