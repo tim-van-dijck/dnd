@@ -84,6 +84,13 @@
                             return level;
                         }
                     },
+                    {
+                        name: 'owner',
+                        title: 'Owner',
+                        format(owner) {
+                            return owner || 'N/A';
+                        }
+                    }
                 ]
             }
         },

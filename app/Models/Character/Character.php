@@ -3,6 +3,7 @@
 namespace App\Models\Character;
 
 use App\Models\Magic\Spell;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int race_id
  * @property int|null subrace_id
  * @property int|null background_id
+ * @property int|null owner_id
  * @property string name
  * @property string title
  * @property string type
@@ -36,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property Race race
  * @property Subrace subrace
  * @property Background background
+ * @property User owner
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
@@ -48,75 +51,61 @@ class Character extends Model
         'name', 'title', 'type', 'age', 'alignment', 'dead', 'bio', 'ability_scores', 'trait', 'ideal', 'bond', 'flaw'
     ];
 
-    protected $casts = ['ability_scores' => 'array'];
+    protected $casts = [
+        'id' => 'int',
+        'campaign_id' => 'int',
+        'race_id' => 'int',
+        'ability_scores' => 'array'
+    ];
 
-    /**
-     * @return BelongsTo
-     */
-    public function race()
+    public function race(): BelongsTo
     {
         return $this->belongsTo(Race::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function subrace()
+    public function subrace(): BelongsTo
     {
         return $this->belongsTo(Subrace::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function background()
+    public function background():BelongsTo
     {
         return $this->belongsTo(Background::class);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function classes()
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id', 'id');
+    }
+
+    public function classes(): BelongsToMany
     {
         return $this->belongsToMany(CharacterClass::class, 'character_class', 'character_id', 'class_id')
             ->withPivot(['level', 'subclass_id']);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function subclasses()
+    public function subclasses(): BelongsToMany
     {
         return $this->belongsToMany(Subclass::class, 'character_class', 'character_id', 'class_id')
             ->withPivot(['level']);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function proficiencies()
+    public function proficiencies(): BelongsToMany
     {
         return $this->belongsToMany(Proficiency::class)->withPivot(['origin_type', 'origin_id']);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function languages()
+    public function languages(): BelongsToMany
     {
         return $this->belongsToMany(Language::class);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function spells()
+    public function spells(): BelongsToMany
     {
         return $this->belongsToMany(Spell::class)->withPivot(['origin_type', 'origin_id']);
     }
 
-    public function features()
+    public function features(): BelongsToMany
     {
         return $this->belongsToMany(Feature::class)->withPivot(['feature_parent_id']);
     }

@@ -32,10 +32,12 @@ class CharacterResource extends JsonResource
                 'alignment' => $this->resource->alignment,
                 'dead' => $this->resource->dead ?? false,
                 'private' => $this->resource->private ?? false,
-                'bio' => $this->resource->bio ?? ''
+                'bio' => $this->resource->bio ?? '',
+                'owner_id' => $this->resource->owner_id
             ],
             'background_id' => $this->resource->background_id ?? null,
-            'ability_scores' => $this->resource->ability_scores
+            'ability_scores' => $this->resource->ability_scores,
+            'owner' => $this->getOwner()
         ];
 
         if ($this->resource->type == 'player') {
@@ -147,5 +149,14 @@ class CharacterResource extends JsonResource
             ];
         }
         return $proficiencies;
+    }
+
+    private function getOwner()
+    {
+        if (empty($this->resource->owner_id)) {
+            return null;
+        }
+
+        return $this->resource->owner->name;
     }
 }

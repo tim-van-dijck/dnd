@@ -28,6 +28,17 @@ class UserRepository
             ->paginate($pageSize, ['users.*', 'roles.name AS role', 'roles.id AS role_id'], 'page[number]', $page);
     }
 
+    public function userExistsInCampaign(int $campaignId, int $userId): bool
+    {
+        return User::query()
+            ->join('role_user', 'role_user.user_id', '=', 'users.id')
+            ->join('roles', function ($join) use ($campaignId) {
+                $join->on('roles.id', '=', 'role_user.role_id')
+                    ->where('roles.campaign_id', $campaignId);
+            })
+            ->exists();
+    }
+
     /**
      * @param int $campaignId
      * @param string $email

@@ -20,7 +20,8 @@ let store = new Vuex.Store({
         languages: null,
         logs: [],
         user: {
-            permissions: {}
+            permissions: {},
+            roles: []
         }
     },
     actions: {
@@ -91,6 +92,9 @@ let store = new Vuex.Store({
                 }
             }
             return false;
+        },
+        hasRole: state => (role) => {
+            return (state?.user?.roles || []).filter(item => item.id === role || item.name === role).length > 0;
         }
     }
 });
