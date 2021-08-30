@@ -1,6 +1,7 @@
 import Dashboard from './components/dashboard';
-import {JournalRoutes} from './router/journal';
 import {CharacterRoutes} from './router/characters';
+import {InventoryRoutes} from './router/inventory';
+import {JournalRoutes} from './router/journal';
 import {LocationRoutes} from './router/locations';
 import {NoteRoutes} from './router/notes';
 import {QuestRoutes} from './router/quests';
@@ -8,7 +9,7 @@ import {RoleRoutes} from './router/roles';
 import {UserRoutes} from './router/users';
 
 import VueRouter from "vue-router";
-import ComingSoon from "./components/ComingSoon";
+import NotFound from "./components/NotFound";
 
 let routes = [
     {
@@ -24,12 +25,11 @@ let routes = [
     ...QuestRoutes,
     ...RoleRoutes,
     ...UserRoutes,
+    ...InventoryRoutes,
 
     {
-        path: '/inventory',
-        name: 'inventory',
-        props: true,
-        component: ComingSoon
+        path: '*',
+        component: NotFound
     },
 ];
 

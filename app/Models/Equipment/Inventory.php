@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int id
  * @property int campaign_id
+ * @property int|null character_id
  */
 class Inventory extends Model
 {

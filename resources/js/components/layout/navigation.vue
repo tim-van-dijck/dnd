@@ -33,7 +33,7 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link :to="{name: 'inventory'}">
+                    <router-link :to="{name: 'inventories'}">
                         <i class="fas fa-shopping-bag fa-fw"></i> Inventory
                     </router-link>
                 </li>

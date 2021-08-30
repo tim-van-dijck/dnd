@@ -2,6 +2,7 @@
 
 namespace App\Models\Character;
 
+use App\Models\Equipment\Inventory;
 use App\Models\Magic\Spell;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -39,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @property Subrace subrace
  * @property Background background
  * @property User owner
+ * @property Inventory inventory
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
@@ -76,6 +78,11 @@ class Character extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id', 'id');
+    }
+
+    public function inventory(): BelongsTo
+    {
+        return $this->hasOne(Inventory::class);
     }
 
     public function classes(): BelongsToMany

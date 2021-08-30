@@ -1,5 +1,6 @@
 import {Characters} from './modules/characters';
 import {Journal} from "./modules/journal";
+import {Inventory} from "./modules/inventory";
 import {Locations} from './modules/locations';
 import {Messages} from './modules/messages';
 import {Notes} from './modules/notes';
@@ -14,7 +15,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 let store = new Vuex.Store({
-    modules: {Characters, Journal, Locations, Messages, Notes, Permissions, Quests, Roles, Spells, Users},
+    modules: {Characters, Inventory, Journal, Locations, Messages, Notes, Permissions, Quests, Roles, Spells, Users},
     state: {
         campaign: {},
         errors: {},

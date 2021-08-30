@@ -5,6 +5,7 @@ namespace App\Managers;
 
 use App\Enums\OriginTypes;
 use App\Models\Character\Character;
+use App\Models\Equipment\Inventory;
 use App\Repositories\Character\CharacterRepository;
 use App\Repositories\LogRepository;
 use App\Services\AuthService;
@@ -35,6 +36,11 @@ class CharacterManager
         unset($input['type']);
         if ($type == 'player') {
             $character = $this->savePlayerCharacter($campaignId, $input);
+
+            $inventory = new Inventory();
+            $inventory->campaign_id = $campaignId;
+            $inventory->character_id = $character->id;
+            $inventory->save();
         } else {
             $character = $this->saveNPC($input);
         }
