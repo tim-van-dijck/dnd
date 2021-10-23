@@ -1,6 +1,18 @@
 <template>
     <div>
-        <h1>{{ title }}</h1>
+        <h1>
+            <router-link class="uk-link-text" :to="{name: 'inventories'}"><i class="fas fa-chevron-left"></i></router-link>
+            <template v-if="inventory && inventory.hasOwnProperty('character')">
+                Inventory for
+                <router-link :to="{name: 'pc-detail', params: {id: inventory.character.id}}"
+                             class="uk-link-text header-link">
+                    {{ inventory.character.name }}
+                </router-link>
+            </template>
+            <template v-else>
+                {{ inventory && inventory.character_id === null ? 'Party inventory' : '' }}
+            </template>
+        </h1>
         <div v-if="inventory" class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <div class="uk-margin-bottom uk-width-4-6@l uk-width-1-1@m" uk-grid>
