@@ -18,6 +18,7 @@ class CreateInventoryItemTable extends Migration
             $table->unsignedInteger('inventory_id');
             $table->unsignedInteger('item_id');
             $table->boolean('equipped');
+            $table->integer('quantity');
         });
     }
 

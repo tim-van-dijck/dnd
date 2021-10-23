@@ -24,6 +24,7 @@ class ItemTableSeeder extends Seeder
         return [
             ...$this->getArmor(),
             ...$this->getWeapons(),
+            ...$this->getPotions(),
             ...$this->getOther(),
             ...$this->getEquipment()
         ];
@@ -880,12 +881,88 @@ class ItemTableSeeder extends Seeder
                     'damage_type' => 'n/a',
                     'damage' => 0,
                     'range' => '5/15',
-                    'special' => 'A Large or smaller creature hit by a net is restrained until it is freed. A net has no effect on creatures that are formless, or creatures that are Huge or larger. A creature can use its action to make a DC 10 Strength check, freeing itself or another creature within its reach on a success. Dealing 5 lashing damage to the net (AC 10) also frees the creature without harming it, ending the effect and destroying the net. When you use an action, bonus action, or reaction to attack with a net, you can make only one attack regardless of the number of attacks you can normally make.'
+                    'special' => 'A Large or smaller creature hit by a net is restrained until it is freed. A net has no effect on creatures that are formless, or creatures that are Huge or larger. A creature can use its action to make a DC 10 Strength check, freeing itself or another creature within its reach on a success. Dealing 5 slashing damage to the net (AC 10) also frees the creature without harming it, ending the effect and destroying the net. When you use an action, bonus action, or reaction to attack with a net, you can make only one attack regardless of the number of attacks you can normally make.'
                 ],
                 'cost' => 100,
                 'weight' => 3,
                 'magic' => false,
             ]
+        ];
+    }
+
+    private function getPotions(): array
+    {
+        return [
+            [
+                'name' => 'Acid (vial)',
+                'description' => 'As an action, you can splash the contents of this vial onto a creature within 5 ft. of you or throw the vial up to 20 ft., shattering it on impact. In either case, make a ranged attack against a creature or object, treating the acid as an improvised weapon. On a hit, the target takes 2d6 acid damage.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Poison',
+                'cost' => 2500,
+                'weight' => 1,
+                'magic' => false
+            ],
+            [
+                'name' => 'Alchemist\'s Fire (flask)',
+                'description' => 'This sticky, adhesive fluid ignites when exposed to air. As an action, you can throw this flask up to 20 ft, shattering it on impact. Make a ranged attack against a creature or object, treating the alchemist\'s fire as an improvised weapon. On a hit, the target takes 1d4 fire damage at the start of each of its turns. A creature can end this damage by using its action to make a DC 10 Dexterity check to extinguish the flames.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Miscellaneous',
+                'cost' => 5000,
+                'weight' => 1,
+                'magic' => false
+            ],
+            [
+                'name' => 'Antitoxins (vial)',
+                'description' => 'A creature that drinks this vial of liquid gains advantage on saving throws against poison for 1 hour. It confers no benefit to undead or constructs.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Potions',
+                'cost' => 5000,
+                'weight' => 0,
+                'magic' => false
+            ],
+            [
+                'name' => 'Holy water (flask)',
+                'description' => 'As an action, you can splash the contents of this flask onto a creature within 5 ft of you or throw it up to 20 ft, shattering it on impact. In either case, make a ranged attack against a target creature, treating the holy water as an improvised weapon. If the target is a fiend or undead, it takes 2d6 radiant damage. A cleric or paladin may create holy water vy performing a special ritual. The ritualtakes 1 hour to perform, uses 25gp worth of powdered silver, and requires the caster to expend at least a 1st-level spell slot.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Miscellaneous',
+                'cost' => 2500,
+                'weight' => 1,
+                'magic' => false
+            ],
+            [
+                'name' => 'Oil (flask)',
+                'description' => 'Oil usually comes in a clay flask that holds 1 pint. As an action, you can splash the oil in this flask onto a creature within 5 fet of you or throw it up to 20 ft, shattering it on impact. Make a ranged attack against a target creature or object, treating the oil as an improvised weapon. On a hit, the target is covered in oil. If the target takes any fire damage before the oil dries (after 1 minute), the target takes an additional 5 fire damage from the burning oil. You can also pour a flask of oil on the ground to cover a 5 ft square area, provided that the surface is level. If lit, the oil burns for 2 rounds and deals 5 fire damage to any creature that enters the area or ends its turn in the area. A creature can take this damage only once per turn.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Miscellaneous',
+                'cost' => 10,
+                'weight' => 1,
+                'magic' => false
+            ],
+            [
+                'name' => 'Poison, basic (vial)',
+                'description' => 'You can use the poison in this vial to coat one slashing or piercing weapon or up to three pieces of ammunition. Applying the poison takes an action. A creature hit by the poisoned weapon or ammunition must make a DC 10 Constitution saving throw or take 1d4 poison damage. Once applied, the poison retains potency for 1 minute before drying.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Poison',
+                'cost' => 10000,
+                'weight' => 0,
+                'magic' => false
+            ],
+            [
+                'name' => 'Potion of Healing',
+                'description' => 'A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points. Drinking or administering a potion takes an action.',
+                'category' => 'Potions',
+                'rarity' => 'Common',
+                'type' => 'Potions',
+                'cost' => 5000,
+                'weight' => .5,
+                'magic' => false
+            ],
         ];
     }
 
@@ -902,27 +979,6 @@ class ItemTableSeeder extends Seeder
                 'weight' => 2,
                 'magic' => false
             ],
-            [
-                'name' => 'Acid (vial)',
-                'description' => 'As an action, you can splash the contents of this vial onto a creature within 5 ft. of you or throw the vial up to 20 ft., shattering it on impact. In either case, make a ranged attack against a creature or object, treating the acid as an improvised weapon. On a hit, the target takes 2d6 acid damage.',
-                'category' => 'Items',
-                'rarity' => 'Common',
-                'type' => 'Potions',
-                'cost' => 2500,
-                'weight' => 1,
-                'magic' => false
-            ],
-            [
-                'name' => 'Alchemist\'s Fire (flask)',
-                'description' => 'This sticky, adhesive fluid ignites when exposed to air. As an action, you can throw this flask up to 20 ft, shattering it on impact. Make a ranged attack against a creature or object, treating the alchemist\'s fire as an improvised weapon. On a hit, the target takes 1d4 fire damage at the start of each of its turns. A creature can end this damage by using its action to make a DC 10 Dexterity check to extinguish the flames.',
-                'category' => 'Items',
-                'rarity' => 'Common',
-                'type' => 'Potions',
-                'cost' => 5000,
-                'weight' => 1,
-                'magic' => false
-            ],
-
             [
                 'name' => 'Arrows',
                 'description' => 'Arrows',
@@ -963,18 +1019,6 @@ class ItemTableSeeder extends Seeder
                 'weight' => 1.5,
                 'magic' => false
             ],
-
-            [
-                'name' => 'Antitoxins (vial)',
-                'description' => 'A creature that drinks this vial of liquid gains advantage on saving throws against poison for 1 hour. It confers no benefit to undead or constructs.',
-                'category' => 'Potions',
-                'rarity' => 'Common',
-                'type' => 'Potions',
-                'cost' => 5000,
-                'weight' => 0,
-                'magic' => false
-            ],
-
             [
                 'name' => 'Arcane focus (crystal)',
                 'description' => 'An arcane focus is a special item designed to channel the power of arcane spells. A sorcerer, warlock or wizard can use such an item as a spellcasting focus.',
@@ -1411,16 +1455,6 @@ class ItemTableSeeder extends Seeder
             ],
 
             [
-                'name' => 'Holy water (flask)',
-                'description' => 'As an action, you can splash the contents of this flask onto a creature within 5 ft of you or throw it up to 20 ft, shattering it on impact. In either case, make a ranged attack against a target creature, treating the holy water as an improvised weapon. If the target is a fiend or undead, it takes 2d6 radiant damage. A cleric or paladin may create holy water vy performing a special ritual. The ritualtakes 1 hour to perform, uses 25gp worth of powdered silver, and requires the caster to expend at least a 1st-level spell slot.',
-                'category' => 'Items',
-                'rarity' => 'Common',
-                'type' => 'Potion',
-                'cost' => 2500,
-                'weight' => 1,
-                'magic' => false
-            ],
-            [
                 'name' => 'Hourglass',
                 'description' => 'An hourglass',
                 'category' => 'Items',
@@ -1563,16 +1597,6 @@ class ItemTableSeeder extends Seeder
                 'magic' => false
             ],
             [
-                'name' => 'Oil (flask)',
-                'description' => 'Oil usually comes in a clay flask that holds 1 pint. As an action, you can splash the oil in this flask onto a creature within 5 fet of you or throw it up to 20 ft, shattering it on impact. Make a ranged attack against a target creature or object, treating the oil as an improvised weapon. On a hit, the target is covered in oil. If the target takes any fire damage before the oil dries (after 1 minute), the target takes an additional 5 fire damage from the burning oil. You can also pour a flask of oil on the ground to cover a 5 ft square area, provided that the surface is level. If lit, the oil burns for 2 rounds and deals 5 fire damage to any creature that enters the area or ends its turn in the area. A creature can take this damage only once per turn.',
-                'category' => 'Items',
-                'rarity' => 'Common',
-                'type' => 'Potions',
-                'cost' => 10,
-                'weight' => 1,
-                'magic' => false
-            ],
-            [
                 'name' => 'Paper (one sheet)',
                 'description' => 'A sheet of paper',
                 'category' => 'Items',
@@ -1623,16 +1647,6 @@ class ItemTableSeeder extends Seeder
                 'magic' => false
             ],
             [
-                'name' => 'Poison, basic (vial)',
-                'description' => 'You can use the poison in this vial to coat one slashing or piercing weapon or up to three pieces of ammunition. Applying the poison takes an action. A creature hit by the poisoned weapon or ammunition must make a DC 10 Constitution saving throw or take 1d4 poison damage. Once applied, the poison retains potency for 1 minute before drying.',
-                'category' => 'Items',
-                'rarity' => 'Common',
-                'type' => 'Other',
-                'cost' => 10000,
-                'weight' => 0,
-                'magic' => false
-            ],
-            [
                 'name' => 'Pole (10-foot)',
                 'description' => 'A 10-foot pole',
                 'category' => 'Items',
@@ -1650,16 +1664,6 @@ class ItemTableSeeder extends Seeder
                 'type' => 'Other',
                 'cost' => 200,
                 'weight' => 10,
-                'magic' => false
-            ],
-            [
-                'name' => 'Potion of Healing',
-                'description' => 'A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points. Drinking or administering a potion takes an action.',
-                'category' => 'Items',
-                'rarity' => 'Common',
-                'type' => 'Potions',
-                'cost' => 5000,
-                'weight' => .5,
                 'magic' => false
             ],
             [

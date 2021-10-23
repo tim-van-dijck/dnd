@@ -77,10 +77,13 @@ class LocationRepository
         $location->private = !empty($data['private']);
         $location->save();
 
-        if (array_key_exists('permissions', $input)) {
-            AuthService::setCustomPermissions($campaignId, 'location', $location->id, $input['permissions']);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'location',
+            $location->id,
+            $data['permissions'] ?? [],
+            $location->private
+        );
         $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'created');
     }
 
@@ -106,10 +109,14 @@ class LocationRepository
         }
         $location->save();
 
-        if (array_key_exists('permissions', $input)) {
-            AuthService::setCustomPermissions($campaignId, 'location', $location->id, $input['permissions']);
-        }
 
+        AuthService::managePermissions(
+            $campaignId,
+            'location',
+            $location->id,
+            $data['permissions'] ?? [],
+            $location->private
+        );
         $this->logRepository->store($campaignId, 'location', $location->id, $location->name, 'updated');
     }
 

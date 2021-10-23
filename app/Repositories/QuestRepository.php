@@ -88,9 +88,13 @@ class QuestRepository
             $questObjective->save();
         }
 
-        if (array_key_exists('permissions', $data)) {
-            AuthService::setCustomPermissions($campaignId, 'quest', $quest->id, $data['permissions']);
-        }
+        AuthService::managePermissions(
+            $campaignId,
+            'quest',
+            $quest->id,
+            $data['permissions'] ?? [],
+            $quest->private
+        );
         $this->logRepository->store($campaignId, 'quest', $quest->id, $quest->title, 'created');
     }
 
@@ -123,11 +127,14 @@ class QuestRepository
             $questObjective->save();
         }
 
-        if (array_key_exists('permissions', $data)) {
-            AuthService::setCustomPermissions($campaignId, 'quest', $quest->id, $data['permissions']);
-        }
-
-        $this->logRepository->store($campaignId, 'location', $quest->id, $quest->title, 'updated');
+        AuthService::managePermissions(
+            $campaignId,
+            'quest',
+            $quest->id,
+            $data['permissions'] ?? [],
+            $quest->private
+        );
+        $this->logRepository->store($campaignId, 'quest', $quest->id, $quest->title, 'updated');
     }
 
     /**
