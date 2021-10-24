@@ -18,6 +18,12 @@
                 <b>Age</b>
                 <span>{{ character.info.age }}</span>
             </div>
+            <router-link v-if="character.info.inventory_id"
+                         tag="button"
+                         class="uk-button uk-margin uk-width"
+                         :to="{name: 'inventory', params: {id: character.info.inventory_id}}">
+                <i class="fas fa-shopping-bag"></i> To inventory
+            </router-link>
             <div class="uk-width uk-margin">
                 <h2>Race Traits</h2>
                 <div class="uk-alert-primary" uk-alert>These aren't available yet.</div>

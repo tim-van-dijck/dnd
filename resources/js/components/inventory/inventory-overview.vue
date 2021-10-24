@@ -10,7 +10,7 @@
                         <div class="uk-width">
                             <h3 class="uk-card-title">
                                 <router-link class="uk-link-heading uk-width uk-display-block"
-                                             :to="{name: 'character-inventory', params: {id: inventory.id}}">
+                                             :to="{name: 'inventory', params: {id: inventory.id}}">
                                     {{ inventory.character.name }}
                                 </router-link>
                             </h3>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="uk-flex uk-flex-between">
                             <router-link tag="button" class="uk-button uk-button-round uk-button-default"
-                                         :to="{name: 'character-inventory', params: {id: inventory.id}}">
+                                         :to="{name: 'inventory', params: {id: inventory.id}}">
                                 <i class="fas fa-eye"></i>
                             </router-link>
                         </div>

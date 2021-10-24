@@ -10,7 +10,7 @@ export const InventoryRoutes = [
     },
     {
         path: '/inventories/:id',
-        name: 'character-inventory',
+        name: 'inventory',
         props: true,
         component: Inventory
     }
