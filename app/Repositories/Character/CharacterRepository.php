@@ -71,10 +71,13 @@ class CharacterRepository
         $character->private = !empty($input['private']);
         $character->save();
 
-        if ($character->private) {
-            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'character',
+            $character->id,
+            $data['permissions'] ?? [],
+            $character->private
+        );
         return $character;
     }
 
@@ -109,10 +112,13 @@ class CharacterRepository
         $character->private = !empty($input['private']);
         $character->save();
 
-        if ($character->private) {
-            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'character',
+            $character->id,
+            $data['permissions'] ?? [],
+            $character->private
+        );
         return $character;
     }
 

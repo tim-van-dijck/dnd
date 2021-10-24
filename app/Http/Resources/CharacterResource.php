@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Enums\OriginTypes;
 use App\Models\Character\Character;
 use App\Models\Character\Proficiency;
+use App\Models\Equipment\Inventory;
 use App\Models\Magic\Spell;
 use App\Services\Character\Helpers\CharacterFeatureHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,6 +23,7 @@ class CharacterResource extends JsonResource
     public function toArray($request)
     {
         $includes = explode(',', $request->query('includes', ''));
+        $inventory = Inventory::query()->where('character_id', $this->resource->id)->first(['id']);
         $character = [
             'id' => $this->resource->id,
             'info' => [
@@ -33,7 +35,8 @@ class CharacterResource extends JsonResource
                 'dead' => $this->resource->dead ?? false,
                 'private' => $this->resource->private ?? false,
                 'bio' => $this->resource->bio ?? '',
-                'owner_id' => $this->resource->owner_id
+                'owner_id' => $this->resource->owner_id,
+                'inventory_id' => $inventory ? $inventory->id : null
             ],
             'background_id' => $this->resource->background_id ?? null,
             'ability_scores' => $this->resource->ability_scores,

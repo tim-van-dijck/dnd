@@ -103,6 +103,21 @@ class AuthService
         return $permissions;
     }
 
+    public static function managePermissions(
+        int $campaignId,
+        string $entity,
+        int $entityId,
+        array $permissions = [],
+        bool $private = false
+    ) {
+        if (!empty($permissions)) {
+            AuthService::setCustomPermissions($campaignId, $entity, $entityId, $permissions);
+        }
+        if ($private) {
+            self::setPrivateEntity($campaignId, $entity, $entityId, Auth::user()->id);
+        }
+    }
+
     /**
      * @param int $campaignId
      * @param string $entity

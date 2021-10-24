@@ -12,10 +12,10 @@
                 <td class="uk-width-small">
                     <ul class="uk-iconnav">
                         <li v-for="action in actions">
-                            <a v-if="action.to" :href="getTo(action.to, row)" :target="action.newTab ? '_blank' : 'self'">
+                            <a v-if="action.to" :href="getTo(action.to, row)" :target="action.newTab ? '_blank' : 'self'" :title="action.title">
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
-                            <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" v-else>
+                            <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" :title="action.title" v-else>
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
                         </li>

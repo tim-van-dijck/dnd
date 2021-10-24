@@ -3,8 +3,7 @@
         <h1>Page Not Found</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <h2>Coming Soon...(well, soonish)</h2>
-                <p>Whoops! You found a page that doesn't do anything yet. It's planned though!</p>
+                <p>Whoops! You found a page that doesn't do anything. Best try somewhere else.</p>
             </div>
         </div>
     </div>
@@ -12,6 +11,6 @@
 
 <script>
 export default {
-    name: "ComingSoon.vue"
+    name: "NotFound.vue"
 }
 </script>

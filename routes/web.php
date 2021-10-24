@@ -35,6 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
         Route::get('characters/{character}/sheet', 'Character\CharacterController@sheet');
+
+        Route::get('inventories', 'Campaign\InventoryController@index');
+        Route::get('inventories/{inventory}', 'Campaign\InventoryController@show');
+        Route::put('inventories/{inventory}', 'Campaign\InventoryController@update');
+        Route::post('inventories/{inventory}/items', 'Campaign\InventoryController@addItem');
+        Route::delete('inventories/{inventory}/items', 'Campaign\InventoryController@removeItem');
+
+        Route::get('items/{category}', 'Campaign\ItemController@index');
+
         Route::resource('journal', 'Campaign\JournalController')
             ->except(['create', 'edit'])
             ->parameters(['journal' => 'journalEntry']);

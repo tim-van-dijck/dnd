@@ -63,10 +63,13 @@ class NoteRepository
         $note->private = $data['private'] ?? false;
         $note->save();
 
-        if (array_key_exists('permissions', $data)) {
-            AuthService::setCustomPermissions($campaignId, 'note', $note->id, $data['permissions']);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'note',
+            $note->id,
+            $data['permissions'] ?? [],
+            $note->private
+        );
         $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'created');
     }
 
@@ -85,10 +88,13 @@ class NoteRepository
         $note->private = $data['private'] ?? false;
         $note->save();
 
-        if (array_key_exists('permissions', $data)) {
-            AuthService::setCustomPermissions($campaignId, 'note', $note->id, $data['permissions']);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'note',
+            $note->id,
+            $data['permissions'] ?? [],
+            $note->private
+        );
         $this->logRepository->store($campaignId, 'note', $note->id, $note->name, 'updated');
     }
 
