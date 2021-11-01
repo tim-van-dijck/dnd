@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Symfony\Component\Console\Input\InputOption;
 
 class CreateUser extends Command
 {
@@ -13,7 +14,7 @@ class CreateUser extends Command
      *
      * @var string
      */
-    protected $signature = 'make:user';
+    protected $signature = 'make:user {--a|admin=0 : Make the new user an admin.}';
 
     /**
      * The console command description.
@@ -35,7 +36,7 @@ class CreateUser extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -47,8 +48,10 @@ class CreateUser extends Command
         $name = $this->ask('Name:');
         $email = $this->ask('E-mail address:');
         $password = $this->secret('Password');
+        $admin = $this->option('admin', false);
 
         $user = new User();
+        $user->admin = 1;
         $user->name = $name;
         $user->email = $email;
         $user->password = bcrypt($password);

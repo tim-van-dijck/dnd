@@ -11,10 +11,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int id
  * @property string name
  * @property string description
+ * @property array settings
  * @property Carbon created_at
  * @property Carbon updated_at
  */
 class Campaign extends Model
 {
-
+    protected $casts = [
+        'settings' => 'array'
+    ];
 }

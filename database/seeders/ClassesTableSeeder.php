@@ -38,7 +38,7 @@ class ClassesTableSeeder extends Seeder
             $charClass->hit_die = $classArray['hit_die'];
             $charClass->saving_throws = $classArray['saving_throws'];
             $charClass->spellcaster = $classArray['spellcaster'];
-            $charClass->spellcasting_ability = $classArray['spellcasting_ability'];
+            $charClass->spellcasting_ability = $classArray['spellcasting_ability'] ?? '';
             $charClass->save();
 
             $this->setProficiencies($charClass, $classArray);

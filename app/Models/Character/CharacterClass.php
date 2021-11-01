@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property int tool_choices
  * @property array saving_throws
  * @property bool spellcaster
+ * @property string spellcasting_ability
  *
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies

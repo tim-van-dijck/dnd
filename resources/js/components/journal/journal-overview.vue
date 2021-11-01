@@ -32,7 +32,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     <button type="button" class="sort-handle uk-button uk-button-round uk-button-default">
-                                        <i class="fas fa-bars"></i>
+                                        <i class="fas fa-grip-vertical"></i>
                                     </button>
                                 </div>
                             </div>

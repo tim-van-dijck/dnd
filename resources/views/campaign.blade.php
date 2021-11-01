@@ -14,26 +14,7 @@
     <div id="app">
         <header-navbar>
             <header id="top-head" class="uk-position-fixed">
-                <div class="uk-container uk-container-expand uk-background-primary">
-                    <nav class="uk-navbar uk-light" data-uk-navbar="mode:click; duration: 250">
-                        <div class="uk-navbar-left">
-                            <div class="uk-navbar-item uk-visible@s">
-                            </div>
-                        </div>
-                        <div class="uk-navbar-right">
-                            <ul class="uk-navbar-nav">
-                                <li><a href="/campaigns" class="uk-navbar-item">My Campaigns</a></li>
-                                <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
-                                <li>
-                                    <a href="/logout" title="Sign out" class="uk-navbar-item"
-                                       @click.prevent="$store.dispatch('logout')">
-                                        <i class="fas fa-sign-out-alt fa-fw"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
+                <x-layout.header />
             </header>
         </header-navbar>
         <navigation>
@@ -68,12 +49,7 @@
         <div id="content" uk-height-viewport="expand: true">
             <div class="uk-container uk-container-expand">
                 <router-view></router-view>
-                <footer class="uk-section uk-section-small uk-text-center">
-                    <hr>
-                    <p class="uk-text-small uk-text-center">
-                        Copyright {{ date('Y') }} - <a href="https://timvandijck.com">Created by ne spast</a>
-                    </p>
-                </footer>
+                <x-layout.footer />
             </div>
         </div>
     </div>
