@@ -1,10 +1,12 @@
 {
     "private": true,
     "scripts": {
+        "dev": "npx run development",
         "development": "mix",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot ",
+        "hot": "mix watch --hot",
+        "prod": "npx run production",
         "production": "mix --production"
     },
     "devDependencies": {
@@ -14,21 +16,22 @@
         "laravel-mix-alias": "^1.0.3",
         "lodash": "^4.17.21",
         "postcss": "^8.1",
-        "resolve-url-loader": "^3.1.3",
+        "resolve-url-loader": "^2.3.2",
         "sass": "^1.32.8",
-        "sass-loader": "^11.0.1",
-        "vue-loader": "^15.9.5",
-        "vue-svg-loader": "^0.16.0",
+        "sass-loader": "^11.1.0",
+        "vue-loader": "^17.0.0",
+        "vue-svg-loader": "^0.10.0",
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
         "@tinymce/tinymce-vue": "^3.2.8",
-        "npx": "^10.2.2",
-        "tinymce": "^5.6.0",
+        "npx": "^3.0.0",
+        "tinymce": "^5.10.0",
         "uikit": "^3.6.18",
         "vue": "^2.6.12",
         "vue-router": "^3.5.1",
         "vue-select": "^3.11.2",
+        "vuedraggable": "^2.24.3",
         "vuex": "^3.6.2"
     }
 }

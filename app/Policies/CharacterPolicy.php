@@ -25,6 +25,9 @@ class CharacterPolicy
 
     public function view(User $user, Character $character)
     {
+        if ($character->owner_id == $user->id) {
+            return true;
+        }
         return AuthService::userHasCampaignPermission($user, $character, 'character', 'view');
     }
 
@@ -35,11 +38,17 @@ class CharacterPolicy
 
     public function update(User $user, Character $character)
     {
+        if ($character->owner_id === $user->id) {
+            return true;
+        }
         return AuthService::userHasCampaignPermission($user, $character, 'character', 'edit');
     }
 
     public function delete(User $user, Character $character)
     {
+        if ($character->owner_id === $user->id) {
+            return true;
+        }
         return AuthService::userHasCampaignPermission($user, $character, 'character', 'delete');
     }
 }

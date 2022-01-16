@@ -10,6 +10,7 @@
                          :records="characters"
                          @edit="$router.push({name: 'pc-edit', params: {id: $event.id}})"
                          @view="$router.push({name: 'pc-detail', params: {id: $event.id}})"
+                         @inventory="$router.push({name: 'inventory', params: {id: $event.info.inventory_id}})"
                          @destroy="destroy" />
         <p v-else class="uk-text-center">
             <i v-if="characters == null" class="fas fa-sync fa-spin fa-2x"></i>
@@ -35,10 +36,11 @@
         data() {
             return {
                 actions: [
-                    {name: 'destroy', icon: 'trash', classes: 'uk-text-danger'},
-                    {name: 'edit', icon: 'edit'},
-                    {name: 'view', icon: 'eye'},
-                    {name: 'sheet', to: (row) => `/campaign/characters/${row.id}/sheet`, icon: 'file', newTab: true}
+                    {name: 'destroy', title: 'Delete character', icon: 'trash', classes: 'uk-text-danger'},
+                    {name: 'edit', title: 'Edit character', icon: 'edit'},
+                    {name: 'view', title: 'Go to details', icon: 'eye'},
+                    {name: 'sheet', title: 'Download character sheet', to: (row) => `/campaign/characters/${row.id}/sheet`, icon: 'file', newTab: true},
+                    {name: 'inventory', title: 'Go to inventory', icon: 'shopping-bag'}
                 ],
                 columns: [
                     {title: 'Name', name: 'info.name'},
@@ -84,6 +86,13 @@
                             return level;
                         }
                     },
+                    {
+                        name: 'owner',
+                        title: 'Owner',
+                        format(owner) {
+                            return owner || 'N/A';
+                        }
+                    }
                 ]
             }
         },

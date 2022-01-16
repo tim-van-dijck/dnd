@@ -1,5 +1,5 @@
 <template>
-    <div id="locations">
+    <div id="quests">
         <h1>Quests</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">

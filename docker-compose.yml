@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: digitalocean.com/php
     container_name: dnd-php
     restart: unless-stopped
     tty: true
@@ -46,7 +45,6 @@ services:
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - dnd-network
 

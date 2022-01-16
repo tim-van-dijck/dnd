@@ -41,11 +41,20 @@
                     <input id="dead" name="dead" type="checkbox" class="uk-checkbox" v-model="info.dead">
                     <label for="dead">Dead</label>
                 </div>
-                <hr>
-                <div class="uk-margin uk-form-controls">
-                    <input id="private" name="private" type="checkbox" class="uk-checkbox" v-model="info.private">
-                    <label for="private">Private</label>
-                </div>
+                <template v-if="isOwner || info.owner_id === null">
+                    <div class="uk-margin" v-if="isOwner && users !== null">
+                        <label for="owner_id" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.owner_id')}">Owner*</label>
+                        <select id="owner_id" name="owner_id" class="uk-select"
+                                :class="{'uk-form-danger': this.errors.hasOwnProperty('info.owner_id')}" v-model="info.owner_id">
+                            <option :value="null">- Choose an owner -</option>
+                            <option v-for="user in users.data" :value="user.id">{{ user.name }}</option>
+                        </select>
+                    </div>
+                    <div v-if="isOwner || info.owner_id === null" class="uk-margin uk-form-controls">
+                        <input id="private" name="private" type="checkbox" class="uk-checkbox" v-model="info.private">
+                        <label for="private">Private</label>
+                    </div>
+                </template>
             </div>
             <div class="uk-width-1-2">
                 <label for="bio" class="uk-form-label" :class="{'uk-text-danger': this.errors.hasOwnProperty('info.bio')}">Bio</label>
@@ -70,12 +79,19 @@
         props: ['value'],
         mounted() {
             this.$set(this, 'info', this.value);
+            if (this.isOwner) {
+                this.$store.dispatch('Users/load');
+                if (this.info.owner_id == null) {
+                    this.info.owner_id = this.$store.state.user.id;
+                }
+            }
         },
         data() {
             return {
                 info: {
                     race_id: null,
-                    subrace_id: null
+                    subrace_id: null,
+                    owner_id: null
                 },
                 alignments: [
                     {value: 'LG', name: 'Lawful Good'},
@@ -100,6 +116,7 @@
         },
         computed: {
             ...mapState('Characters', ['races', 'backgrounds', 'errors']),
+            ...mapState('Users', ['users']),
             subraces() {
                 if (this.races)  {
                     let race = this.races[this.info.race_id];
@@ -108,6 +125,13 @@
                     }
                 }
                 return [];
+            },
+            isOwner() {
+                let user = this.$store.state.user;
+                if (!user) {
+                    return false;
+                }
+                return user.id === this.info.owner_id || this.$store.getters['hasRole']('Admin');
             }
         },
         components: {RaceInfoModal, HtmlEditor}

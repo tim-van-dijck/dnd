@@ -9,9 +9,9 @@ import SpellOverview from "./components/spells/spell-overview";
 import SpellForm from "./components/spells/spell-form";
 
 import VueRouter from "vue-router";
-import ComingSoon from "../components/ComingSoon";
+import NotFound from "../components/NotFound";
 
-let routes = [
+const routes = [
     {
         path: '/',
         redirect: 'campaigns'
@@ -70,11 +70,11 @@ let routes = [
 
     {
         path: '*',
-        component: ComingSoon
+        component: NotFound
     }
 ];
 
-let router = new VueRouter({routes});
+const router = new VueRouter({routes});
 router.beforeEach((to, from, next) => {
     if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
         document.title = to.meta.title;

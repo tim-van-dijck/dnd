@@ -59,7 +59,7 @@ export const Quests = {
         destroy({dispatch}, quest) {
             return axios.delete(`/campaign/quests/${quest.id}`)
                 .then(() => {
-                    dispatch('Messages/success', 'Location successfully deleted!', {root: true});
+                    dispatch('Messages/success', 'Quest successfully deleted!', {root: true});
                 })
         }
     },

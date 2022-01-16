@@ -19,10 +19,10 @@
                 <td class="uk-width-small">
                     <ul class="uk-iconnav">
                         <li v-for="action in actions">
-                            <a v-if="action.to" :href="getTo(action.to, row)" :target="action.newTab ? '_blank' : ''">
+                            <a v-if="action.to" :href="getTo(action.to, row)" :target="action.newTab ? '_blank' : ''" :title="action.title">
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
-                            <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" v-else>
+                            <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" :title="action.title" v-else>
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
                         </li>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-    import _ from "lodash";
+    import {debounce} from "lodash";
 
     export default {
         name: "paginated-table",
@@ -116,7 +116,7 @@
                     return to(row) || '/';
                 }
             },
-            search: _.debounce(function () {
+            search: debounce(function () {
                 if (this.query.length === 0) {
                     this.searchResults = 0;
                 }

@@ -43,6 +43,7 @@ class CampaignRepository
         $campaign = new Campaign();
         $campaign->name = $data['name'];
         $campaign->description = strip_tags($data['description'] ?? '', implode('', self::DESCRIPTION_ALLOWED_TAGS));
+        $campaign->settings = $data['settings'] ?? [];
         $campaign->save();
 
         return $campaign;
@@ -57,6 +58,7 @@ class CampaignRepository
     {
         $campaign->name = $data['name'];
         $campaign->description = $data['description'];
+        $campaign->settings = $data['settings'] ?? [];
         $campaign->save();
 
         return $campaign;

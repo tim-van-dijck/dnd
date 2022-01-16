@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int id
  * @property string name
  * @property string description
+ * @property array settings
  * @property Carbon created_at
  * @property Carbon updated_at
  *
@@ -25,6 +26,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Campaign extends Model
 {
+    protected $casts = [
+        'settings' => 'array'
+    ];
+
     /**
      * @return HasMany
      */

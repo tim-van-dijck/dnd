@@ -80,7 +80,6 @@ class AuthService
     {
         $permissions = [];
         $role = Auth::user()->roles()->where('campaign_id', $campaignId)->first();
-        $exceptions = Auth::user()->permissions()->where(['campaign_id' => $campaignId])->get();
         /** @var Permission $permission */
         foreach ($role->permissions as $permission) {
             $permissions[$permission->name] = [
@@ -91,6 +90,7 @@ class AuthService
             ];
         }
 
+        $exceptions = Auth::user()->permissions()->where(['campaign_id' => $campaignId])->get();
         /** @var UserPermission $exception */
         foreach ($exceptions as $exception) {
             $permissions[$exception->entity]['exceptions'][$exception->entity_id] = [
@@ -101,6 +101,21 @@ class AuthService
             ];
         }
         return $permissions;
+    }
+
+    public static function managePermissions(
+        int $campaignId,
+        string $entity,
+        int $entityId,
+        array $permissions = [],
+        bool $private = false
+    ) {
+        if (!empty($permissions)) {
+            AuthService::setCustomPermissions($campaignId, $entity, $entityId, $permissions);
+        }
+        if ($private) {
+            self::setPrivateEntity($campaignId, $entity, $entityId, Auth::user()->id);
+        }
     }
 
     /**

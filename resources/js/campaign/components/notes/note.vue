@@ -5,7 +5,7 @@
             <div id="note" v-if="note" class="uk-container padded">
                 <div v-html="note.content"></div>
                 <p class="uk-margin">
-                    <router-link class="uk-button uk-button-text" :to="{name: 'quests'}">
+                    <router-link class="uk-button uk-button-text" :to="{name: 'notes'}">
                         <i class="fa fa-chevron-left fa-fw"></i> Back to notes
                     </router-link>
                 </p>

@@ -6,9 +6,11 @@ use App\Enums\CharacterTypes;
 use App\Models\Campaign\Quest;
 use App\Models\Character\Character;
 use App\Repositories\LogRepository;
+use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class CharacterRepository
 {
@@ -65,13 +67,17 @@ class CharacterRepository
             $character->subrace_id = $input['subrace_id'];
         }
         $character->background_id = $input['background_id'];
+        $character->owner_id = $this->verifiedOwnerId($input['owner_id'] ?? null) ?? Auth::user()->id;
         $character->private = !empty($input['private']);
         $character->save();
 
-        if ($character->private) {
-            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'character',
+            $character->id,
+            $data['permissions'] ?? [],
+            $character->private
+        );
         return $character;
     }
 
@@ -102,13 +108,17 @@ class CharacterRepository
             $character->subrace_id = $input['subrace_id'];
         }
         $character->background_id = $input['background_id'];
+        $character->owner_id = $this->verifiedOwnerId($input['owner_id'], $character->owner_id) ?? $character->owner_id;
         $character->private = !empty($input['private']);
         $character->save();
 
-        if ($character->private) {
-            AuthService::setPrivateEntity($campaignId, 'character', $character->id, Auth::user()->id);
-        }
-
+        AuthService::managePermissions(
+            $campaignId,
+            'character',
+            $character->id,
+            $data['permissions'] ?? [],
+            $character->private
+        );
         return $character;
     }
 
@@ -131,5 +141,22 @@ class CharacterRepository
         /** @var LogRepository $logRepository */
         $logRepository = resolve(LogRepository::class);
         $logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
+    }
+
+    /**
+     * @param $ownerId
+     * @return mixed
+     */
+    public function verifiedOwnerId(?int $ownerId, ?int $currentOwnerId = null): ?int
+    {
+        if ($ownerId === null) {
+            return null;
+        }
+
+        if (Auth::user()->roles()->where('name', 'Admin')->exists() || $currentOwnerId === Auth::user()->id) {
+            $userRepository = new UserRepository();
+            return $userRepository->userExistsInCampaign(Session::get('campaign_id'), $ownerId) ? $ownerId : null;
+        }
+        return null;
     }
 }

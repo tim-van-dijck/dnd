@@ -12,35 +12,12 @@
 </head>
 <body>
     <header class="uk-position-fixed uk-width-1-1">
-        <div class="uk-container uk-container-expand uk-background-primary">
-            <nav class="uk-navbar uk-light" data-uk-navbar="mode:click; duration: 250">
-                <div class="uk-navbar-left">
-                    <ul class="uk-navbar-nav">
-                        <li><a href="/" class="uk-navbar-item uk-navbar-logo">DUNGEONS & DIARIES</a></li>
-                    </ul>
-                </div>
-                <div class="uk-navbar-right">
-                    <ul class="uk-navbar-nav">
-                        <li><a href="/campaigns" class="uk-navbar-item">My Campaigns</a></li>
-                        <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
-                        <li>
-                            <form action="/logout" method="post">
-                                @csrf
-                                <button type="submit" class="uk-navbar-item uk-button uk-button-link uk-link-text">
-                                    <i class="fas fa-sign-out-alt fa-fw"></i>
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
+        <x-layout.header />
     </header>
     <div id="content" class="uk-width-1-1" uk-height-viewport="expand: true">
         <div class="uk-container uk-container-expand">
             @yield('content')
-            @component('partial.footer')
-            @endcomponent
+            <x-layout.footer />
         </div>
     </div>
     @yield('js')

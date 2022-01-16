@@ -124,3 +124,7 @@
   color: #242C33;
   box-shadow: 0 2px 12px rgba(50,50,50,0.1);
 }
+
+.sort-handle:hover {
+  cursor: ns-resize;
+}

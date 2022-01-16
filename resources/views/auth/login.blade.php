@@ -13,11 +13,7 @@
     <div class="uk-position-cover uk-overlay-primary"></div>
 
     <div class="uk-width-medium uk-padding-small uk-position-z-index" uk-scrollspy="cls: uk-animation-fade">
-
-        <div class="uk-text-center uk-margin">
-            <img src="img/login-logo.svg" alt="Logo">
-        </div>
-
+        <h1 class="uk-text-center uk-heading-primary">Dungeons<br>&<br>Diaries</h1>
         @if ($errors->any())
             <p class="uk-text-danger uk-align-center">{{ $errors->first() }}</p>
         @endif

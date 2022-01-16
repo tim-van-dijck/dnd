@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
  * Class User
  * @package App\Models
  * @property int id
+ * @property bool $admin
  * @property string name
  * @property string email
  * @property string password
