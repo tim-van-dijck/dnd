@@ -42,6 +42,11 @@
                         to: (row) => {
                             return `admin#/users/${row.id}`;
                         }
+                    },
+                    {
+                        name: 'destroy',
+                        icon: 'trash',
+                        classes: 'uk-text-danger'
                     }
                 ],
                 columns: [

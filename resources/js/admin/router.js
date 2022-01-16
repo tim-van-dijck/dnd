@@ -5,6 +5,8 @@ import UserOverview from './components/users/user-overview';
 import UserDetail from './components/users/user-detail';
 import UserForm from './components/users/user-form';
 
+import RaceOverview from "./components/races/race-overview";
+
 import SpellOverview from "./components/spells/spell-overview";
 import SpellForm from "./components/spells/spell-form";
 
@@ -47,6 +49,12 @@ const routes = [
         name: 'user-edit',
         props: true,
         component: UserForm
+    },
+
+    {
+        path: '/races',
+        name: 'races',
+        component: RaceOverview,
     },
 
     {

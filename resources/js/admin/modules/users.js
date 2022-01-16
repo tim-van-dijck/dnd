@@ -5,30 +5,30 @@ export const Users = {
         errors: {}
     },
     actions: {
-        previous({commit,state}) {
+        previous({state}) {
             if (state.users != null && state.users.meta.current_page > 1) {
                 axios.get(`/admin/users?page[number]=${state.users.meta.current_page - 1}`)
                     .then((response) => {
-                        commit('SET_USERS', response.data);
+                        state.users = response.data;
                     })
             }
         },
-        page({commit,state}, number) {
+        page({state}, number) {
             if (state.users != null && number > 0 && number <= state.users.meta.last_page)
                 axios.get(`/admin/users?page[number]=${number}`)
                     .then((response) => {
-                        commit('SET_USERS', response.data);
+                        state.users = response.data;
                     })
         },
-        next({commit,state}) {
+        next({state}) {
             if (state.users != null && state.users.meta.current_page < state.users.meta.last_page) {
                 axios.get(`/admin/users?page[number]=${state.users.meta.current_page + 1}`)
                     .then((response) => {
-                        commit('SET_USERS', response.data);
+                        state.users = response.data;
                     })
             }
         },
-        load({commit}, filters) {
+        load({state}, filters) {
             let params = {};
             for (let key in filters || {}) {
                 params[`filters[${key}]`] = filters[key];
@@ -36,7 +36,7 @@ export const Users = {
             let query = new URLSearchParams(params)
             return axios.get(`/admin/users?${query}`)
                 .then((response) => {
-                    commit('SET_USERS', response.data)
+                    state.users = response.data
                 });
         },
 
@@ -52,17 +52,17 @@ export const Users = {
                     return response.data;
                 });
         },
-        store({dispatch, commit}, data) {
+        store({dispatch, state}, data) {
             return axios.post(`/admin/users`, data.user)
                 .then(() => {
-                    commit('SET_ERRORS', {});
+                    state.errors = {};
                     dispatch('Messages/success', 'User saved!', {root: true});
                 });
         },
-        update({dispatch, commit}, data) {
+        update({dispatch, state}, data) {
             return axios.put(`/admin/users/${data.id}`, data.user)
                 .then(() => {
-                    commit('SET_ERRORS', {});
+                    state.errors = {};
                     dispatch('Messages/success', 'User saved!', {root: true});
                 });
         },
@@ -74,14 +74,6 @@ export const Users = {
                             dispatch('Messages/success', 'User successfully deleted!', {root: true});
                         });
                 })
-        }
-    },
-    mutations: {
-        SET_USERS(state, users) {
-            state.users = users;
-        },
-        SET_ERRORS(state, errors) {
-            state.errors = errors;
         }
     }
 }

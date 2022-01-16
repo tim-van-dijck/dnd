@@ -66,6 +66,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', 'AdminController@index')->name('admin');
         Route::resource('campaigns', 'Admin\CampaignController')
             ->only(['index', 'store', 'show', 'update', 'destroy']);
+        Route::resource('races', 'Admin\RaceController')
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
         Route::resource('users', 'Admin\UserController')
             ->only(['index', 'store', 'show', 'update', 'destroy']);
         Route::resource('spells', 'Magic\SpellController')
