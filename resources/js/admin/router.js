@@ -1,80 +1,23 @@
 import CampaignOverview from './components/campaigns/campaign-overview';
 import CampaignForm from './components/campaigns/campaign-form';
 
-import UserOverview from './components/users/user-overview';
-import UserDetail from './components/users/user-detail';
-import UserForm from './components/users/user-form';
-
-import RaceOverview from "./components/races/race-overview";
-
-import SpellOverview from "./components/spells/spell-overview";
-import SpellForm from "./components/spells/spell-form";
-
 import VueRouter from "vue-router";
 import NotFound from "../components/NotFound";
+import {RaceRoutes} from "./routes/races";
+import {UserRoutes} from "./routes/users";
+import {SpellRoutes} from "./routes/spells";
+import {CampaignRoutes} from "./routes/campaigns";
 
 const routes = [
     {
         path: '/',
-        redirect: 'campaigns'
+        redirect: '/campaigns'
     },
 
-    {
-        path: '/campaigns',
-        name: 'campaigns',
-        props: true,
-        component: CampaignOverview
-    },
-    {
-        path: '/campaigns/:id',
-        name: 'campaign-edit',
-        props: true,
-        component: CampaignForm
-    },
-
-    {
-        path: '/users',
-        name: 'users',
-        props: true,
-        component: UserOverview
-    },
-    {
-        path: '/users/:id',
-        name: 'user',
-        props: true,
-        component: UserDetail
-    },
-    {
-        path: '/users/:id/edit',
-        name: 'user-edit',
-        props: true,
-        component: UserForm
-    },
-
-    {
-        path: '/races',
-        name: 'races',
-        component: RaceOverview,
-    },
-
-    {
-        path: '/spells',
-        name: 'spells',
-        props: true,
-        component: SpellOverview
-    },
-    {
-        path: '/spells/create',
-        name: 'spell-create',
-        props: true,
-        component: SpellForm
-    },
-    {
-        path: '/spells/:id',
-        name: 'spell-edit',
-        props: true,
-        component: SpellForm
-    },
+    ...CampaignRoutes,
+    ...UserRoutes,
+    ...RaceRoutes,
+    ...SpellRoutes,
 
     {
         path: '*',

@@ -1,10 +1,10 @@
 <template>
-    <div id="users">
+    <div id="races">
         <h1>Races</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <router-link class="uk-button uk-button-primary" :to="{name: 'user-create'}">
-                    <i class="fas fa-plus"></i> Add user
+                <router-link class="uk-button uk-button-primary" :to="{name: 'race-create'}">
+                    <i class="fas fa-plus"></i> Add race
                 </router-link>
                 <paginated-table :actions="actions"
                                  :columns="columns"
