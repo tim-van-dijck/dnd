@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RaceRequest;
 use App\Http\Resources\RaceResource;
 use App\Models\Character\Race;
+use App\Models\Character\RaceTrait;
 use App\Repositories\RaceRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RaceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return AnonymousResourceCollection
-     */
-    public function index(RaceRepository $raceRepository, Request $request)
+    public function index(RaceRepository $raceRepository, Request $request): AnonymousResourceCollection
     {
         $page = $request->query('page');
         $filters = $request->query('filters', []);
@@ -24,48 +22,28 @@ class RaceController extends Controller
         return RaceResource::collection($races);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function traits(): AnonymousResourceCollection
     {
-        //
+        return JsonResource::collection(RaceTrait::orderBy('name')->get());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Character\Race  $race
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Race $race)
+    public function store(RaceRepository $raceRepository, RaceRequest $request): RaceResource
     {
-        //
+        return new RaceResource($raceRepository->store($request->input()));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Character\Race  $race
-     * @return \Illuminate\Http\Response
-     */
+    public function show(RaceRepository $raceRepository, Race $race)
+    {
+        return new RaceResource($raceRepository->find($race->id));
+    }
+
     public function update(Request $request, Race $race)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Character\Race  $race
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Race $race)
+    public function destroy(RaceRepository $raceRepository, Race $race)
     {
-        //
+        $raceRepository->destroy($race);
     }
 }

@@ -13,6 +13,7 @@ class SpellController extends Controller
 {
     public function index(SpellRepository $spellRepository, Request $request)
     {
+        $page = $request->query('page');
         $spells = $spellRepository
             ->get($request->query('filters', []), $page['number'] ?? 1, $page['size'] ?? 20);
         return SpellResource::collection($spells);

@@ -39,9 +39,7 @@
                     {
                         name: 'view',
                         icon: 'eye',
-                        to: (row) => {
-                            return `admin#/users/${row.id}`;
-                        }
+                        to: (row) => ({name: 'user', params: {id: row.id}})
                     },
                     {
                         name: 'destroy',

@@ -27,7 +27,7 @@
         "@tinymce/tinymce-vue": "^3.2.8",
         "npx": "^10.2.2",
         "tinymce": "^5.10.0",
-        "uikit": "^3.6.18",
+        "uikit": "^3.10",
         "vue": "^2.6.12",
         "vue-router": "^3.5.1",
         "vue-select": "^3.11.2",

@@ -32,14 +32,19 @@ export default {
         return {
             actions: [
                 {
+                    name: 'destroy',
+                    icon: 'trash',
+                    classes: 'uk-text-danger'
+                },
+                {
                     name: 'edit',
-                    icon: 'pencil',
+                    icon: 'edit',
                     to: (race) => ({nane: 'race-edit', params: {id: race.id}})
                 },
                 {
-                    name: 'delete',
-                    icon: 'trash',
-                    classes: 'uk-text-danger'
+                    name: 'view',
+                    icon: 'eye',
+                    to: (race) => ({name: 'race', params: {id: race.id}})
                 }
             ],
             columns: [

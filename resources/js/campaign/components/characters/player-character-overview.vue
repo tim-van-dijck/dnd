@@ -39,7 +39,7 @@
                     {name: 'destroy', title: 'Delete character', icon: 'trash', classes: 'uk-text-danger'},
                     {name: 'edit', title: 'Edit character', icon: 'edit'},
                     {name: 'view', title: 'Go to details', icon: 'eye'},
-                    {name: 'sheet', title: 'Download character sheet', to: (row) => `/campaign/characters/${row.id}/sheet`, icon: 'file', newTab: true},
+                    {name: 'sheet', title: 'Download character sheet', href: (row) => `/campaign/characters/${row.id}/sheet`, icon: 'file', newTab: true},
                     {name: 'inventory', title: 'Go to inventory', icon: 'shopping-bag'}
                 ],
                 columns: [

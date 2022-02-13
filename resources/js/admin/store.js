@@ -26,6 +26,12 @@ let store = new Vuex.Store({
                     document.location.href = '/';
                 });
         },
+        loadLanguages({state}) {
+            return axios.get('/languages')
+                .then((response) => {
+                    state.languages = response.data;
+                })
+        }
     }
 });
 

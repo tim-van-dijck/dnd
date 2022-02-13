@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export const generatePaginatedActions = (url, collection) => {
     return {
         previous({state}) {
@@ -31,7 +33,7 @@ export const generatePaginatedActions = (url, collection) => {
             const query = new URLSearchParams(params)
             return axios.get(`${url}?${query}`)
                 .then((response) => {
-                    state[collection] = response.data
+                    Vue.set(state, collection, response.data)
                 });
         }
     }

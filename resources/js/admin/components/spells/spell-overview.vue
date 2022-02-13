@@ -46,9 +46,7 @@
                     {
                         name: 'edit',
                         icon: 'edit',
-                        to: (row) => {
-                            return `admin#/spells/${row.id}`;
-                        }
+                        to: (row) => ({name: 'spell-edit', params: {id: row.id}})
                     }
                 ],
                 columns: [

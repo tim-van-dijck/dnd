@@ -19,7 +19,10 @@
                 <td class="uk-width-small">
                     <ul class="uk-iconnav">
                         <li v-for="action in actions">
-                            <a v-if="action.to" :href="getTo(action.to, row)" :target="action.newTab ? '_blank' : ''" :title="action.title">
+                            <router-link v-if="action.to" :to="getTo(action.to, row)" :title="action.title">
+                                <i :class="`fas fa-${action.icon}`"></i>
+                            </router-link>
+                            <a v-else-if="action.href" :href="getHref(action.to, row)" :target="action.newTab ? '_blank' : ''" :title="action.title">
                                 <i :class="`fas fa-${action.icon}`"></i>
                             </a>
                             <a href="/" :class="action.classes || ''"  @click.prevent="$emit(action.name, row)" :title="action.title" v-else>
@@ -109,11 +112,18 @@
                 }
                 return value;
             },
-            getTo(to, row) {
+            getHref(to, row) {
                 if (typeof to === 'string') {
                     return to;
                 } else if (typeof to === 'function') {
                     return to(row) || '/';
+                }
+            },
+            getTo(to, row) {
+                if (typeof to === 'object') {
+                    return to;
+                } else if (typeof to === 'function') {
+                    return to(row);
                 }
             },
             search: debounce(function () {

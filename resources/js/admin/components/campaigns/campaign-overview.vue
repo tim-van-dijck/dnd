@@ -45,16 +45,12 @@
                     {
                         name: 'edit',
                         icon: 'edit',
-                        to: (row) => {
-                            return `admin#/campaigns/${row.id}`;
-                        }
+                        to: (row) => ({name: 'campaign-edit', params: {id: row.id}})
                     },
                     {
                         name: 'view',
                         icon: 'eye',
-                        to: (row) => {
-                            return `/campaigns/${row.id}`;
-                        }
+                        href: (row) => `/campaigns/${row.id}`
                     }
                 ],
                 columns: [

@@ -1,3 +1,5 @@
+import {generatePaginatedActions} from "../../generators/StateActionGenerator";
+
 export const Spells = {
     namespaced: true,
     state: {
@@ -5,40 +7,7 @@ export const Spells = {
         errors: {}
     },
     actions: {
-        previous({commit,state}) {
-            if (state.spells != null && state.spells.meta.current_page > 1) {
-                axios.get(`/admin/spells?page[number]=${state.spells.meta.current_page - 1}`)
-                    .then((response) => {
-                        commit('SET_SPELLS', response.data);
-                    })
-            }
-        },
-        page({commit,state}, number) {
-            if (state.spells != null && number > 0 && number <= state.spells.meta.last_page)
-                axios.get(`/admin/spells?page[number]=${number}`)
-                    .then((response) => {
-                        commit('SET_SPELLS', response.data);
-                    })
-        },
-        next({commit,state}) {
-            if (state.spells != null && state.spells.meta.current_page < state.spells.meta.last_page) {
-                axios.get(`/admin/spells?page[number]=${state.spells.meta.current_page + 1}`)
-                    .then((response) => {
-                        commit('SET_SPELLS', response.data);
-                    })
-            }
-        },
-        load({commit}, filters) {
-            let params = {};
-            for (let key in filters || {}) {
-                params[`filters[${key}]`] = filters[key];
-            }
-            let query = new URLSearchParams(params)
-            return axios.get(`/admin/spells?${query}`)
-                .then((response) => {
-                    commit('SET_SPELLS', response.data)
-                });
-        },
+        ...generatePaginatedActions('/admin/spells', 'spells'),
 
         find({state}, id) {
             if ((state?.spells?.data || []).length > 0) {
