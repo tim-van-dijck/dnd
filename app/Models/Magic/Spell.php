@@ -34,6 +34,21 @@ class Spell extends Model
 {
     public $timestamps = false;
 
+    protected $fillable = [
+        'name',
+        'range',
+        'components',
+        'materials',
+        'ritual',
+        'concentration',
+        'duration',
+        'casting_time',
+        'level',
+        'school',
+        'description',
+        'higher_levels'
+    ];
+
     /**
      * @return MorphToMany
      */

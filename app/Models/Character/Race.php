@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int optional_languages
  * @property int optional_proficiencies
  * @property int optional_traits
+ * @property int optional_feats
  *
  * @property Collection|Language[] languages
  * @property Collection|Proficiency[] proficiencies
@@ -29,6 +30,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Race extends Model
 {
     public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'speed',
+        'size',
+        'optional_ability_bonuses',
+        'optional_languages',
+        'optional_proficiencies',
+        'optional_feats',
+        'optional_traits'
+    ];
 
     /**
      * @return BelongsToMany

@@ -16,21 +16,25 @@ class RaceResource extends JsonResource
     public function toArray($request)
     {
         $race = $this->resource->toArray();
-        $proficiencies = $this->resource->proficiencies->toArray();
-        if (!empty($proficiencies)) {
+
+        if (strpos('proficiencies', $request->query('includes')) !== false) {
+            $proficiencies = $this->resource->proficiencies->toArray();
             $race['proficiencies'] = $this->formatProficiencies($proficiencies);
         }
-        $subraces = $this->resource->subraces->toArray();
-        if (!empty($subraces)) {
+        if (strpos('subraces', $request->query('includes')) !== false) {
+            $subraces = $this->resource->subraces->toArray();
             $race['subraces'] = $this->formatSubclasses($subraces);
         }
-        $languages = $this->resource->languages->toArray();
-        if (!empty($languages)) {
+        if (strpos('languages', $request->query('includes')) !== false) {
+            $languages = $this->resource->languages->toArray();
             $race['languages'] = $this->formatLanguages($languages);
         }
-        $traits = $this->resource->traits->toArray();
-        if (!empty($traits)) {
+        if (strpos('traits', $request->query('includes')) !== false) {
+            $traits = $this->resource->traits->toArray();
             $race['traits'] = $this->formatTraits($traits);
+        }
+        if (strpos('ability_bonuses', $request->query('includes')) !== false) {
+            $race['ability_bonuses'] = $this->resource->abilities()->get();
         }
         return $race;
     }

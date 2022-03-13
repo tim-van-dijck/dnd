@@ -10,6 +10,13 @@ class CampaignPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability)
+    {
+        if ($user->admin) {
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view any app models campaign campaigns.
      *

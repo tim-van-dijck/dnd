@@ -1,4 +1,6 @@
-window._ = require('lodash');
+import Icons from 'uikit/dist/js/uikit-icons';
+import UIkit from 'uikit';
+UIkit.use(Icons);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

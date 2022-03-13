@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Campaign\Role;
 use App\Models\Campaign\UserPermission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -13,10 +15,10 @@ use Illuminate\Support\Carbon;
  * Class User
  * @package App\Models
  * @property int id
- * @property bool $admin
  * @property string name
  * @property string email
  * @property string password
+ * @property boolean admin
  * @property string remember_token
  * @property string invite_code
  * @property Carbon|string email_verified_at
@@ -25,42 +27,24 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token', 'invite_code'
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name', 'email', 'password',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
-    public function permissions()
+    public function permissions(): HasMany
     {
         return $this->hasMany(UserPermission::class);
     }
