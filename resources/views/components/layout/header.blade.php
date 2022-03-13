@@ -10,10 +10,12 @@
                 <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
                 <li><a href="/admin"><i class="fas fa-cogs"></i></a></li>
                 <li>
-                    <a href="/logout" title="Sign out" class="uk-navbar-item"
-                       @click.prevent="$store.dispatch('logout')">
-                        <i class="fas fa-sign-out-alt fa-fw"></i>
-                    </a>
+                    <form action="/logout" method="POST">
+                        {{ csrf_field() }}
+                        <button type="submit" class="uk-navbar-item uk-button-link" title="Sign out">
+                            <i class="fas fa-sign-out-alt fa-fw"></i>
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>

@@ -13,8 +13,7 @@
         "php": "^8.0",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.138",
-        "fideloper/proxy": "^4.0",
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^9.0",
         "laravel/ui": "^3.0",
         "laravel/tinker": "^2.0",
         "tim-van-dijck/dnd-seeds": "^0.16.0@alpha",
@@ -22,10 +21,10 @@
         "tmw/fpdm": "2.9.2"
     },
     "require-dev": {
-        "facade/ignition": "^2.3.6",
+        "spatie/laravel-ignition": "^1.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^5.0",
+        "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.0"
     },
     "config": {
