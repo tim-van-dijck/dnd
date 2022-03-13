@@ -6,13 +6,13 @@
         </div>
         <div class="uk-navbar-right">
             <ul class="uk-navbar-nav">
+                <li><a href="/admin" class="uk-navbar-item">Admin</a></li>
                 <li><a href="/campaigns" class="uk-navbar-item">My Campaigns</a></li>
                 <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
-                <li><a href="/admin"><i class="fas fa-cogs"></i></a></li>
                 <li>
                     <form action="/logout" method="POST">
                         {{ csrf_field() }}
-                        <button type="submit" class="uk-navbar-item uk-button-link" title="Sign out">
+                        <button type="submit" title="Sign out" class="uk-navbar-item uk-button uk-button-link">
                             <i class="fas fa-sign-out-alt fa-fw"></i>
                         </button>
                     </form>

@@ -18,7 +18,6 @@
             </header>
         </header-navbar>
         <navigation>
-
             <aside id="left-col" class="uk-light uk-visible@m">
                 <div class="left-logo uk-flex uk-flex-middle">
                     DUNGEONS & DIARIES
