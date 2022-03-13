@@ -16,7 +16,7 @@ class CampaignController extends Controller
     {
         $page = $request->query('page', [])['number'] ?? null;
         $pageSize = $request->query('page', [])['size'] ?? null;
-        $filters = $request->query('filteres', []);
+        $filters = $request->query('filters', []);
         if (empty($filters['user_id'])) {
             $campaigns = $campaignRepository->get($request->query('filters', []), $page, $pageSize);
         } else {

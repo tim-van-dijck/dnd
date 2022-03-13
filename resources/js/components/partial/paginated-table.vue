@@ -41,25 +41,30 @@
             </tr>
             </tbody>
         </table>
-        <ul v-if="pages.length > 1" class="uk-pagination uk-flex-right uk-margin-medium-top" uk-margin>
-            <li>
-                <a v-if="records.meta.current_page > 1" href="#" @click.prevent="previous">
-                    <span uk-pagination-previous></span>
-                </a>
-            </li>
-            <li v-for="page in pages" :class="{'uk-active': page.active}">
-                <span v-if="page.number == '...'">...</span>
-                <a v-else-if="!page.active" href="#" @click.prevent="go(page.number)">
-                    {{ page.number }}
-                </a>
-                <span v-else>{{ page.number }}</span>
-            </li>
-            <li>
-                <a v-if="records.meta.current_page != records.meta.last_page" href="#" @click.prevent="next">
-                    <span uk-pagination-next></span>
-                </a>
-            </li>
-        </ul>
+        <div class="uk-flex uk-flex-between uk-margin-medium-top" uk-margin>
+            <div>
+                <span>{{ records.meta.from }} - {{ records.meta.to }} of {{ records.meta.total }}</span>
+            </div>
+            <ul v-if="pages.length > 1" class="uk-pagination uk-margin-remove">
+                <li>
+                    <a v-if="records.meta.current_page > 1" href="#" @click.prevent="previous">
+                        <span uk-pagination-previous></span>
+                    </a>
+                </li>
+                <li v-for="page in pages" :class="{'uk-active': page.active}">
+                    <span v-if="page.number == '...'">...</span>
+                    <a v-else-if="!page.active" href="#" @click.prevent="go(page.number)">
+                        {{ page.number }}
+                    </a>
+                    <span v-else>{{ page.number }}</span>
+                </li>
+                <li>
+                    <a v-if="records.meta.current_page != records.meta.last_page" href="#" @click.prevent="next">
+                        <span uk-pagination-next></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 

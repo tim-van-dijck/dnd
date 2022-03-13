@@ -65,15 +65,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::group(['prefix' => 'admin'], function () {
         Route::get('/', 'AdminController@index')->name('admin');
         Route::resource('campaigns', 'Admin\CampaignController')
-            ->only(['index', 'store', 'show', 'update', 'destroy']);
+            ->only(['index', 'store', 'show', 'update', 'destroy'])->names([
+                'index' => 'admin.campaigns.index',
+                'store' => 'admin.campaigns.store',
+                'show' => 'admin.campaigns.show',
+                'update' => 'admin.campaigns.update',
+                'destroy' => 'admin.campaigns.destroy',
+            ]);
         Route::get('races/traits', 'Admin\RaceController@traits')->name('admin.races.traits');
         Route::resource('races', 'Admin\RaceController')
-            ->only(['index', 'store', 'show', 'update', 'destroy']);
+            ->only(['index', 'store', 'show', 'update', 'destroy'])
+            ->names([
+                'index' => 'admin.races.index',
+                'store' => 'admin.races.store',
+                'show' => 'admin.races.show',
+                'update' => 'admin.races.update',
+                'delete' => 'admin.races.delete',
+            ]);
         Route::resource('users', 'Admin\UserController')
-            ->only(['index', 'store', 'show', 'update', 'destroy']);
+            ->only(['index', 'store', 'show', 'update', 'destroy'])
+            ->names([
+                'index' => 'admin.users.index',
+                'store' => 'admin.users.store',
+                'show' => 'admin.users.show',
+                'update' => 'admin.users.update',
+                'delete' => 'admin.users.delete',
+            ]);
         Route::resource('spells', 'Magic\SpellController')
-            ->only(['index', 'store', 'show', 'update', 'destroy']);
+            ->only(['index', 'store', 'show', 'update', 'destroy'])
+            ->names([
+                'index' => 'admin.spells.index',
+                'store' => 'admin.spells.store',
+                'show' => 'admin.spells.show',
+                'update' => 'admin.spells.update',
+                'delete' => 'admin.spells.delete',
+            ]);
         Route::resource('proficiencies', 'Admin\ProficiencyController')
-            ->only(['index']);
+            ->only(['index'])->names(['index' => 'admin.proficiencies.index']);
     });
 });

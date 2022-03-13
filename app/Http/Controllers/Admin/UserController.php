@@ -16,11 +16,6 @@ use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
-    /**
-     * @param UserRepository $userRepository
-     * @param Request $request
-     * @return AnonymousResourceCollection
-     */
     public function index(UserRepository $userRepository, Request $request): AnonymousResourceCollection
     {
         $page = $request->query('page');
@@ -29,18 +24,12 @@ class UserController extends Controller
         return UserResource::collection($users);
     }
 
-    /**
-     * @param User $user
-     * @return JsonResponse
-     */
     public function show(User $user): JsonResponse
     {
         return new JsonResponse($user);
     }
 
     /**
-     * @param UserRepository $userRepository
-     * @param Request $request
      * @throws \Illuminate\Validation\ValidationException
      */
     public function invite(UserRepository $userRepository, Request $request)
@@ -76,17 +65,8 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $user->revokeRoles(Session::get('campaign_id'));
-    }
-
-    public function me()
-    {
-        $permissions = AuthService::campaignPermissions(Session::get('campaign_id'));
-        return response()->json([
-            'id' => Auth::user()->id,
-            'name' => Auth::user()->name,
-            'email' => Auth::user()->email,
-            'permissions' => $permissions
-        ]);
+        $user->roles()->sync([]);
+        $user->permissions()->delete();
+        $user->delete();
     }
 }

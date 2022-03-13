@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Magic;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\SpellRequest;
 use App\Http\Resources\SpellResource;
 use App\Models\Magic\Spell;
 use App\Repositories\Magic\SpellRepository;
@@ -19,19 +20,8 @@ class SpellController extends Controller
         return SpellResource::collection($spells);
     }
 
-    public function store(SpellRepository $spellRepository, Request $request): Spell
+    public function store(SpellRepository $spellRepository, SpellRequest $request): Spell
     {
-        $this->validate($request, [
-            'name' => 'required|string',
-            'description' => 'required|string',
-            'higher_levels' => 'nullable|string',
-            'level' => 'required|integer|between:0,9',
-            'ritual' => 'boolean',
-            'concentration' => 'boolean',
-            'components' => 'required|array',
-            'components.*' => 'required|string|in:V,S,M',
-        ]);
-
         return $spellRepository->store($request->input());
     }
 
@@ -40,19 +30,8 @@ class SpellController extends Controller
         return $spell;
     }
 
-    public function update(SpellRepository $spellRepository, Request $request, Spell $spell): Spell
+    public function update(SpellRepository $spellRepository, SpellRequest $request, Spell $spell): Spell
     {
-        $this->validate($request, [
-            'name' => 'required|string',
-            'description' => 'required|string',
-            'higher_levels' => 'nullable|string',
-            'level' => 'required|integer|between:0,9',
-            'ritual' => 'boolean',
-            'concentration' => 'boolean',
-            'components' => 'required|array',
-            'components.*' => 'required|string|in:V,S,M',
-        ]);
-
         return $spellRepository->update($spell, $request->input());
     }
 

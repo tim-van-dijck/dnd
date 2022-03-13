@@ -11,9 +11,12 @@
                                    v-model="spell.name">
                         </div>
                         <div class="uk-margin">
-                            <label for="range" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('range')}">Range*</label>
-                            <input id="range" name="range" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('range')}"
-                                   v-model="spell.range">
+                            <label for="level" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('level')}">Level*</label>
+                            <select id="level" name="level" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('level')}"
+                                   v-model="spell.level">
+                                <option value="">- Choose a level -</option>
+                                <option v-for="level in 9" :value="level">{{ level === 0 ? 'Cantrip' : `Level ${level}` }}</option>
+                            </select>
                         </div>
                         <div class="uk-margin">
                             <label for="school" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('school')}">School*</label>
@@ -22,6 +25,21 @@
                                 <option value="">- Choose a school -</option>
                                 <option v-for="school in schools" :value="school">{{ school }}</option>
                             </select>
+                        </div>
+                        <div class="uk-margin">
+                            <label for="range" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('range')}">Range*</label>
+                            <input id="range" name="range" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('range')}"
+                                   v-model="spell.range">
+                        </div>
+                        <div class="uk-margin">
+                            <label for="duration" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('duration')}">Duration*</label>
+                            <input id="duration" name="duration" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('duration')}"
+                                   v-model="spell.duration">
+                        </div>
+                        <div class="uk-margin">
+                            <label for="casting_time" class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('casting_time')}">Casting time*</label>
+                            <input id="casting_time" name="casting_time" type="text" class="uk-input" :class="{'uk-form-danger': errors.hasOwnProperty('casting_time')}"
+                                   v-model="spell.casting_time">
                         </div>
                         <div class="uk-margin">
                             <label class="uk-form-label" :class="{'uk-text-danger': errors.hasOwnProperty('components')}">Components*</label>
@@ -96,7 +114,7 @@
                     concentration: false,
                     duration: '',
                     casting_time: '',
-                    level: null,
+                    level: '',
                     school: '',
                     description: '',
                     higher_levels: ''
