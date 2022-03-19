@@ -19,3 +19,5 @@ build:
 access:
 	docker exec -it dnd-$(inst) bash
 
+node:
+	docker run -itv $(PWD):/app -w /app node:16.13 bash

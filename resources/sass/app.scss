@@ -32,20 +32,21 @@ $card-secondary-color-mode: dark;
   margin-left: 0;
 }
 
-#app #content {
+#app #content,
+#admin-app #content {
   margin-top: 52px;
-  transition: margin 0.2s cubic-bezier(.4,0,.2,1);
+  transition: margin 0.2s cubic-bezier(.4, 0, .2, 1);
   padding-top: 30px;
 }
-@media screen and (min-width: 960px){
+
+@media screen and (min-width: 960px) {
   #app, #admin-app {
     #content {
-      /* equal to left-col width */
       margin-left: 240px;
     }
+
     #top-head {
-      /* equal to left-col width */
-      left:240px;
+      left: 240px;
     }
   }
 }
@@ -64,11 +65,13 @@ $card-secondary-color-mode: dark;
   letter-spacing: -0.032em;
   font-weight: 300;
 }
+
 /* Smooth shadow transition */
 .uk-card {
-  -webkit-transition: box-shadow 0.55s cubic-bezier(.4,0,.2,1);
-  transition: box-shadow 0.55s cubic-bezier(.4,0,.2,1);
+  -webkit-transition: box-shadow 0.55s cubic-bezier(.4, 0, .2, 1);
+  transition: box-shadow 0.55s cubic-bezier(.4, 0, .2, 1);
 }
+
 .uk-container.padded {
   padding-left: 40px;
   padding-right: 40px;
@@ -89,9 +92,11 @@ $card-secondary-color-mode: dark;
     i.fas {
       cursor: pointer;
       transition: color .3s ease;
+
       &.fa-check-circle:hover {
         @extend .uk-text-success;
       }
+
       &.fa-times-circle:hover {
         @extend .uk-text-danger;
       }
@@ -102,6 +107,7 @@ $card-secondary-color-mode: dark;
 .uk-label.selection-label {
   cursor: pointer;
   margin-right: 1em;
+
   &:hover {
     span.select-label-content {
       text-decoration: line-through;

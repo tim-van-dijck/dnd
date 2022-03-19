@@ -25,7 +25,7 @@
 </template>
 
 <script>
-    import PaginatedTable from "@/components/partial/paginated-table";
+    import PaginatedTable from "@components/partial/paginated-table";
     import UIKit from 'uikit';
     import {mapState} from "vuex";
 

@@ -1,27 +1,31 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npx run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npx run production",
-        "production": "mix --production"
+        "dev": "npm run development",
+        "prod": "npm run production",
+        "development": "NODE_ENV=development webpack --node-env=development",
+        "production": "NODE_ENV=production webpack --node-env=production",
+        "watch": "NODE_ENV=development webpack --node-env=development --watch",
+        "watch-poll": "NODE_ENV=development webpack --node-env=development --watch --watch-poll"
     },
     "devDependencies": {
         "axios": "^0.21",
         "cross-env": "^7.0.3",
-        "laravel-mix": "^6.0.36",
-        "laravel-mix-alias": "^1.0.3",
+        "css-loader": "^6.7.1",
+        "cssnano": "^5.1.4",
         "lodash": "^4.17.21",
+        "mini-css-extract-plugin": "^2.6.0",
+        "node-sass": "^6.0.1",
         "postcss": "^8.1",
+        "postcss-loader": "^6.2.1",
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.32.8",
-        "sass-loader": "^11.1.0",
+        "sass-loader": "^11.1.1",
+        "style-loader": "^3.3.1",
         "vue-loader": "^15.9.7",
-        "vue-svg-loader": "^0.10.0",
-        "vue-template-compiler": "^2.6.12"
+        "vue-template-compiler": "^2.6.12",
+        "webpack": "^5.70.0",
+        "webpack-cli": "^4.9.2"
     },
     "dependencies": {
         "@tinymce/tinymce-vue": "^3.2.8",

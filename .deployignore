@@ -10,7 +10,7 @@ makefile
 Dockerfile
 yarn.lock
 phpunit.xml
-webpack.mix.js
+webpack.config.js
 .gitignore
 .gitattributes
 .env.example

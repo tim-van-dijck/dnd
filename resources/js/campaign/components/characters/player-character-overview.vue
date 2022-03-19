@@ -23,7 +23,7 @@
 
 <script>
     import {mapState} from 'vuex';
-    import PaginatedTable from "@/components/partial/paginated-table";
+    import PaginatedTable from "@components/partial/paginated-table";
     import UIKit from "uikit";
 
     export default {

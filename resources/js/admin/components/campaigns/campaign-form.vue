@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import HtmlEditor from "@/components/partial/html-editor";
+import HtmlEditor from "@components/partial/html-editor";
 import {mapState} from "vuex";
 
 export default {

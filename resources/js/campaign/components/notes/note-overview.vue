@@ -28,7 +28,7 @@
 <script>
     import {mapState} from "vuex";
     import * as UIKit from "uikit";
-    import PaginatedTable from "@/components/partial/paginated-table";
+    import PaginatedTable from "@components/partial/paginated-table";
 
     export default {
         name: "NoteOverview",

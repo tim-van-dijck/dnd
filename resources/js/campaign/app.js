@@ -1,26 +1,17 @@
 require('../bootstrap');
 
-import Icons from 'uikit/dist/js/uikit-icons';
-import UIkit from 'uikit';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
-
-UIkit.use(Icons);
+import router from './router';
+import store from './store';
+import Campaign from "./components/Campaign";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
-import router from './router';
-import store from './store';
 
-import Messages from './components/layout/messages';
-import Navigation from './components/layout/navigation';
-import HeaderNavbar from './components/layout/header-navbar';
-
-window.copy = function(item) {
-    return JSON.parse(JSON.stringify(item));
-}
+window.copy = (item) => JSON.parse(JSON.stringify(item));
 
 window.onload = () => {
     if (document.getElementById('app')) {
@@ -34,9 +25,9 @@ window.onload = () => {
             .then(() => {
                 const vm = new Vue({
                     el: '#app',
+                    render: (createElement => createElement(Campaign)),
                     router,
-                    store,
-                    components: {HeaderNavbar, Messages, Navigation}
+                    store
                 });
             })
             .catch((error) => {
