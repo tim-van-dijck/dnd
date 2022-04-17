@@ -1,6 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const {VueLoaderPlugin} = require("vue-loader");
+const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = [
     {
@@ -12,9 +12,10 @@ module.exports = [
         },
         resolve: {
             alias: {
+                vue: 'vue/dist/vue.runtime.esm-bundler.js',
                 '@admin': path.resolve(__dirname, 'resources/js/admin'),
                 '@campaign': path.resolve(__dirname, 'resources/js/campaign'),
-                '@components': path.resolve(__dirname, 'resources/js/components'),
+                '@components': path.resolve(__dirname, 'resources/js/components')
             },
             extensions: ['*', '.js', '.vue', '.json', 'png', 'gif', 'jpeg', 'jpg']
         },
@@ -45,7 +46,7 @@ module.exports = [
             app: path.join(__dirname, 'resources/sass/app.scss'),
         },
         plugins: [
-            new MiniCssExtractPlugin({filename: "[name].css"}),
+            new MiniCssExtractPlugin({ filename: "[name].css" }),
         ],
         module: {
             rules: [

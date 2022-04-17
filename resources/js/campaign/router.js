@@ -7,8 +7,7 @@ import {NoteRoutes} from './routes/notes';
 import {QuestRoutes} from './routes/quests';
 import {RoleRoutes} from './routes/roles';
 import {UserRoutes} from './routes/users';
-
-import VueRouter from "vue-router";
+import {createRouter} from "vue-router";
 import NotFound from "../components/NotFound";
 
 const routes = [
@@ -28,12 +27,12 @@ const routes = [
     ...InventoryRoutes,
 
     {
-        path: '*',
+        path: '/:pathMatch(.*)*',
         component: NotFound
     },
 ];
 
-const router = new VueRouter({routes});
+const router = createRouter({routes});
 router.beforeEach((to, from, next) => {
     if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
         document.title = to.meta.title;

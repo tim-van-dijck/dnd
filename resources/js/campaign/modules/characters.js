@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 export const Characters = {
     namespaced: true,
     state: {
@@ -87,9 +85,7 @@ export const Characters = {
             if (state.characters == null) {
                 state.characters = {data: []};
             }
-            let characterIndex = state.characters.data.findIndex((item) => {
-                return item.id == character.id;
-            });
+            const characterIndex = state.characters.data.findIndex((item) => item.id == character.id);
             if (characterIndex >= 0) {
                 state.characters[characterIndex] = character;
             } else {
@@ -97,14 +93,14 @@ export const Characters = {
             }
         },
         REMOVE_CHARACTER(state, character) {
-            let index = state.characters.data.findIndex((item) => item.id == character.id);
+            const index = state.characters.data.findIndex((item) => item.id == character.id);
             if (index) {
                 state.characters.splice(index, 1);
             }
         },
 
         SET_ERRORS(state, errors) {
-            Vue.set(state, 'errors', errors || {});
+            state.errors = errors || {};
         },
 
         SET_BACKGROUNDS(state, backgrounds) {
@@ -112,20 +108,20 @@ export const Characters = {
         },
         SET_CLASSES(state, classes) {
             if (classes) {
-                for (let charClass of classes) {
-                    Vue.set(state.classes, charClass.id, charClass);
+                for (const charClass of classes) {
+                    state.classes[charClass.id] = charClass;
                 }
             } else {
-                Vue.set(state, 'classes', {});
+                state.classes = {};
             }
         },
         SET_RACES(state, races) {
             if (races) {
-                for (let race of races) {
-                    Vue.set(state.races, race.id, race);
+                for (const race of races) {
+                    state.races[race.id] = race;
                 }
             } else {
-                Vue.set(state, 'races', {});
+                state.races = {};
             }
         },
     }

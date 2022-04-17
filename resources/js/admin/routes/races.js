@@ -1,4 +1,4 @@
-import RaceOverview from "../components/races/race-overview";
+import RaceOverview from "../components/races/race-overview/race-overview";
 import RaceDetails from "../components/races/race-detail";
 import RaceForm from "../components/races/race-form";
 

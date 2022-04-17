@@ -39,20 +39,22 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
+    import {useStore} from 'vuex';
 
     export default {
         name: "Navigation",
-        methods: {
-            logout() {
-                axios.post('/logout')
-                    .then(() => {
-                        document.location.href = '/';
-                    });
+        setup() {
+            const store = useStore()
+            const {user} = store
+            return {
+                logout() {
+                    axios.post('/logout')
+                        .then(() => {
+                            document.location.href = '/';
+                        });
+                },
+                user
             }
-        },
-        computed: {
-            ...mapState(['user'])
         }
     }
 </script>

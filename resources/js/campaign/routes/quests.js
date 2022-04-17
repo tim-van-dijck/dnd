@@ -1,6 +1,6 @@
 import QuestOverview from "../components/quests/quest-overview";
-import QuestForm from "../components/quests/quest-form";
-import Quest from "../components/quests/quest";
+import QuestForm from "../components/quests/quest-form/quest-form";
+import Quest from "../components/quests/quest/quest";
 
 export const QuestRoutes = [
     {

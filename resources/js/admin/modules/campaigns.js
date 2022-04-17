@@ -2,52 +2,51 @@ export const Campaigns = {
     namespaced: true,
     state: {
         campaigns: null,
-        userCampaigns: {},
-        errors: {}
+        userCampaigns: {}
     },
     actions: {
-        previous({commit,state}) {
+        previous({state}) {
             if (state.campaigns != null && state.campaigns.meta.current_page > 1) {
                 axios.get(`/admin/campaigns?page[number]=${state.campaigns.meta.current_page - 1}`)
                     .then((response) => {
-                        commit('SET_CAMPAIGNS', response.data);
+                        state.campaigns =  response.data
                     })
             }
         },
-        page({commit,state}, number) {
+        page({state}, number) {
             if (state.campaigns != null && number > 0 && number <= state.campaigns.meta.last_page)
                 axios.get(`/admin/campaigns?page[number]=${number}`)
                     .then((response) => {
-                        commit('SET_CAMPAIGNS', response.data);
+                        state.campaigns = response.data
                     })
         },
-        next({commit,state}) {
+        next({state}) {
             if (state.campaigns != null && state.campaigns.meta.current_page < state.campaigns.meta.last_page) {
                 axios.get(`/admin/campaigns?page[number]=${state.campaigns.meta.current_page + 1}`)
                     .then((response) => {
-                        commit('SET_CAMPAIGNS', response.data);
+                        state.campaigns = response.data
                     })
             }
         },
-        load({commit}) {
+        load({state}) {
             return axios.get(`/admin/campaigns`)
                 .then((response) => {
-                    commit('SET_CAMPAIGNS', response.data)
+                    state.campaigns = response.data
                 });
         },
-        loadForUser({commit, state}, userId) {
+        loadForUser({state}, userId) {
             if (state.userCampaigns.hasOwnProperty(userId)) {
                 return Promise.resolve(state.userCampaigns[userId]);
             }
             return axios.get(`/admin/campaigns?filters[user_id]=${userId}`)
                 .then((response) => {
-                    commit('SET_USER_CAMPAIGNS', {userId, campaigns: response.data.data})
+                    state.userCampaigns[userId] = response.data.data
                     return response.data.data;
                 });
         },
         find({state}, id) {
             if ((state.campaigns?.data || []).length > 0) {
-                let campaign = state.campaigns.data.find((item) => item.id === id);
+                const campaign = state.campaigns.data.find((item) => item.id === id);
                 if (campaign) {
                     return Promise.resolve(campaign);
                 }
@@ -57,17 +56,15 @@ export const Campaigns = {
                     return response.data;
                 });
         },
-        store({dispatch, commit}, data) {
+        store({dispatch}, data) {
             return axios.post(`/admin/campaigns`, data.campaign)
                 .then(() => {
-                    commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Campaign saved!', {root: true});
                 });
         },
-        update({dispatch, commit}, data) {
+        update({dispatch}, data) {
             return axios.put(`/admin/campaigns/${data.id}`, data.campaign)
                 .then(() => {
-                    commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Campaign saved!', {root: true});
                 });
         },
@@ -79,14 +76,6 @@ export const Campaigns = {
                             dispatch('Messages/success', 'Campaign successfully deleted!', {root: true});
                         });
                 })
-        }
-    },
-    mutations: {
-        SET_CAMPAIGNS(state, campaigns) {
-            state.campaigns = campaigns;
-        },
-        SET_USER_CAMPAIGNS(state, data) {
-            state.userCampaigns[data.userId] = data.campaigns;
         }
     },
     getters: {

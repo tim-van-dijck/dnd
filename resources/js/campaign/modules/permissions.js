@@ -4,18 +4,18 @@ export const Permissions = {
         permissions: {}
     },
     actions: {
-        fetch: ({state, commit}, data) => {
-            if (data.entity && data.id) {
-                if (!state.permissions.hasOwnProperty(data.entity) || !state.permissions[data.entity].hasOwnProperty(data.id)) {
-                    return axios.get(`/campaign/permissions/${data.entity}/${data.id}`)
+        fetch: ({state, commit}, {entity, id}) => {
+            if (entity && id) {
+                if (!state.permissions.hasOwnProperty(entity) || !state.permissions[entity].hasOwnProperty(id)) {
+                    return axios.get(`/campaign/permissions/${entity}/${id}`)
                         .then((response) => {
-                            let permissions = {};
-                            for (let index in response.data) {
+                            const permissions = {};
+                            for (const index in response.data) {
                                 if (index > 0) {
                                     permissions[index] = response.data[index];
                                 }
                             }
-                            commit('SET_PERMISSIONS', {id: data.id, entity: data.entity, permissions});
+                            commit('SET_PERMISSIONS', {id, entity, permissions});
                         })
                         .catch(() => {});
                 }

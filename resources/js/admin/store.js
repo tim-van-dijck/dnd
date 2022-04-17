@@ -3,12 +3,9 @@ import {Messages} from '../modules/messages';
 import {Races} from "./modules/races";
 import {Spells} from "./modules/spells";
 import {Users} from "./modules/users";
-import Vue from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
 
-Vue.use(Vuex);
-
-let store = new Vuex.Store({
+export const store = createStore({
     modules: {Campaigns, Messages, Races, Spells, Users},
     state: {
         campaign: {},
@@ -34,5 +31,3 @@ let store = new Vuex.Store({
         }
     }
 });
-
-export default store;

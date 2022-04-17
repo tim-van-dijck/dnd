@@ -1,7 +1,4 @@
-import CampaignOverview from './components/campaigns/campaign-overview';
-import CampaignForm from './components/campaigns/campaign-form';
-
-import VueRouter from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import NotFound from "../components/NotFound";
 import {RaceRoutes} from "./routes/races";
 import {UserRoutes} from "./routes/users";
@@ -20,16 +17,16 @@ const routes = [
     ...SpellRoutes,
 
     {
-        path: '*',
+        path: '/:pathMatch(.*)*',
         component: NotFound
     }
 ];
 
-const router = new VueRouter({routes});
+const router = createRouter({routes, history: createWebHistory()});
 router.beforeEach((to, from, next) => {
     if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
         document.title = to.meta.title;
     }
     next();
 });
-export default router;
+export {router};

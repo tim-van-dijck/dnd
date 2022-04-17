@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export const Journal = {
     namespaced: true,
     state: {
@@ -10,7 +8,7 @@ export const Journal = {
         load({state}) {
             axios.get('/campaign/journal')
                 .then((response) => {
-                    Vue.set(state, 'entries', response.data);
+                    state.entries = response.data;
                 })
         },
         find({commit}, entryId) {
@@ -23,28 +21,28 @@ export const Journal = {
             return axios.post('/campaign/journal', entry)
                 .then((response) => {
                     if (state.entries === null) {
-                        Vue.set(state, 'entries', [response.data]);
+                        state.entries = [response.data];
                     } else {
                         state.entries.push(response.data)
                     }
-                    Vue.set(state, 'errors', {});
+                    state.errors = {};
                     dispatch('Messages/success', 'Entry saved!', {root: true});
                 })
                 .catch((error) => {
-                    Vue.set(state, 'errors', error.response.data.errors || {});
+                    state.errors = error.response.data.errors || {};
                     dispatch('Messages/error', error.response.data.message, {root: true});
                 });
         },
         update({state, dispatch}, data) {
-            let payload = data.entry;
+            const payload = data.entry;
             payload._method = 'put';
             return axios.post(`/campaign/journal/${data.id}`, payload)
                 .then((response) => {
-                    let index = state.entries.findIndex(entry => entry.id === data.id);
+                    const index = state.entries.findIndex(entry => entry.id === data.id);
                     if (index) {
                         state.entries.splice(index, 1, response.data);
                     }
-                    Vue.set(state, 'errors', {});
+                    state.errors = {};
                     dispatch('Messages/success', 'Entry saved!', {root: true});
                 })
                 .catch((error) => {
@@ -62,13 +60,13 @@ export const Journal = {
             if (state.entries === null) {
                 return;
             }
-            let order = [];
-            for (let entry of state.entries) {
+            const order = [];
+            for (const entry of state.entries) {
                 order.push(entry.id);
             }
             axios.post('/campaign/journal/sort', {list: order})
                 .then(() => {
-                    for (let entry of state.entries) {
+                    for (const entry of state.entries) {
                         entry.order = order.find(item => item === entry.id)?.order;
                     }
                 })

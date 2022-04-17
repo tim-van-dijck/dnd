@@ -47,12 +47,11 @@ export const Quests = {
                     dispatch('Messages/success', 'Quest saved!', {root: true});
                 });
         },
-        update({commit, dispatch}, data) {
-            let payload = data.quest;
-            payload._method = 'put';
-            return axios.post(`/campaign/quests/${data.id}`, payload)
+        update({commit, dispatch}, {quest, id}) {
+            const payload = {...quest, _method: 'put'}
+            return axios.post(`/campaign/quests/${id}`, payload)
                 .then(() => {
-                    commit('SET_ERRORS', {});
+                    state.errors = {}
                     dispatch('Messages/success', 'Quest saved!', {root: true});
                 });
         },

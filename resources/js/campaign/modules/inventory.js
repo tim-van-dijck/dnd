@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export const Inventory = {
     namespaced: true,
     state: {
@@ -22,7 +20,7 @@ export const Inventory = {
             if (id && !existing) {
                 return axios.get(`/campaign/inventories/${id}`)
                     .then((response) => {
-                        Vue.set(state, 'characterInventories', [...state.characterInventories || [], response.data.data]);
+                        state.characterInventories = [...state.characterInventories || [], response.data.data];
                     });
             }
             return Promise.resolve(existing);
@@ -31,7 +29,7 @@ export const Inventory = {
             return axios.put(`/campaign/inventories/${payload.id}`, payload.input)
                 .then((response) => {
                     const index = state.characterInventories?.findIndex(inventory => inventory.id == payload.id);
-                    Vue.set(state.characterInventories, index, (response?.data?.data || {}));
+                    state.characterInventories[index] = (response?.data?.data || {});
                     dispatch('Messages/success', 'Inventory updated!', {root: true});
                     return state.characterInventories[index];
                 })
@@ -51,7 +49,7 @@ export const Inventory = {
                     } else {
                         inventory.items.push({...item, quantity})
                     }
-                    Vue.set(state.characterInventories, index, inventory)
+                    state.characterInventories[index] = inventory
                 });
         },
         remove({dispatch, getters, state}, payload) {
@@ -69,13 +67,13 @@ export const Inventory = {
                             inventory.items.splice(inventory.items.indexOf(existingItem), 1);
                         }
                     }
-                    Vue.set(state.characterInventories, index, inventory)
+                    state.characterInventories[index] = inventory
                 });
         },
         loadItems({state}, type) {
             return axios.get(`/campaign/items/${type}`)
                 .then((response) => {
-                    Vue.set(state.items, type, response.data);
+                    state.items[type] = response.data;
                 });
         }
     },

@@ -1,5 +1,4 @@
 import {generatePaginatedActions} from "../../generators/StateActionGenerator";
-import Vue from "vue";
 
 export const Races  = {
     namespaced: true,
@@ -13,13 +12,13 @@ export const Races  = {
         loadProficiencies({state}) {
             return axios.get('/admin/proficiencies')
                 .then((response) => {
-                    Vue.set(state, 'proficiencies', response.data.data)
+                    state.proficiencies = response.data.data
                 })
         },
         loadTraits({state}) {
             return axios.get('/admin/races/traits')
                 .then((response) => {
-                    Vue.set(state, 'traits', response.data.data)
+                    state.traits = response.data.data
                 })
         },
 

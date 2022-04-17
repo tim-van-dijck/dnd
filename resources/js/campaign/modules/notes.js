@@ -47,10 +47,9 @@ export const Notes = {
                     dispatch('Messages/success', 'Note saved!', {root: true});
                 });
         },
-        update({commit, dispatch}, data) {
-            let payload = data.note;
-            payload._method = 'put';
-            return axios.post(`/campaign/notes/${data.id}`, payload)
+        update({commit, dispatch}, {note, id}) {
+            const payload = {...note, _method: 'put'}
+            return axios.post(`/campaign/notes/${id}`, payload)
                 .then(() => {
                     commit('SET_ERRORS', {});
                     dispatch('Messages/success', 'Note saved!', {root: true});

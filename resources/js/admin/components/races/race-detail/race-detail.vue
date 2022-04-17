@@ -40,7 +40,9 @@
                                     <li v-for="ability in race.ability_bonuses.filter((item) => !item.optional)">
                                         {{ ability.ability }} +{{ ability.bonus }}
                                     </li>
-                                    <li v-if="race.optional_ability_bonuses > 0">{{ race.optional_ability_bonuses }} optional bonuses</li>
+                                    <li v-if="race.optional_ability_bonuses > 0">{{ race.optional_ability_bonuses }}
+                                        optional bonuses
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -48,7 +50,9 @@
                             <b>Proficiencies</b>
                             <div>
                                 <ul class="uk-list">
-                                    <li v-for="proficiency in race.proficiencies">{{ proficiency.name }}<template v-if="proficiency.optional"> (optional)</template></li>
+                                    <li v-for="proficiency in race.proficiencies">{{ proficiency.name }}
+                                        <template v-if="proficiency.optional"> (optional)</template>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -56,8 +60,12 @@
                             <b>Languages</b>
                             <div>
                                 <ul class="uk-list">
-                                    <li v-for="language in race.languages.filter(item => !item.optional)">{{ language.name }}</li>
-                                    <li v-if="race.optional_languages > 0">{{ race.optional_languages }} optional languages</li>
+                                    <li v-for="language in race.languages.filter(item => !item.optional)">
+                                        {{ language.name }}
+                                    </li>
+                                    <li v-if="race.optional_languages > 0">{{ race.optional_languages }} optional
+                                        languages
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -84,23 +92,27 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { onMounted, reactive } from "vue";
+
 export default {
     name: "race-detail",
     props: ['id'],
-    data() {
+    setup(props) {
+        const store = useStore()
+
+        const state = reactive({
+            race: null,
+            setRace(race) {
+                this.race = race
+            }
+        })
+
+        onMounted(() => store.dispatch('Races/find', props.id).then(state.setRace))
+
         return {
-            race: null
+            race: state.race
         }
-    },
-    created() {
-        this.$store.dispatch('Races/find', this.id)
-            .then((race) => {
-                this.race = race;
-            })
     }
 }
 </script>
-
-<style scoped>
-
-</style>
