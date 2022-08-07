@@ -12,7 +12,9 @@
                     <ul v-if="logs && logs.length > 0" class="uk-list uk-list-divider">
                         <li v-for="log in logs">
                             <span v-html="log.message"></span>
-                            <span class="uk-display-inline-block uk-align-right uk-text-italic">({{ log.created_at|date }})</span>
+                            <span class="uk-display-inline-block uk-align-right uk-text-italic">({{
+                                    formatDate(log.created_at)
+                                }})</span>
                         </li>
                     </ul>
                     <div v-else class="uk-alert uk-alert-primary">
@@ -25,15 +27,20 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
+import { useStore } from 'vuex';
+import { formatDate } from "../../libs/formatting/date";
+import { onMounted } from "vue";
 
-    export default {
-        name: "Dashboard",
-        mounted() {
-            this.$store.dispatch('loadLogs');
-        },
-        computed: {
-            ...mapState(['campaign', 'logs'])
+export default {
+    name: "Dashboard",
+    setup() {
+        const store = useStore()
+        onMounted(() => store.dispatch('loadLogs'))
+        return {
+            campaign: store.state.campaign,
+            formatDate,
+            logs: store.state.logs
         }
     }
+}
 </script>

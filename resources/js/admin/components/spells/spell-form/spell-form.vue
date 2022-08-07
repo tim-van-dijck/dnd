@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{ ui.title }}</h1>
+        <h1>{{ ui.title.value }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="state.spell" class="uk-form-stacked" uk-grid>
@@ -15,7 +15,7 @@
                         <div class="uk-margin">
                             <label for="level" class="uk-form-label"
                                    :class="{'uk-text-danger': state.errors.hasOwnProperty('level')}">Level*</label>
-                            <select id="level" name="level" type="text" class="uk-input"
+                            <select id="level" name="level" class="uk-input"
                                     :class="{'uk-form-danger': state.errors.hasOwnProperty('level')}"
                                     v-model="state.spell.level">
                                 <option value="">- Choose a level -</option>
@@ -28,7 +28,7 @@
                         <div class="uk-margin">
                             <label for="school" class="uk-form-label"
                                    :class="{'uk-text-danger': state.errors.hasOwnProperty('school')}">School*</label>
-                            <select id="school" name="school" type="text" class="uk-input"
+                            <select id="school" name="school" class="uk-input"
                                     :class="{'uk-form-danger': state.errors.hasOwnProperty('school')}"
                                     v-model="state.spell.school">
                                 <option value="">- Choose a school -</option>
@@ -114,8 +114,10 @@
                                       v-model="state.spell.higher_levels"></textarea>
                         </div>
                     </div>
+
                     <p class="uk-margin">
-                        <button class="uk-button uk-button-primary" @click.prevent="state.save">Save</button>
+                        <button class="uk-button uk-button-primary uk-margin-right" @click.prevent="state.save">Save
+                        </button>
                         <router-link class="uk-button uk-button-danger" :to="{name: 'spells'}">
                             Cancel
                         </router-link>
@@ -130,31 +132,33 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import HtmlEditor from "../../../../components/partial/html-editor";
-import { onMounted } from "vue";
-import { state } from "./spell-form.state";
+import { computed, onMounted } from 'vue'
+import HtmlEditor from '../../../../components/partial/html-editor'
+import { useSpellStore } from '../../../stores/spells'
+import { useState } from './spell-form.state'
 
 export default {
-    name: "spell-form",
+    name: 'spell-form',
     props: ['id'],
     components: { HtmlEditor },
     setup(props) {
-        const store = useStore()
+        const store = useSpellStore()
+        const { state } = useState(store)
         onMounted(() => {
             if (props.id) {
-                store.dispatch('Spells/find', props.id)
+                store.find(props.id)
                     .then((spell) => {
-                        spell.components = spell.components.split(',');
-                        state.spell = spell
-                    });
+                        spell.components = spell.components.split(',')
+                        state.setSpell(spell)
+                    })
             }
         })
+        const title = computed(() => props.id ? `Edit ${state.spell ? state.spell.name : 'spell'}` : 'Add spell')
 
         return {
             state,
             ui: {
-                title: () => props.id ? `Edit ${state.spell ? state.spell.name : 'spell'}` : 'Add spell'
+                title
             }
         }
     }

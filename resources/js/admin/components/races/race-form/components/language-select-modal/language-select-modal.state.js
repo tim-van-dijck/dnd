@@ -1,21 +1,19 @@
-import { reactive } from "vue";
-import { useStore } from "vuex";
+import { reactive } from 'vue'
 
-export const useState = (ctx, ui) => {
-    const store = useStore()
-    return {
-        languages: store.languages,
-        language: reactive(emptyLanguage),
+export const useState = (store, ctx, ui) => {
+    return reactive({
+        language: reactive({ ...emptyLanguage }),
         reset() {
-            state.language = emptyLanguage
+            this.language = { ...emptyLanguage }
         },
         save() {
-            if (state.language.id > 0) {
-                ctx.emit('input', { ...state.language })
+            if (this.language.id > 0) {
+                ctx.emit('input', { ...this.language })
+                this.reset()
                 ui.close()
             }
-        },
-    }
+        }
+    })
 }
 
 const emptyLanguage = {

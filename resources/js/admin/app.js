@@ -1,17 +1,19 @@
-require('../bootstrap');
+require('../bootstrap')
 
-import { createApp } from 'vue';
-import {router} from './router';
-import {store} from './store';
+import { createPinia } from 'pinia/dist/pinia.esm-browser'
+
+import tinymce from 'tinymce'
+import { createApp } from 'vue'
 import Admin from './components/Admin'
+import { router } from './router'
 
-
-window.copy = (item) => JSON.parse(JSON.stringify(item));
+window.tinymce = tinymce
 
 window.onload = () => {
-    const app = createApp(Admin);
+    const app = createApp(Admin)
     app
         .use(router)
-        .use(store)
-        .mount('#admin-app')
-};
+        .use(createPinia())
+
+    router.isReady().then(() => app.mount('#admin-app'))
+}

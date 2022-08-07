@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Campaign\Permission;
 use App\Models\Campaign\Role;
 use App\Models\Campaign\UserPermission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,9 +21,13 @@ use Illuminate\Support\Carbon;
  * @property string email
  * @property string password
  * @property boolean admin
+ * @property boolean active
  * @property string remember_token
  * @property string invite_code
  * @property Carbon|string email_verified_at
+ *
+ * @property Role[]|Collection roles
+ * @property Permission[]|Collection permissions
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -32,7 +38,9 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'active' => 'boolean',
+        'admin' => 'boolean',
+        'email_verified_at' => 'datetime'
     ];
 
     protected $fillable = [

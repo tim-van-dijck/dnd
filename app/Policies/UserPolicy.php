@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Campaign\Quest;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -13,7 +12,7 @@ class UserPolicy
 
     public function before($user, $ability)
     {
-        if ($user->admin) {
+        if ($user->admin && $user->active) {
             return true;
         }
     }

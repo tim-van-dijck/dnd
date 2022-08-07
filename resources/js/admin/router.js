@@ -1,32 +1,27 @@
-import {createRouter, createWebHistory} from "vue-router";
-import NotFound from "../components/NotFound";
-import {RaceRoutes} from "./routes/races";
-import {UserRoutes} from "./routes/users";
-import {SpellRoutes} from "./routes/spells";
-import {CampaignRoutes} from "./routes/campaigns";
+import { createRouter, createWebHistory } from 'vue-router'
+import NotFound from '../components/NotFound'
+import { CampaignRoutes } from './routes/campaigns'
+import { ClassRoutes } from './routes/classes'
+import { RaceRoutes } from './routes/races'
+import { SpellRoutes } from './routes/spells'
+import { UserRoutes } from './routes/users'
 
 const routes = [
-    {
-        path: '/',
-        redirect: '/campaigns'
-    },
-
     ...CampaignRoutes,
+    ...ClassRoutes,
     ...UserRoutes,
     ...RaceRoutes,
     ...SpellRoutes,
 
     {
+        path: '/',
+        redirect: { name: 'campaigns' }
+    },
+    {
         path: '/:pathMatch(.*)*',
         component: NotFound
     }
-];
+]
 
-const router = createRouter({routes, history: createWebHistory()});
-router.beforeEach((to, from, next) => {
-    if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
-        document.title = to.meta.title;
-    }
-    next();
-});
-export {router};
+
+export const router = createRouter({ routes, history: createWebHistory('/admin/') })

@@ -1,6 +1,7 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { VueLoaderPlugin } = require("vue-loader");
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
+const Webpack = require('webpack')
 
 module.exports = [
     {
@@ -8,7 +9,7 @@ module.exports = [
         mode: process.env.NODE_ENV,
         entry: {
             admin: './resources/js/admin/app.js',
-            campaign: './resources/js/campaign/app.js',
+            campaign: './resources/js/campaign/app.js'
         },
         resolve: {
             alias: {
@@ -21,6 +22,10 @@ module.exports = [
         },
         plugins: [
             new VueLoaderPlugin(),
+            new Webpack.DefinePlugin({
+                __VUE_OPTIONS_API__: false,
+                __VUE_PROD_DEVTOOLS__: false
+            })
         ],
         module: {
             rules: [
@@ -43,10 +48,10 @@ module.exports = [
         name: 'scss',
         mode: process.env.NODE_ENV,
         entry: {
-            app: path.join(__dirname, 'resources/sass/app.scss'),
+            app: path.join(__dirname, 'resources/sass/app.scss')
         },
         plugins: [
-            new MiniCssExtractPlugin({ filename: "[name].css" }),
+            new MiniCssExtractPlugin({ filename: '[name].css' })
         ],
         module: {
             rules: [
@@ -80,5 +85,5 @@ module.exports = [
         }
     }
 
-];
+]
 // module.exports.parallelism = 2;

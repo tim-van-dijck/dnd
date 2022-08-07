@@ -3,23 +3,21 @@
 namespace App\Http\Controllers\Campaign;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CurrentUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Campaign\Role;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use App\Services\AuthService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    /**
-     * @param UserRepository $userRepository
-     * @param Request $request
-     * @return mixed
-     */
-    public function index(UserRepository $userRepository, Request $request)
+    public function index(UserRepository $userRepository, Request $request): AnonymousResourceCollection
     {
         $page = $request->query('page');
         $users = $userRepository->getByCampaign(Session::get('campaign_id'), $page['number'] ?? 1, $page['size'] ?? 10);
@@ -27,11 +25,9 @@ class UserController extends Controller
     }
 
     /**
-     * @param UserRepository $userRepository
-     * @param Request $request
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    public function invite(UserRepository $userRepository, Request $request)
+    public function invite(UserRepository $userRepository, Request $request): void
     {
         $campaignId = Session::get('campaign_id');
         $roles = implode(',', Role::where('campaign_id', $campaignId)->get('id')->pluck('id')->toArray());
@@ -44,13 +40,10 @@ class UserController extends Controller
     }
 
     /**
-     * @param UserRepository $userRepository
-     * @param Request $request
-     * @param User $user
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
-    public function update(UserRepository $userRepository, Request $request, User $user)
+    public function update(UserRepository $userRepository, Request $request, User $user): void
     {
         $this->authorize('update', $user);
         $campaignId = Session::get('campaign_id');
@@ -62,20 +55,13 @@ class UserController extends Controller
         $userRepository->updateRole($campaignId, $user, $request->input('role'));
     }
 
-    public function destroy(User $user)
+    public function destroy(User $user): void
     {
         $user->revokeRoles(Session::get('campaign_id'));
     }
 
-    public function me()
+    public function me(): CurrentUserResource
     {
-        $permissions = AuthService::campaignPermissions(Session::get('campaign_id'));
-        return response()->json([
-            'id' => Auth::user()->id,
-            'name' => Auth::user()->name,
-            'email' => Auth::user()->email,
-            'permissions' => $permissions,
-            'roles' => Auth::user()->roles
-        ]);
+        return new CurrentUserResource(Auth::user());
     }
 }

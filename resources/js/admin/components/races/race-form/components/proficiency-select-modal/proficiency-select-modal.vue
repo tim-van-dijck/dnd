@@ -9,7 +9,7 @@
                 <div class="uk-margin">
                     <select name="proficiency" id="proficiency" class="uk-select" v-model="state.proficiency.id">
                         <option :value="0">- Choose a proficiency -</option>
-                        <optgroup v-for="(options, type) in state.proficiencyOptions" :label="type">
+                        <optgroup v-for="(options, type) in proficiencyOptions" :label="type">
                             <option v-for="option in options" :value="option.id"
                                     :disabled="selected.includes(option.id)">{{ option.name }}
                             </option>
@@ -34,13 +34,14 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import UIKit from "uikit";
-import { onMounted } from "vue";
-import { useState } from "./proficiency-select-modal.state";
+import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
+import UIKit from 'uikit'
+import { computed, onMounted } from 'vue'
+import { useRaceStore } from '../../../../../stores/races'
+import { useState } from './proficiency-select-modal.state'
 
 export default {
-    name: "proficiency-select-modal",
+    name: 'proficiency-select-modal',
     props: {
         selected: {
             type: Array,
@@ -48,14 +49,28 @@ export default {
         }
     },
     setup(props, ctx) {
-        const store = useStore()
+        const store = useRaceStore()
+        const { proficiencies } = storeToRefs(store)
         const ui = {
             close: () => UIKit.modal('#proficiency-select-modal').hide()
         }
-        const state = useState(ctx, ui)
-        onMounted(() => store.dispatch('Races/loadProficiencies'))
+        const state = useState(proficiencies, ctx, ui)
+        onMounted(() => store.loadProficiencies())
 
-        return { state, selected: props.selected }
+        const proficiencyOptions = computed(() => {
+            const proficiencyOptions = {}
+            for (const proficiency of (
+                proficiencies.value || []
+            )) {
+                if (!proficiencyOptions.hasOwnProperty(proficiency.type)) {
+                    proficiencyOptions[proficiency.type] = []
+                }
+                proficiencyOptions[proficiency.type].push(proficiency)
+            }
+            return proficiencyOptions
+        })
+
+        return { state, proficiencyOptions }
     }
 }
 </script>

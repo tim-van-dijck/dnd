@@ -12,82 +12,49 @@ class CampaignPolicy
 
     public function before($user, $ability)
     {
-        if ($user->admin) {
+        if ($user->admin && $user->active) {
             return true;
         }
     }
 
-    /**
-     * Determine whether the user can view any app models campaign campaigns.
-     *
-     * @param  User $user
-     * @return mixed
-     */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can view the app models campaign campaign.
-     *
-     * @param  User $user
-     * @param  Campaign $campaign
-     * @return mixed
-     */
-    public function view(User $user, Campaign $campaign)
+    public function view(User $user, Campaign $campaign): bool
     {
         return $user->roles()->where('campaign_id', $campaign->id)->count() > 0;
     }
 
-    /**
-     * Determine whether the user can create app models campaign campaigns.
-     *
-     * @param  User $user
-     * @return mixed
-     */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can update the app models campaign campaign.
-     *
-     * @param  User $user
-     * @param  Campaign $campaign
-     * @return mixed
-     */
-    public function update(User $user, Campaign $campaign)
+    public function update(User $user, Campaign $campaign): bool
     {
         return $user->roles()
-            ->join('permission_role', 'roles.id', '=', 'permission_role.role_id')
-            ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
-            ->where([
-                'roles.campaign_id' => $campaign->id,
-                'permissions.name' => 'campaign',
-                'permission_role.edit' => 1
-            ])
-            ->count() > 0;
+                ->join('permission_role', 'roles.id', '=', 'permission_role.role_id')
+                ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
+                ->where([
+                    'roles.campaign_id' => $campaign->id,
+                    'permissions.name' => 'campaign',
+                    'permission_role.edit' => 1
+                ])
+                ->count() > 0;
     }
 
-    /**
-     * Determine whether the user can delete the app models campaign campaign.
-     *
-     * @param  User $user
-     * @param  Campaign $campaign
-     * @return mixed
-     */
-    public function delete(User $user, Campaign $campaign)
+    public function delete(User $user, Campaign $campaign): bool
     {
         return $user->roles()
-            ->join('permission_role', 'role.id', '=', 'permission_role.role_id')
-            ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
-            ->where([
-                'roles.campaign_id' => $campaign->id,
-                'permissions.name' => 'campaign',
-                'permission_role.delete' => 1
-            ])
-            ->count() > 0;
+                ->join('permission_role', 'role.id', '=', 'permission_role.role_id')
+                ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
+                ->where([
+                    'roles.campaign_id' => $campaign->id,
+                    'permissions.name' => 'campaign',
+                    'permission_role.delete' => 1
+                ])
+                ->count() > 0;
     }
 }

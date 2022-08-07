@@ -5,66 +5,67 @@ export const Notes = {
         notes: null
     },
     actions: {
-        previous({commit,state}) {
+        previous({ commit, state }) {
             if (state.notes != null && state.notes.meta.current_page > 1) {
-                axios.get(`/campaign/notes?page[number]=${state.notes.meta.current_page - 1}`)
+                axios.get(`/api/campaign/notes?page[number]=${state.notes.meta.current_page - 1}`)
                     .then((response) => {
-                        commit('SET_NOTES', response.data);
+                        commit('SET_NOTES', response.data)
                     })
             }
         },
-        page({commit,state}, number) {
-            if (state.notes != null && number > 0 && number <= state.notes.meta.last_page)
-                axios.get(`/campaign/notes?page[number]=${number}`)
+        page({ commit, state }, number) {
+            if (state.notes != null && number > 0 && number <= state.notes.meta.last_page) {
+                axios.get(`/api/campaign/notes?page[number]=${number}`)
                     .then((response) => {
-                        commit('SET_NOTES', response.data);
+                        commit('SET_NOTES', response.data)
                     })
+            }
         },
-        next({commit,state}) {
+        next({ commit, state }) {
             if (state.notes != null && state.notes.meta.current_page < state.notes.meta.last_page) {
-                axios.get(`/campaign/notes?page[number]=${state.notes.meta.current_page + 1}`)
+                axios.get(`/api/campaign/notes?page[number]=${state.notes.meta.current_page + 1}`)
                     .then((response) => {
-                        commit('SET_NOTES', response.data);
+                        commit('SET_NOTES', response.data)
                     })
             }
         },
-        load({commit}) {
-            axios.get('/campaign/notes')
+        load({ commit }) {
+            axios.get('/api/campaign/notes')
                 .then((response) => {
-                    commit('SET_NOTES', response.data);
-                });
-        },
-        find({}, id) {
-            return axios.get(`/campaign/notes/${id}`)
-                .then((response) => {
-                    return response.data;
+                    commit('SET_NOTES', response.data)
                 })
         },
-        store({commit, dispatch}, note) {
-            return axios.post('/campaign/notes', note)
-                .then(() => {
-                    commit('SET_ERRORS', {});
-                    dispatch('Messages/success', 'Note saved!', {root: true});
-                });
+        find({}, id) {
+            return axios.get(`/api/campaign/notes/${id}`)
+                .then((response) => {
+                    return response.data
+                })
         },
-        update({commit, dispatch}, {note, id}) {
-            const payload = {...note, _method: 'put'}
-            return axios.post(`/campaign/notes/${id}`, payload)
+        store({ commit, dispatch }, note) {
+            return axios.post('/api/campaign/notes', note)
                 .then(() => {
-                    commit('SET_ERRORS', {});
-                    dispatch('Messages/success', 'Note saved!', {root: true});
-                });
+                    commit('SET_ERRORS', {})
+                    dispatch('Messages/success', 'Note saved!', { root: true })
+                })
         },
-        destroy({dispatch}, note) {
-            return axios.delete(`/campaign/notes/${note.id}`)
+        update({ commit, dispatch }, { note, id }) {
+            const payload = { ...note, _method: 'put' }
+            return axios.post(`/api/campaign/notes/${id}`, payload)
                 .then(() => {
-                    dispatch('Messages/success', 'Note successfully deleted!', {root: true});
+                    commit('SET_ERRORS', {})
+                    dispatch('Messages/success', 'Note saved!', { root: true })
+                })
+        },
+        destroy({ dispatch }, note) {
+            return axios.delete(`/api/campaign/notes/${note.id}`)
+                .then(() => {
+                    dispatch('Messages/success', 'Note successfully deleted!', { root: true })
                 })
         }
     },
     mutations: {
         SET_ERRORS(state, errors) {
-            state.errors = errors;
+            state.errors = errors
         },
         SET_NOTES(state, notes) {
             state.notes = notes;

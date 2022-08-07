@@ -13,8 +13,9 @@
                         <div v-if="searchVisible" class="results uk-background-muted">
                             <ul class="uk-list uk-margin-remove">
                                 <li v-for="result in searchResults">
-                                    <div class="search-result uk-link-text uk-padding-small uk-text-secondary uk-display-block"
-                                         @click="navigate(result.to)">
+                                    <div
+                                        class="search-result uk-link-text uk-padding-small uk-text-secondary uk-display-block"
+                                        @click="navigate(result.to)">
                                         <h5 v-html="result.label"></h5>
                                         <p>{{ result.type }}</p>
                                     </div>
@@ -48,7 +49,7 @@
                 </div>
             </aside>
         </navigation>
-        <messages></messages>
+        <messages/>
         <div id="content" uk-height-viewport="expand: true">
             <div class="uk-container uk-container-expand">
                 <router-view></router-view>
@@ -64,12 +65,13 @@
 </template>
 
 <script>
-import Messages from "@components/partial/messages";
-import HeaderNavbar from "@components/layout/header-navbar";
-import Navigation from "./layout/navigation";
-import { debounce } from "lodash";
+import HeaderNavbar from '@components/layout/header-navbar'
+import Messages from '@components/layout/messages'
+import { debounce } from 'lodash'
+import Navigation from './layout/navigation'
+
 export default {
-    name: "Campaign",
+    name: 'Campaign',
     data() {
         return {
             searchResults: [],
@@ -80,29 +82,29 @@ export default {
     methods: {
         search: debounce(function () {
             if (this.query.length === 0) {
-                this.searchResults = 0;
+                this.searchResults = 0
             }
             if (this.query.length >= 3) {
                 axios.get(`/campaign/search?query=${this.query}`)
                     .then((response) => {
                         this.searchResults = response.data.map((item) => {
-                            let to;
+                            let to
                             switch (item.type) {
                                 case 'location':
-                                    to = {name: 'location', params: {id: item.id}}
-                                    break;
+                                    to = { name: 'location', params: { id: item.id } }
+                                    break
                                 case 'note':
-                                    to = {name: 'note', params: {id: item.id}}
-                                    break;
+                                    to = { name: 'note', params: { id: item.id } }
+                                    break
                                 case 'npc':
-                                    to = {name: 'npc-detail', params: {id: item.id}}
-                                    break;
+                                    to = { name: 'npc-detail', params: { id: item.id } }
+                                    break
                                 case 'player':
-                                    to = {name: 'pc-detail', params: {id: item.id}}
-                                    break;
+                                    to = { name: 'pc-detail', params: { id: item.id } }
+                                    break
                                 case 'quest':
-                                    to = {name: 'quest', params: {id: item.id}}
-                                    break;
+                                    to = { name: 'quest', params: { id: item.id } }
+                                    break
                             }
                             return {
                                 id: item.id,
@@ -110,30 +112,30 @@ export default {
                                 to,
                                 type: item.type === 'player' ? 'Player Character' : item.type
                             }
-                        });
-                        this.searchVisible = this.searchResults.length > 0;
-                    });
+                        })
+                        this.searchVisible = this.searchResults.length > 0
+                    })
             }
         }, 500),
         navigate(to) {
-            this.query = '';
-            this.searchVisible = false;
+            this.query = ''
+            this.searchVisible = false
             if (this.$route.name === to.name) {
                 for (const index in this.$route.params) {
                     if (this.$route.params[index] != to.params[index]) {
-                        return this.$router.push(to);
+                        return this.$router.push(to)
                     }
                 }
             } else {
-                return this.$router.push(to);
+                return this.$router.push(to)
             }
         }
     },
     watch: {
         query() {
-            this.search();
+            this.search()
         }
     },
-    components: {Navigation, HeaderNavbar, Messages}
+    components: { Navigation, HeaderNavbar, Messages }
 }
 </script>

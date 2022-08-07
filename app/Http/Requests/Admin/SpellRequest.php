@@ -10,7 +10,7 @@ class SpellRequest extends FormRequest
 {
     public function authorize()
     {
-        return Auth::user()->admin;
+        return Auth::user()->admin && Auth::user()->active;
     }
 
     public function rules()

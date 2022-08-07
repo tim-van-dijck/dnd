@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{ ui.title }}</h1>
+        <h1>{{ ui.title.value }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="state.race" class="uk-form-stacked" uk-grid>
@@ -15,7 +15,7 @@
                         <div class="uk-margin">
                             <label for="size" class="uk-form-label"
                                    :class="{'uk-text-danger': state.errors.hasOwnProperty('size')}">Size*</label>
-                            <select id="size" name="size" type="text" class="uk-input"
+                            <select id="size" name="size" class="uk-input"
                                     :class="{'uk-form-danger': state.errors.hasOwnProperty('size')}"
                                     v-model="state.race.size">
                                 <option value="">- Choose a size -</option>
@@ -49,10 +49,10 @@
                             <input id="optional_ability_bonuses" class="uk-input" type="number" min="0"
                                    v-model="state.race.optional_ability_bonuses">
                         </div>
-                        <ul v-if="state.selected.ability_bonuses.length > 0">
-                            <li class="uk-flex uk-flex-between" v-for="ability in state.selected.ability_bonuses">
+                        <ul v-if="ui.selected.value.ability_bonuses.length > 0">
+                            <li class="uk-flex uk-flex-between" v-for="ability in ui.selected.value.ability_bonuses">
                                 <span>
-                                    {{ ability.id }} +{{ ability.bonus }}
+                                    {{ ability.ability }} +{{ ability.bonus }}
                                     <template v-if="ability.optional">&nbsp;<em>(optional)</em></template>
                                 </span>
                                 <button class="uk-button uk-button-link uk-text-danger"
@@ -72,8 +72,8 @@
                             <input id="optional_proficiencies" class="uk-input" type="number" min="0"
                                    v-model="state.race.optional_proficiencies">
                         </div>
-                        <ul v-if="state.selected.proficiencies.length > 0">
-                            <li class="uk-flex uk-flex-between" v-for="proficiency in state.selected.proficiencies">
+                        <ul v-if="ui.selected.value.proficiencies.length > 0">
+                            <li class="uk-flex uk-flex-between" v-for="proficiency in ui.selected.value.proficiencies">
                                 <span>
                                     {{ proficiency.name }}
                                     <template v-if="proficiency.optional">&nbsp;<em>(optional)</em></template>
@@ -97,8 +97,8 @@
                             <input id="optional_languages" class="uk-input" type="number" min="0"
                                    v-model="state.race.optional_languages">
                         </div>
-                        <ul v-if="state.selected.languages.length > 0">
-                            <li class="uk-flex uk-flex-between" v-for="language in state.selected.languages">
+                        <ul v-if="ui.selected.value.languages.length > 0">
+                            <li class="uk-flex uk-flex-between" v-for="language in ui.selected.value.languages">
                                 <span>
                                     {{ language.name }}
                                     <template v-if="language.optional">&nbsp;<em>(optional)</em></template>
@@ -125,8 +125,8 @@
                     </div>
                     <div class="uk-margin uk-width">
                         <h2>Race Traits</h2>
-                        <ul v-if="state.selected.traits.length > 0">
-                            <li class="uk-flex uk-flex-between" v-for="(trait, index) in state.selected.traits">
+                        <ul v-if="ui.selected.value.traits.length > 0">
+                            <li class="uk-flex uk-flex-between" v-for="(trait, index) in ui.selected.value.traits">
                                 <span :title="trait.description">{{ trait.name }}</span>
                                 <button class="uk-button uk-button-link uk-text-danger"
                                         @click.prevent="state.removeTrait(index)">
@@ -135,10 +135,11 @@
                             </li>
                         </ul>
                         <trait-select-modal :selected="state.race.traits.map(trait => trait.id)"
-                                            @input="state.race.traits.push($event)"/>
+                                            @input="state.addTrait($event)"/>
                     </div>
                     <p class="uk-margin">
-                        <button class="uk-button uk-button-primary" @click.prevent="state.save">Save</button>
+                        <button class="uk-button uk-button-primary uk-margin-right" @click.prevent="state.save">Save
+                        </button>
                         <router-link class="uk-button uk-button-danger" :to="{name: 'races'}">
                             Cancel
                         </router-link>
@@ -154,84 +155,71 @@
 
 <script>
 
-import HtmlEditor from "../../../../components/partial/html-editor";
-import { mapState, useStore } from "vuex";
-import LanguageSelectModal from "./components/language-select-modal";
-import ProficiencySelectModal from "./components/proficiency-select-modal/proficiency-select-modal";
-import AbilityBonusModal from "./components/ability-bonus-modal/ability-bonus-modal";
-import TraitSelectModal from "./components/trait-select-modal/trait-select-modal";
-import { onMounted } from "vue";
-import { useState } from "./race-form.state";
+import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
+import { computed, onMounted } from 'vue'
+import HtmlEditor from '../../../../components/partial/html-editor'
+import { useMainStore } from '../../../stores/main'
+import { useRaceStore } from '../../../stores/races'
+import AbilityBonusModal from './components/ability-bonus-modal/ability-bonus-modal'
+import LanguageSelectModal from './components/language-select-modal'
+import ProficiencySelectModal from './components/proficiency-select-modal/proficiency-select-modal'
+import TraitSelectModal from './components/trait-select-modal/trait-select-modal'
+import { useState } from './race-form.state'
 
 export default {
-    name: "race-form",
+    name: 'race-form',
     props: ['id'],
     components: { TraitSelectModal, AbilityBonusModal, ProficiencySelectModal, LanguageSelectModal, HtmlEditor },
     setup(props) {
-        const state = useState(props);
-        const store = useStore()
-        onMounted(() => store.dispatch('loadLanguages'))
+        const mainStore = useMainStore()
+        const store = useRaceStore()
+        const { proficiencies, traits } = storeToRefs(store)
+        const { languages } = storeToRefs(mainStore)
+        const state = useState(store, props)
 
-        return {
-            state,
-            ui: {
-                selected: () => (
-                    {
-                        ability_bonuses: state.race.ability_bonuses || [],
-                        languages: state.race.languages?.map((lang) => {
-                            const language = store.Races.state.languages.find(item => item.id === lang.id)
-                            return {
-                                ...lang,
-                                name: language.name
-                            }
-                        }) || [],
-                        proficiencies: state.race.proficiencies?.map((prof) => {
-                            const proficiency = store.Races.state.proficiencies.find(item => item.id === prof.id)
-                            return {
-                                ...prof,
-                                name: proficiency.name
-                            }
-                        }) || [],
-                        traits: state.race.traits.map((trait) => {
-                            if (trait.hasOwnProperty('id')) {
-                                const selected = store.Races.state.traits.find((item) => item.id === trait.id)
-                                return selected || trait;
-                            }
-                            return trait;
-                        })
-                    }
-                ),
-                title: () => props.id ? `Edit ${state.race ? state.race.name : 'race'}` : 'Add race'
-            }
-        }
-    },
-    computed: {
-        ...mapState(['languages']),
-        ...mapState('Races', ['proficiencies', 'traits']),
-        selected() {
-            return {
-                ability_bonuses: this.race.ability_bonuses || [],
-                languages: this.race.languages?.map((lang) => {
-                    const language = this.languages.find(item => item.id === lang.id)
+        const selected = computed(() => (
+            {
+                ability_bonuses: state.race.ability_bonuses || [],
+                languages: state.race.languages?.map((lang) => {
+                    const language = languages.value.find(item => item.id === lang.id) || {}
                     return {
                         ...lang,
                         name: language.name
                     }
                 }) || [],
-                proficiencies: this.race.proficiencies?.map((prof) => {
-                    const proficiency = this.proficiencies.find(item => item.id === prof.id)
+                proficiencies: state.race.proficiencies?.map((prof) => {
+                    const proficiency = proficiencies.value.find(item => item.id === prof.id)
                     return {
                         ...prof,
                         name: proficiency.name
                     }
                 }) || [],
-                traits: this.race.traits.map((trait) => {
+                traits: state.race.traits.map((trait) => {
                     if (trait.hasOwnProperty('id')) {
-                        const selected = this.traits.find((item) => item.id === trait.id)
-                        return selected || trait;
+                        const selected = traits.value.find((item) => item.id === trait.id)
+                        return selected || trait
                     }
-                    return trait;
+                    return trait
                 })
+            }
+        ))
+        const title = computed(() => state.race.id ? `Edit ${state.race.name || 'race'}` : 'Add race')
+
+        onMounted(() => {
+            mainStore.loadLanguages()
+            if (props.id) {
+                store.find(props.id)
+                    .then((race) => {
+                        state.setRace(race)
+                    })
+            }
+        })
+
+        return {
+            state,
+            ui: {
+                selected,
+                title
             }
         }
     }

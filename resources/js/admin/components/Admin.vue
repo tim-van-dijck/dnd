@@ -1,6 +1,6 @@
 <template>
     <div id="admin-app">
-        <header-navbar />
+        <header-navbar/>
         <navigation>
             <aside id="left-col" class="uk-light uk-visible@m">
                 <div class="left-logo uk-flex uk-flex-middle">
@@ -16,16 +16,15 @@
                 </div>
             </aside>
         </navigation>
-        <messages></messages>
+        <messages/>
         <div id="content" uk-height-viewport="expand: true">
             <div class="uk-container uk-container-expand">
-                <router-view>
-                    <div class="uk-section uk-section-default">
-                        <div class="uk-container padded">
-                            &nbsp;
-                        </div>
+                <div class="uk-section uk-section-default">
+                    <div class="uk-container padded">
+                        <router-view>
+                        </router-view>
                     </div>
-                </router-view>
+                </div>
                 <footer class="uk-section uk-section-small uk-text-center">
                     <hr>
                     <p class="uk-text-small uk-text-center">
@@ -38,12 +37,12 @@
 </template>
 
 <script>
-import Messages from "@components/layout/messages";
-import Navigation from "@admin/components/layout/navigation";
-import HeaderNavbar from "@components/layout/header-navbar";
+import Navigation from '@admin/components/layout/navigation'
+import HeaderNavbar from '@components/layout/header-navbar'
+import Messages from '@components/layout/messages'
 
 export default {
-    name: "Admin",
-    components: {HeaderNavbar, Navigation, Messages}
+    name: 'Admin',
+    components: { HeaderNavbar, Navigation, Messages }
 }
 </script>

@@ -1,5 +1,3 @@
-import UIKit from "uikit";
-
 export const ui = {
     actions: [
         {
@@ -10,7 +8,9 @@ export const ui = {
         {
             name: 'edit',
             icon: 'edit',
-            to: (row) => ({name: 'campaign-edit', params: {id: row.id}})
+            to: (row) => (
+                { name: 'campaign-edit', params: { id: row.id } }
+            )
         },
         {
             name: 'view',
@@ -27,11 +27,11 @@ export const ui = {
             name: 'admins',
             title: 'Admins',
             formatRaw(admins) {
-                const template = [];
+                const template = []
                 for (const admin of admins) {
-                    template.push(`<a href="/admin#/users/${admin.id}">${admin.name}</a>`);
+                    template.push(`<a href="/admin#/users/${admin.id}">${admin.name}</a>`)
                 }
-                return template.join('<br>');
+                return template.join('<br>')
             }
         }
     ]

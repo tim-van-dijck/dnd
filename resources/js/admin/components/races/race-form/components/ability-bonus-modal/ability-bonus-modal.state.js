@@ -1,32 +1,33 @@
-import { reactive } from "vue";
+import { reactive } from 'vue'
 
 export const useState = (ctx, ui) => {
-    return {
+    return reactive({
         abilities,
-        ability: reactive(emptyAbility),
+        ability: reactive({ ...emptyAbility }),
         reset() {
-            state.ability = emptyAbility
+            this.ability = { ...emptyAbility }
         },
         save() {
-            if (state.ability.id.length === 3) {
-                ctx.emit('input', { ...state.ability })
+            if (this.ability.ability.length === 3) {
+                ctx.emit('input', { ...this.ability })
+                this.reset()
                 ui.close()
             }
-        },
-    }
+        }
+    })
 }
 
 const abilities = [
-    { id: 'STR', name: 'Strength' },
-    { id: 'DEX', name: 'Dexterity' },
-    { id: 'CON', name: 'Constitution' },
-    { id: 'INT', name: 'Intelligence' },
-    { id: 'WIS', name: 'Wisdom' },
-    { id: 'CHA', name: 'Charisma' }
+    { ability: 'STR', name: 'Strength' },
+    { ability: 'DEX', name: 'Dexterity' },
+    { ability: 'CON', name: 'Constitution' },
+    { ability: 'INT', name: 'Intelligence' },
+    { ability: 'WIS', name: 'Wisdom' },
+    { ability: 'CHA', name: 'Charisma' }
 ]
 
 const emptyAbility = {
-    id: '',
+    ability: '',
     bonus: 1,
     optional: false
-};
+}

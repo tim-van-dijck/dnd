@@ -1,39 +1,30 @@
-require('../bootstrap');
+require('../bootstrap')
 
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex';
-import router from './router';
-import store from './store';
-import Campaign from "./components/Campaign";
-
-Vue.use(VueRouter);
-Vue.use(Vuex);
-
-
-window.copy = (item) => JSON.parse(JSON.stringify(item));
+import { createApp } from 'vue'
+import Campaign from './components/Campaign'
+import router from './router'
+import store from './store'
 
 window.onload = () => {
     if (document.getElementById('app')) {
         store.dispatch('loadCampaign')
             .catch((error) => {
                 if (error.response.status === 403) {
-                    document.location.href = '/';
+                    document.location.href = '/'
                 }
-            });
+            })
         store.dispatch('loadUser')
             .then(() => {
-                const vm = new Vue({
-                    el: '#app',
-                    render: (createElement => createElement(Campaign)),
-                    router,
-                    store
-                });
+                const app = createApp(Campaign)
+                app
+                    .use(router)
+                    .use(store)
+                    .mount('#app')
             })
             .catch((error) => {
                 if (error.response.status === 403) {
-                    document.location.href = '/';
+                    document.location.href = '/'
                 }
-            });
+            })
     }
 }

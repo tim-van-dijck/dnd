@@ -1,14 +1,15 @@
-import {confirmDelete} from "../../../modals";
-import {useStore} from "vuex";
+import { useModals } from '../../../modals'
 
-const store = useStore()
 
-export const state = {
-    campaigns: store.Campaigns.state.campaigns,
-    destroy: (campaign) => {
-        confirmDelete(
-            'campaign',
-            () => store.dispatch('Campaigns/destroy', campaign).then(() => store.dispatch('Campaigns/load'))
-        )
+export const useCampaignOverviewState = (store) => {
+    const { confirmDelete } = useModals()
+    return {
+        destroy: (campaign) => {
+            confirmDelete(
+                'campaign',
+                () => store.destroy(campaign).then(() => store.load())
+            )
+        }
     }
 }
+

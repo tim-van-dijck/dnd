@@ -13,7 +13,7 @@ class RolePolicy
 
     public function before($user, $ability)
     {
-        if ($user->admin) {
+        if ($user->admin && $user->active) {
             return true;
         }
     }

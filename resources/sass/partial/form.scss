@@ -3,6 +3,10 @@
   border-color: #f0506e;
 }
 
+i.fas.uk-form-icon {
+  display: inline-flex;
+}
+
 .uk-button-round {
   border-radius: 50%;
   width: 3em;
@@ -10,7 +14,8 @@
   line-height: 1em;
   padding: 0;
   text-align: center;
-  &>i[class^='fa'] {
+
+  & > i[class^='fa'] {
     font-size: 1.5em;
   }
 }
@@ -20,6 +25,7 @@
     height: 40px;
     border: 1px solid #e5e5e5;
   }
+
   .vs__dropdown-menu {
     border: 1px solid #e5e5e5;
     border-top-style: none;

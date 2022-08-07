@@ -1,6 +1,7 @@
-import Icons from 'uikit/dist/js/uikit-icons';
-import UIkit from 'uikit';
-UIkit.use(Icons);
+import UIkit from 'uikit'
+import Icons from 'uikit/dist/js/uikit-icons'
+
+UIkit.use(Icons)
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -8,19 +9,7 @@ UIkit.use(Icons);
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require('axios');
+window.axios = require('axios')
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-import Vue from "vue";
-
-Vue.filter('date', function (value) {
-    return Intl.DateTimeFormat('nl', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
-        .format(new Date(value));
-});
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+window.axios.defaults.headers.common['Authorization'] = `Bearer ${window.App.api_token}`

@@ -1,21 +1,18 @@
-import {Characters} from './modules/characters';
-import {Journal} from "./modules/journal";
-import {Inventory} from "./modules/inventory";
-import {Locations} from './modules/locations';
-import {Messages} from '../modules/messages';
-import {Notes} from './modules/notes';
-import {Permissions} from './modules/permissions';
-import {Quests} from './modules/quests';
-import {Roles} from './modules/roles';
-import {Spells} from "./modules/spells";
-import {Users} from './modules/users';
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex'
+import { Messages } from '../modules/messages'
+import { Characters } from './modules/characters'
+import { Inventory } from './modules/inventory'
+import { Journal } from './modules/journal'
+import { Locations } from './modules/locations'
+import { Notes } from './modules/notes'
+import { Permissions } from './modules/permissions'
+import { Quests } from './modules/quests'
+import { Roles } from './modules/roles'
+import { Spells } from './modules/spells'
+import { Users } from './modules/users'
 
-Vue.use(Vuex);
-
-let store = new Vuex.Store({
-    modules: {Characters, Inventory, Journal, Locations, Messages, Notes, Permissions, Quests, Roles, Spells, Users},
+export const store = createStore({
+    modules: { Characters, Inventory, Journal, Locations, Messages, Notes, Permissions, Quests, Roles, Spells, Users },
     state: {
         campaign: {},
         errors: {},
@@ -27,81 +24,67 @@ let store = new Vuex.Store({
         }
     },
     actions: {
-        loadCampaign({commit}) {
-            return axios.get('/campaign')
+        loadCampaign({ state }) {
+            return axios.get('/api/campaign')
                 .then((response) => {
-                    commit('SET_CAMPAIGN', response.data);
-                });
-        },
-        loadLanguages({commit}) {
-            return axios.get('/languages')
-                .then((response) => {
-                    commit('SET_LANGUAGES', response.data);
+                    state.campaign = response.data
                 })
         },
-        loadLogs({commit}) {
-            return axios.get('/campaign/logs')
+        loadLanguages({ state }) {
+            return axios.get('/api/languages')
                 .then((response) => {
-                    commit('SET_LOGS', response.data.data);
+                    state.languages = response.data
                 })
         },
-        loadUser({commit}) {
-            return axios.get('/campaign/me')
+        loadLogs({ state }) {
+            return axios.get('/api/campaign/logs')
                 .then((response) => {
-                    commit('SET_USER', response.data);
+                    state.logs = response.data.data
+                })
+        },
+        loadUser({ state }) {
+            return axios.get('/api/campaign/me')
+                .then((response) => {
+                    state.user = response.data
                 })
                 .catch((error) => {
-                    if ([401,403,404].includes(error.response.status)) {
-                        window.location = '/';
+                    if ([401, 403, 404].includes(error.response.status)) {
+                        window.location = '/'
                     }
-                });
+                })
         },
         logout({}) {
             axios.post('/logout')
                 .then(() => {
-                    document.location.href = '/';
-                });
-        }
-    },
-    mutations: {
-        SET_CAMPAIGN(state, campaign) {
-            state.campaign = campaign;
-        },
-        SET_LANGUAGES(state, languages) {
-            state.languages = languages
-        },
-        SET_LOGS(state, logs) {
-            state.logs = logs;
-        },
-        SET_USER(state, user) {
-            state.user = user;
+                    document.location.href = '/'
+                })
         }
     },
     getters: {
         can: state => (permission, entity, id = null) => {
             if (!state.user.permissions.hasOwnProperty(entity)) {
-                return false;
+                return false
             }
-            let permissions = state.user.permissions[entity];
+            const permissions = state.user.permissions[entity]
             if (permissions[permission]) {
-                return true;
+                return true
             }
             if (permissions.exceptions) {
                 if (id > 0) {
-                    return permissions.exceptions.hasOwnProperty(id) && permissions.exceptions[id][permission];
+                    return permissions.exceptions.hasOwnProperty(id) && permissions.exceptions[id][permission]
                 } else {
-                    return Object.keys(permissions.exceptions).length > 0;
+                    return Object.keys(permissions.exceptions).length > 0
                 }
             }
-            return false;
+            return false
         },
-        admin: state => {
-            return state.user.admin;
-        },
+        admin: state => state.user.admin,
         hasRole: state => (role) => {
-            return (state?.user?.roles || []).filter(item => item.id === role || item.name === role).length > 0;
+            return (
+                state?.user?.roles || []
+            ).filter(item => item.id === role || item.name === role).length > 0
         }
     }
-});
+})
 
-export default store;
+export default store

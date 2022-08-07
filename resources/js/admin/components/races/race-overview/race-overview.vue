@@ -6,10 +6,11 @@
                 <router-link class="uk-button uk-button-primary" :to="{name: 'race-create'}">
                     <i class="fas fa-plus"></i> Add race
                 </router-link>
-                <paginated-table :actions="ui.actions"
+                <paginated-table v-if="(races?.data?.length || 0) > 0"
+                                 :actions="ui.actions"
                                  :columns="ui.columns"
-                                 module="Races"
-                                 :records="state.races"
+                                 :records="races"
+                                 :store="store"
                                  @destroy="state.destroy"
                                  searchable/>
             </div>
@@ -18,20 +19,28 @@
 </template>
 
 <script>
-import PaginatedTable from "@components/partial/paginated-table";
-import { ui } from "./race-overview.ui";
-import { onMounted } from "vue";
-import { useStore } from "vuex";
+import PaginatedTable from '@components/partial/paginated-table'
+import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
+import { onMounted } from 'vue'
+import { useRaceStore } from '../../../stores/races'
+import { useState } from './race-overview.state'
+import { ui } from './race-overview.ui'
 
 export default {
-    name: "race-overview",
+    name: 'race-overview',
     components: { PaginatedTable },
     setup() {
-        const store = useStore()
-        onMounted(() => store.dispatch('Races/load'))
+        const store = useRaceStore()
+        const { races } = storeToRefs(store)
+        const { state } = useState(store)
+
+        onMounted(() => store.load())
+
         return {
+            races,
             state,
-            ui,
+            store,
+            ui
         }
     }
 }

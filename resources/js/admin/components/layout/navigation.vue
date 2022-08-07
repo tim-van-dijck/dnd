@@ -39,22 +39,16 @@
 </template>
 
 <script>
-    import {useStore} from 'vuex';
 
-    export default {
-        name: "Navigation",
-        setup() {
-            const store = useStore()
-            const {user} = store
-            return {
-                logout() {
-                    axios.post('/logout')
-                        .then(() => {
-                            document.location.href = '/';
-                        });
-                },
-                user
-            }
+import { useMainStore } from '../../stores/main'
+
+export default {
+    name: 'Navigation',
+    setup() {
+        const store = useMainStore()
+        return {
+            user: store.user
         }
     }
+}
 </script>

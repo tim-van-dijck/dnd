@@ -11,7 +11,6 @@ use App\Repositories\LogRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -68,9 +67,6 @@ class CampaignController extends Controller
         return redirect('/');
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function currentCampaign(): JsonResponse
     {
         /** @var Campaign $campaign */
@@ -85,37 +81,21 @@ class CampaignController extends Controller
         }
     }
 
-    /**
-     * @param Campaign $campaign
-     * @return View
-     */
     public function edit(Campaign $campaign): View
     {
         return view('campaigns.edit', ['campaign' => $campaign]);
     }
 
-    /**
-     * @param Request $request
-     * @param CampaignRepository $campaignRepository
-     * @param Campaign $campaign
-     * @return RedirectResponse
-     * @throws ValidationException
-     */
     public function update(Request $request, CampaignRepository $campaignRepository, Campaign $campaign): RedirectResponse
     {
         $this->validate($request, [
-           'name' => 'required|string',
-           'description' => 'string'
+            'name' => 'required|string',
+            'description' => 'string'
         ]);
         $campaignRepository->update($campaign, $request->input());
         return redirect()->route('campaigns.index');
     }
 
-    /**
-     * @param CampaignRepository $campaignRepository
-     * @param Campaign $campaign
-     * @return RedirectResponse
-     */
     public function destroy(CampaignRepository $campaignRepository, Campaign $campaign): RedirectResponse
     {
         $campaignRepository->destroy($campaign);

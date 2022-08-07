@@ -1,6 +1,6 @@
-import UserOverview from "../components/users/user-overview";
-import UserDetail from "../components/users/user-detail";
-import UserForm from "../components/users/user-form";
+import UserDetail from '../components/users/user-detail'
+import UserForm from '../components/users/user-form'
+import UserOverview from '../components/users/user-overview'
 
 export const UserRoutes = [
     {

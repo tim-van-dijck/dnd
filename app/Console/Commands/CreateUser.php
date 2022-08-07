@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Symfony\Component\Console\Input\InputOption;
 
 class CreateUser extends Command
 {
@@ -51,7 +50,6 @@ class CreateUser extends Command
         $admin = $this->option('admin', false);
 
         $user = new User();
-        $user->admin = 1;
         $user->name = $name;
         $user->email = $email;
         $user->password = bcrypt($password);

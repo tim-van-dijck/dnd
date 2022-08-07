@@ -1,36 +1,45 @@
-import { reactive } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useMessageStore } from '../../../../stores/messages'
 
-const router = useRouter();
-const store = useStore();
+export const useState = (store) => {
+    const router = useRouter()
 
-export const useState = (props) => {
     return reactive({
-        id: props.id,
         errors: {},
         race: emptyRace,
+        setRace(race) {
+            this.race = { ...race }
+        },
+        addTrait(trait) {
+            this.race.traits = [...this.race.traits, trait]
+        },
+        removeTrait(index) {
+            if (this.race.traits.hasOwnProperty(index)) {
+                this.race.traits?.splice(index, 1)
+            }
+        },
         sizes,
         save() {
-            store.dispatch(`Races/${this.id > 0 ? 'update' : 'store'}`, { id: this.id || null, race: this.race })
+            const { id, ...race } = this.race
+            race.traits = race.traits.map((trait) => trait.id ? { id: trait.id } : trait)
+
+            const promise = id ? store.update({ id, race }) : store.store(race)
+            promise
                 .then(() => {
-                    router.push({ name: 'races' });
+                    router.push({ name: 'races' })
                     this.errors = {}
                 })
                 .catch((exception) => {
-                    this.errors = exception.response.data.errors;
-                    store.dispatch('Messages/error', exception.response.data.message, { root: true });
-                });
+                    this.errors = exception.response.data.errors
+                    const messages = useMessageStore()
+                    messages.error(exception.response.data.message)
+                })
         },
         remove(type, id) {
             const index = this.race?.[type]?.findIndex((item) => item.id === id)
             if (index != null) {
                 this.race?.[type]?.splice(index, 1)
-            }
-        },
-        removeTrait(index) {
-            if (this.race.traits.hasOwnProperty(index)) {
-                this.race.traits?.splice(index, 1)
             }
         }
     })

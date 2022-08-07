@@ -1,17 +1,17 @@
-import RaceOverview from "../components/races/race-overview/race-overview";
-import RaceDetails from "../components/races/race-detail";
-import RaceForm from "../components/races/race-form";
+import RaceDetails from '../components/races/race-detail'
+import RaceForm from '../components/races/race-form'
+import RaceOverview from '../components/races/race-overview'
 
 export const RaceRoutes = [
     {
         path: '/races',
         name: 'races',
-        component: RaceOverview,
+        component: RaceOverview
     },
     {
         path: '/races/create',
         name: 'race-create',
-        component: RaceForm,
+        component: RaceForm
     },
     {
         path: '/races/:id/edit',
@@ -24,5 +24,5 @@ export const RaceRoutes = [
         name: 'race',
         component: RaceDetails,
         props: true
-    },
+    }
 ]

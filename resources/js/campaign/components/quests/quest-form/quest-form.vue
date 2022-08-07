@@ -91,37 +91,38 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import HtmlEditor from "../../../../components/partial/html-editor";
-import PermissionsForm from "../../partial/permissions-form";
-import { computed, onMounted, reactive } from "vue";
-import { search } from "./quest-form.methods";
+import { computed, onMounted, reactive } from 'vue'
+import { useStore } from 'vuex'
+import HtmlEditor from '../../../../components/partial/html-editor'
+import PermissionsForm from '../../partial/permissions-form'
 
 export default {
-    name: "QuestForm",
+    name: 'QuestForm',
     props: ['id'],
     setup(props) {
-        const store = useStore();
-        let input;
+        const store = useStore()
+        const { state } = useQuestFormState(store)
+        const { locations, search } = useSearch()
         onMounted(() => {
             if (props.id) {
                 store.dispatch('Quests/find', props.id)
                     .then((quest) => {
-                        input = reactive({ ...quest });
+                        state.input = reactive({ ...quest })
                         if (!quest.hasOwnProperty('permissions')) {
-                            input.permissions = {};
+                            state.input.permissions = {}
                         }
-                    });
+                    })
             } else {
-                input = reactive({
+                state.input = {
                     objectives: [],
                     permissions: {}
-                });
-                addObjective();
+                }
+                state.addObjective()
             }
         })
+
         return {
-            locations: reactive([]),
+            locations,
             tab: reactive('details'),
             quest: input,
             errors: reactive({}),
@@ -130,8 +131,8 @@ export default {
             },
             onSearch: (query, loading) => {
                 if (query.length > 2) {
-                    loading(true);
-                    search(query, loading);
+                    loading(true)
+                    search(query, loading)
                 }
             },
             title: computed(() => props.id ? `Edit ${input.title || 'quest'}` : 'Create new quest')

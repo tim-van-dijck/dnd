@@ -1,9 +1,8 @@
-import { reactive } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useMessageStore } from '../../../../stores/messages'
 
 const router = useRouter()
-const store = useStore()
 
 const emptySpell = {
     name: '',
@@ -31,26 +30,31 @@ const schools = [
     'Transmutation'
 ]
 
+export const useState = (store) => {
+    const router = useRouter()
 
-export const state = {
-    errors: reactive({}),
-    schools,
-    spell: reactive(emptySpell),
-    save() {
-        let promise;
-        if (this.id > 0) {
-            promise = store.dispatch('Spells/update', { id: this.id, spell: this.spell });
-        } else {
-            promise = store.dispatch('Spells/store', { spell: this.spell })
-        }
-
-        promise
-            .then(() => {
-                router.push({ name: 'spells' });
-            })
-            .catch((exception) => {
-                state.errors = exception.response.data.errors
-                store.dispatch('Messages/error', exception.response.data.message, { root: true });
-            });
+    return {
+        state: reactive({
+            errors: {},
+            schools,
+            spell: emptySpell,
+            setSpell(spell) {
+                this.spell = spell
+            },
+            save() {
+                const { id, ...spell } = this.spell
+                const promise = id ? store.update({ id, spell }) : store.store(spell)
+                promise
+                    .then(() => {
+                        router.push({ name: 'spells' })
+                        this.errors = {}
+                    })
+                    .catch((exception) => {
+                        this.errors = exception.response.data.errors
+                        const messages = useMessageStore()
+                        messages.error(exception.response.data.message)
+                    })
+            }
+        })
     }
 }

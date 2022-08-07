@@ -44,14 +44,14 @@ export const Spells = {
                 spell_slots_level_2: 3,
                 spell_slots_level_3: 3,
                 spell_slots_level_4: 3,
-                spell_slots_level_5: 1,
+                spell_slots_level_5: 1
             },
             10: {
                 spell_slots_level_1: 4,
                 spell_slots_level_2: 3,
                 spell_slots_level_3: 3,
                 spell_slots_level_4: 3,
-                spell_slots_level_5: 2,
+                spell_slots_level_5: 2
             },
             11: {
                 spell_slots_level_1: 4,
@@ -59,7 +59,7 @@ export const Spells = {
                 spell_slots_level_3: 3,
                 spell_slots_level_4: 3,
                 spell_slots_level_5: 2,
-                spell_slots_level_6: 1,
+                spell_slots_level_6: 1
             },
             12: {
                 spell_slots_level_1: 4,
@@ -67,7 +67,7 @@ export const Spells = {
                 spell_slots_level_3: 3,
                 spell_slots_level_4: 3,
                 spell_slots_level_5: 2,
-                spell_slots_level_6: 1,
+                spell_slots_level_6: 1
             },
             13: {
                 spell_slots_level_1: 4,
@@ -76,7 +76,7 @@ export const Spells = {
                 spell_slots_level_4: 3,
                 spell_slots_level_5: 2,
                 spell_slots_level_6: 1,
-                spell_slots_level_7: 1,
+                spell_slots_level_7: 1
             },
             14: {
                 spell_slots_level_1: 4,
@@ -85,7 +85,7 @@ export const Spells = {
                 spell_slots_level_4: 3,
                 spell_slots_level_5: 2,
                 spell_slots_level_6: 1,
-                spell_slots_level_7: 1,
+                spell_slots_level_7: 1
             },
             15: {
                 spell_slots_level_1: 4,
@@ -95,7 +95,7 @@ export const Spells = {
                 spell_slots_level_5: 2,
                 spell_slots_level_6: 1,
                 spell_slots_level_7: 1,
-                spell_slots_level_8: 1,
+                spell_slots_level_8: 1
             },
             16: {
                 spell_slots_level_1: 4,
@@ -105,7 +105,7 @@ export const Spells = {
                 spell_slots_level_5: 2,
                 spell_slots_level_6: 1,
                 spell_slots_level_7: 1,
-                spell_slots_level_8: 1,
+                spell_slots_level_8: 1
             },
             17: {
                 spell_slots_level_1: 4,
@@ -116,7 +116,7 @@ export const Spells = {
                 spell_slots_level_6: 1,
                 spell_slots_level_7: 1,
                 spell_slots_level_8: 1,
-                spell_slots_level_9: 1,
+                spell_slots_level_9: 1
             },
             18: {
                 spell_slots_level_1: 4,
@@ -127,7 +127,7 @@ export const Spells = {
                 spell_slots_level_6: 1,
                 spell_slots_level_7: 1,
                 spell_slots_level_8: 1,
-                spell_slots_level_9: 1,
+                spell_slots_level_9: 1
             },
             19: {
                 spell_slots_level_1: 4,
@@ -138,7 +138,7 @@ export const Spells = {
                 spell_slots_level_6: 1,
                 spell_slots_level_7: 1,
                 spell_slots_level_8: 1,
-                spell_slots_level_9: 1,
+                spell_slots_level_9: 1
             },
             20: {
                 spell_slots_level_1: 4,
@@ -149,25 +149,25 @@ export const Spells = {
                 spell_slots_level_6: 1,
                 spell_slots_level_7: 1,
                 spell_slots_level_8: 1,
-                spell_slots_level_9: 1,
+                spell_slots_level_9: 1
             }
         }
     },
     actions: {
-        load: ({state, commit}, force) => {
+        load: ({ state, commit }, force) => {
             if (force || state.spells === null) {
-                return axios.get('/spells')
+                return axios.get('/api/spells')
                     .then((response) => {
-                        commit('SET_SPELLS', response.data);
-                    });
+                        commit('SET_SPELLS', response.data)
+                    })
             } else {
-                return Promise.resolve();
+                return Promise.resolve()
             }
-        },
+        }
     },
     mutations: {
         SET_SPELLS: (state, spells) => {
-            state.spells = spells;
+            state.spells = spells
         }
     }
 }

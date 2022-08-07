@@ -1,5 +1,5 @@
-import SpellOverview from "../components/spells/spell-overview";
-import SpellForm from "../components/spells/spell-form/spell-form";
+import SpellForm from '../components/spells/spell-form'
+import SpellOverview from '../components/spells/spell-overview'
 
 export const SpellRoutes = [
     {

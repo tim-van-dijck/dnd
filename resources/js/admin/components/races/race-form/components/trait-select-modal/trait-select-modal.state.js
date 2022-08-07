@@ -1,45 +1,44 @@
-import { computed, reactive } from "vue";
-import { useStore } from "vuex";
+import { computed, reactive } from 'vue'
 
-export const useState = (ctx, ui) => {
-    const store = useStore()
-    const state = {
-        errors: reactive({}),
-        trait: reactive(emptyTrait),
-        traits: store.Races.state.traits,
+export const useState = (traits, ctx, ui) => {
+    const state = reactive({
+        errors: {},
+        trait: reactive({ ...emptyTrait }),
         reset() {
-            this.trait = emptyTrait
+            this.trait = { ...emptyTrait }
         },
         save() {
-            if (state.trait.id > 0 || state.trait.name?.length > 0) {
-                const trait = { ...state.trait }
-                if (state.trait.id > 0) {
+            if (this.trait.id > 0 || this.trait.name?.length > 0) {
+                const trait = { ...this.trait }
+                if (this.trait.id > 0) {
                     delete trait.name
                     delete trait.description
                 } else {
                     delete trait.id
                 }
                 ctx.emit('input', trait)
+                this.reset()
                 ui.close()
             }
-        },
-        selectedTrait: computed(() => {
-            if (state.trait.id > 0) {
-                return state.traits?.find(trait => trait.id === state.trait.id) || null
-            }
-            return null
-        }),
-        traitOptions: computed(() => {
-            return state.traits?.map(({ id, name, description }) => (
-                { id, name, description }
-            )) || null
-        })
-    }
-    return state
+        }
+    })
+
+    const selectedTrait = computed(() => {
+        if (state.trait.id > 0) {
+            return traits?.value?.find(trait => trait.id === state.trait.id) || null
+        }
+        return null
+    })
+    const traitOptions = computed(() => {
+        return traits?.value?.map(({ id, name, description }) => (
+            { id, name, description }
+        )) || null
+    })
+    return { state, selectedTrait, traitOptions }
 }
 
 const emptyTrait = {
     id: 0,
     name: null,
     description: null
-};
+}

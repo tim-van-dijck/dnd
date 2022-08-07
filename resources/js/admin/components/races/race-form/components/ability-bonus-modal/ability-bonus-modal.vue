@@ -7,10 +7,10 @@
             <div class="uk-modal-dialog uk-modal-body">
                 <h2 class="uk-modal-title">Select an ability bonus</h2>
                 <div class="uk-margin">
-                    <select name="ability" id="ability" class="uk-select" v-model="state.ability.id">
+                    <select name="ability" id="ability" class="uk-select" v-model="state.ability.ability">
                         <option value="">- Choose a ability -</option>
-                        <option v-for="abilityOption in abilities" :value="abilityOption.id"
-                                :disabled="selected.includes(abilityOption.id)">{{ abilityOption.name }}
+                        <option v-for="abilityOption in state.abilities" :value="abilityOption.ability"
+                                :disabled="selected.includes(abilityOption.ability)">{{ abilityOption.name }}
                         </option>
                     </select>
                 </div>
@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import UIKit from "uikit";
-import { useState } from "./ability-bonus-modal.state";
+import UIKit from 'uikit'
+import { useState } from './ability-bonus-modal.state'
 
 export default {
-    name: "ability-bonus-modal",
+    name: 'ability-bonus-modal',
     props: {
         selected: {
             type: Array,
@@ -53,7 +53,6 @@ export default {
         }
         const state = useState(ctx, ui)
         return {
-            selected: props.selected,
             state
         }
     }

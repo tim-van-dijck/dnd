@@ -1,11 +1,10 @@
-import CampaignOverview from "../components/campaigns/campaign-overview";
-import CampaignForm from "../components/campaigns/campaign-form";
+import CampaignForm from '../components/campaigns/campaign-form'
+import CampaignOverview from '../components/campaigns/campaign-overview'
 
 export const CampaignRoutes = [
     {
         path: '/campaigns',
         name: 'campaigns',
-        props: true,
         component: CampaignOverview
     },
     {

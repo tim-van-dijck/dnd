@@ -13,7 +13,7 @@
                             <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
                             <li>
                                 <a href="/logout" title="Sign out" class="uk-navbar-item"
-                                   @click.prevent="$store.dispatch('logout')">
+                                   @click.prevent="logout">
                                     <i class="fas fa-sign-out-alt fa-fw"></i>
                                 </a>
                             </li>
@@ -26,7 +26,16 @@
 </template>
 
 <script>
+import { useMainStore } from '../../admin/stores/main'
+
 export default {
-    name: "header-navbar",
+    name: 'header-navbar',
+    setup() {
+        const store = useMainStore()
+
+        return {
+            logout: () => store.logout()
+        }
+    }
 }
 </script>

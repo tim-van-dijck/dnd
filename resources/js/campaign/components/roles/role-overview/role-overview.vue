@@ -14,11 +14,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="role in roles.data">
+                    <tr v-for="role in state.roles.data">
                         <td class="uk-width-small">
                             <ul v-if="!role.system" class="uk-iconnav">
                                 <li>
-                                    <a href="/" class="uk-text-danger" @click.prevent="destroy(role)">
+                                    <a href="/" class="uk-text-danger" @click.prevent="state.destroy(role)">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </li>
@@ -45,31 +45,23 @@
 </template>
 
 <script>
-    import {mapState} from "vuex";
-    import UIKit from 'uikit';
+import { onMounted } from 'vue'
+import { mapState, useStore } from 'vuex'
+import { useRoleOverviewState } from './role-overview.state'
 
-    export default {
-        name: "RoleOverview",
-        created() {
-            this.$store.dispatch('Roles/load');
-        },
-        methods: {
-            destroy(role) {
-                UIKit.modal.confirm('Are you sure you want to delete this note?', {
-                    labels: {
-                        ok: 'Delete',
-                        cancel: 'cancel'
-                    }
-                }).then(() => {
-                    this.$store.dispatch('Roles/destroy', role)
-                        .then(() => {
-                            this.$store.dispatch('Roles/load');
-                        });
-                });
-            }
-        },
-        computed: {
-            ...mapState('Roles', ['roles'])
-        }
+export default {
+    name: 'role-overview',
+    setup() {
+        const store = useStore()
+        onMounted(() => store.dispatch('Roles/load'))
+
+        const { state } = useRoleOverviewState(store)
+
+        return { state }
+    },
+    methods: {},
+    computed: {
+        ...mapState('Roles', ['roles'])
     }
+}
 </script>

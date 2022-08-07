@@ -1,14 +1,18 @@
-import {useStore} from "vuex";
-import {confirmDelete} from "../../../modals";
+import { useModals } from '../../../modals'
 
-const store = useStore();
+export const useState = (store) => {
+    const { confirmDelete } = useModals()
+    return (
+        {
+            state: {
+                destroy: (race) => {
+                    confirmDelete(
+                        'race',
+                        () => store.destroy(race.id).then(() => store.load())
+                    )
+                }
 
-export const state = {
-    races: store.Races.state.races,
-    destroy: (race) => {
-        confirmDelete(
-            'race',
-            () => store.dispatch('Races/destroy', race).then(() => store.dispatch('Races/load'))
-        )
-    }
+            }
+        }
+    )
 }

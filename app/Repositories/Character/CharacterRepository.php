@@ -143,10 +143,6 @@ class CharacterRepository
         $logRepository->store($campaignId, 'character', $character->id, $character->name, 'deleted');
     }
 
-    /**
-     * @param $ownerId
-     * @return mixed
-     */
     public function verifiedOwnerId(?int $ownerId, ?int $currentOwnerId = null): ?int
     {
         if ($ownerId === null) {

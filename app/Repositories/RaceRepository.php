@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Models\Character\Race;
 use App\Models\Character\RaceTrait;
@@ -52,13 +50,28 @@ class RaceRepository
             fn ($ability) => [
                 'race_id' => $race->id,
                 'subrace_id' => null,
-                'ability' => $ability['id'],
+                'ability' => $ability['ability'],
                 'bonus' => $ability['bonus'],
                 'optional' => !empty($ability['optional'])
             ],
             $input['ability_bonuses']
         );
         $race->abilities()->insert($abilityBonuses);
+
+        $this->syncRelationship('languages', $race, $input['languages']);
+        $this->syncRelationship('proficiencies', $race, $input['languages']);
+        $this->syncTraits($race, $input['traits']);
+
+        return $race;
+    }
+
+    public function update(Race $race, array $input): Race
+    {
+        $input['optional_traits'] = 0;
+        $race->fill($input);
+        $race->save();
+
+        $this->syncAbilityBonuses($race, $input['ability_bonuses']);
 
         $this->syncRelationship('languages', $race, $input['languages']);
         $this->syncRelationship('proficiencies', $race, $input['languages']);
@@ -109,5 +122,24 @@ class RaceRepository
         $race->proficiencies()->sync([]);
         $race->traits()->sync([]);
         $race->delete();
+    }
+
+    private function syncAbilityBonuses(Race $race, array $abilityBonuses)
+    {
+        $existing = $race->abilities()->get(['ability']);
+        $toCreate = array_filter(array_map(
+            fn ($ability) => [
+                'race_id' => $race->id,
+                'subrace_id' => null,
+                'ability' => $ability['ability'],
+                'bonus' => $ability['bonus'],
+                'optional' => !empty($ability['optional'])
+            ],
+            $abilityBonuses
+        ), fn ($ability) => !in_array($ability['ability'], $existing->pluck('ability')->toArray()));
+        $race->abilities()->insert($toCreate);
+        $race->abilities()
+            ->whereNotIn('ability', array_map(fn ($ability) => $ability['ability'], $abilityBonuses))
+            ->delete();
     }
 }

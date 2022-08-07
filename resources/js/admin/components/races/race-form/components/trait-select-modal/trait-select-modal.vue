@@ -9,12 +9,12 @@
                 <div class="uk-margin">
                     <select name="trait" id="trait" class="uk-select" v-model="state.trait.id">
                         <option :value="0">- Choose a trait -</option>
-                        <option v-for="option in state.traitOptions" :value="option.id"
+                        <option v-for="option in traitOptions" :value="option.id"
                                 :disabled="selected.includes(option.id)">{{ option.name }}
                         </option>
                     </select>
                 </div>
-                <div v-if="state.selectedTrait" v-html="state.selectedTrait.description"></div>
+                <div v-if="selectedTrait" v-html="selectedTrait.description"></div>
                 <hr>
                 <div uk-accordion>
                     <div class="accordion">
@@ -47,13 +47,15 @@
 </template>
 
 <script>
-import HtmlEditor from "../../../../../../components/partial/html-editor"
-import { useStore } from "vuex"
-import { onMounted } from "vue"
+import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
+import { onMounted } from 'vue'
+import HtmlEditor from '../../../../../../components/partial/html-editor'
+import { useRaceStore } from '../../../../../stores/races'
+import { useState } from './trait-select-modal.state'
 import { ui } from './trait-select-modal.ui'
 
 export default {
-    name: "trait-select-modal",
+    name: 'trait-select-modal',
     components: { HtmlEditor },
     props: {
         selected: {
@@ -62,16 +64,17 @@ export default {
         }
     },
     setup(props, ctx) {
-        const store = useStore()
-        const state = useState(ctx, ui)
+        const store = useRaceStore()
+        const { traits } = storeToRefs(store)
+        const { state, selectedTrait, traitOptions } = useState(traits, ctx, ui)
 
         onMounted(() => {
-            store.dispatch('Races/loadTraits')
+            store.loadTraits()
             ui.initEditorOnShow()
             ui.removeEditorOnHide()
         })
 
-        return { state, selected: props.selected }
+        return { state, selectedTrait, traitOptions }
     }
 }
 </script>

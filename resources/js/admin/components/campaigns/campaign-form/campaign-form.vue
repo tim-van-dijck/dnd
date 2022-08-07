@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{ ui.title }}</h1>
+        <h1>{{ ui.title.value }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
                 <form v-if="state.campaign" class="uk-form-stacked">
@@ -18,7 +18,8 @@
                                      height="600"></html-editor>
                     </div>
                     <p class="uk-margin">
-                        <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
+                        <button class="uk-button uk-button-primary uk-margin-right" @click.prevent="state.save">Save
+                        </button>
                         <router-link class="uk-button uk-button-danger" :to="{name: 'campaigns'}">
                             Cancel
                         </router-link>
@@ -33,28 +34,36 @@
 </template>
 
 <script>
-import HtmlEditor from "@components/partial/html-editor";
-import { useStore } from "vuex";
-import { computed, onMounted } from "vue";
-import { state } from "./campaign-form.state";
+import HtmlEditor from '@components/partial/html-editor'
+import { computed, onMounted } from 'vue'
+import { useMessageStore } from '../../../../stores/messages'
+import { useCampaignStore } from '../../../stores/campaigns'
+import { useCampaignFormState } from './campaign-form.state'
 
 export default {
-    name: "campaign-form",
+    name: 'campaign-form',
     setup(props) {
-        const store = useStore()
+        const store = useCampaignStore()
+        const messages = useMessageStore()
+        const { state } = useCampaignFormState(store, messages)
+        const title = computed(() => props.id
+            ? `Edit ${state.campaign ? state.campaign.name : 'campaign'}`
+            : 'Add campaign')
 
         onMounted(() => {
             if (props.id) {
-                store.dispatch('Campaigns/find', props.id)
-                    .then((campaignFromState) => state.setCampaign(campaignFromState));
+                store.find(props.id)
+                    .then((campaignFromState) => state.setCampaign(campaignFromState))
+            } else {
+                state.setCampaign({ name: '', description: '' })
             }
-
         })
+
 
         return {
             state,
             ui: {
-                title: computed(() => props.id ? `Edit ${state.campaign ? state.campaign.name : 'campaign'}` : '')
+                title
             }
         }
     },

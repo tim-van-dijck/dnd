@@ -8,12 +8,16 @@ export const ui = {
         {
             name: 'edit',
             icon: 'edit',
-            to: (race) => ({nane: 'race-edit', params: {id: race.id}})
+            to: (race) => (
+                { name: 'race-edit', params: { id: race.id } }
+            )
         },
         {
             name: 'view',
             icon: 'eye',
-            to: (race) => ({name: 'race', params: {id: race.id}})
+            to: (race) => (
+                { name: 'race', params: { id: race.id } }
+            )
         }
     ],
     columns: [
@@ -23,7 +27,7 @@ export const ui = {
         },
         {
             name: 'size',
-            title: 'Size',
+            title: 'Size'
         },
         {
             name: 'speed',

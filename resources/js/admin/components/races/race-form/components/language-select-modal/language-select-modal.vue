@@ -9,7 +9,7 @@
                 <div class="uk-margin">
                     <select name="language" id="language" class="uk-select" v-model="state.language.id">
                         <option :value="0">- Make a choice -</option>
-                        <option v-for="language in state.languages" :value="language.id"
+                        <option v-for="language in languages" :value="language.id"
                                 :disabled="selected.includes(language.id)">
                             {{ language.name }}
                         </option>
@@ -33,11 +33,13 @@
 </template>
 
 <script>
-import UIKit from "uikit";
-import { useState } from "./language-select-modal.state";
+import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
+import UIKit from 'uikit'
+import { useMainStore } from '../../../../../stores/main'
+import { useState } from './language-select-modal.state'
 
 export default {
-    name: "language-select-modal",
+    name: 'language-select-modal',
     props: {
         selected: {
             type: Array,
@@ -45,11 +47,13 @@ export default {
         }
     },
     setup(props, ctx) {
+        const store = useMainStore()
+        const { languages } = storeToRefs(store)
         const ui = {
             close: () => UIKit.modal('#ability-select-modal').hide()
         }
-        const state = useState(ctx, ui)
-        return { state }
+        const state = useState(languages, ctx, ui)
+        return { languages, state }
     }
 }
 </script>

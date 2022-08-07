@@ -1,5 +1,5 @@
-import RoleOverview from "../components/roles/role-overview";
-import RoleForm from "../components/roles/role-form";
+import RoleForm from '../components/roles/role-form'
+import RoleOverview from '../components/roles/role-overview'
 
 export const RoleRoutes = [
     {
