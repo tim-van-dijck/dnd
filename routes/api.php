@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ValidateCampaignId;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,13 +21,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/races', 'Character\ApiController@races');
     Route::get('/spells', 'Magic\SpellController@all');
 
-    Route::group(['prefix' => '/campaign'], function () {
+    Route::group(['prefix' => '/campaign', 'middleware' => [ValidateCampaignId::class]], function () {
         Route::get('/', 'Campaign\CampaignController@currentCampaign');
         Route::get('/search', 'Campaign\CampaignController@search');
         Route::get('/logs', 'Campaign\CampaignController@logs');
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
-        Route::get('characters/{character}/sheet', 'Character\CharacterController@sheet');
 
         Route::get('inventories', 'Campaign\InventoryController@index');
         Route::get('inventories/{inventory}', 'Campaign\InventoryController@show');
@@ -40,12 +40,15 @@ Route::group(['middleware' => 'auth:api'], function () {
             ->except(['create', 'edit'])
             ->parameters(['journal' => 'journalEntry']);
         Route::post('journal/sort', 'Campaign\JournalController@sort');
-        Route::resource('quests', 'Campaign\QuestController')->except(['create', 'edit']);
+
         Route::post('quests/{questId}/objectives/{objectiveId}/toggle', 'Campaign\QuestController@toggleObjectiveStatus');
+        Route::resource('quests', 'Campaign\QuestController')->except(['create', 'edit']);
+
         Route::resource('notes', 'Campaign\NoteController')->except(['create', 'edit']);
         Route::resource('roles', 'Campaign\RoleController')->except(['create', 'edit']);
         Route::get('permissions/{entity}/{entityId}', 'Campaign\RoleController@customEntityPermissions')
             ->middleware('can:create,App\Models\Campaign\Role');
+
         Route::resource('users', 'Campaign\UserController')->except(['create', 'store', 'edit']);
         Route::post('users/invite', 'Campaign\UserController@invite')->name('users.invite');
         Route::get('me', 'Campaign\UserController@me')->name('users.me');

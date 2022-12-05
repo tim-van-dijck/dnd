@@ -1,9 +1,9 @@
-import CharacterForm from '../components/characters/character-form';
-import PCForm from '../components/characters/create/pc-form';
-import PCDetail from '../components/characters/details/pc-detail';
-import CharacterOverview from '../components/characters/character-overview';
-import PlayerCharacterOverview from '../components/characters/player-character-overview';
-import NPCOverview from '../components/characters/npc-overview';
+import CharacterForm from '../components/characters/character-form'
+import CharacterOverview from '../components/characters/character-overview'
+import NPCOverview from '../components/characters/npc-overview'
+import PCDetail from '../components/characters/player-character'
+import PCForm from '../components/characters/player-character-form'
+import PlayerCharacterOverview from '../components/characters/player-character-overview'
 
 export const CharacterRoutes = [
     {
@@ -12,8 +12,8 @@ export const CharacterRoutes = [
         name: 'characters',
         component: CharacterOverview,
         children: [
-            {name: 'player-characters', path: 'players', component: PlayerCharacterOverview},
-            {name: 'npcs', path: 'npc', component: NPCOverview},
+            { name: 'player-characters', path: 'players', component: PlayerCharacterOverview },
+            { name: 'npcs', path: 'npc', component: NPCOverview }
         ]
     },
     {

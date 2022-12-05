@@ -1,5 +1,5 @@
-import Inventory from "../../components/inventory/inventory";
-import InventoryOverview from "../../components/inventory/inventory-overview";
+import Inventory from '../components/inventories/inventory'
+import InventoryOverview from '../components/inventories/inventory-overview'
 
 export const InventoryRoutes = [
     {

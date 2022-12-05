@@ -1,9 +1,32 @@
 import { debounce } from 'lodash'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useMessageStore } from '../../../../stores/messages'
 
-export const useQuestFormState = (store) => {
+export const useQuestFormState = (store, can) => {
+    const router = useRouter()
     const state = reactive({
+        init(id) {
+            if (id) {
+                store.find(id)
+                    .then((quest) => {
+                        this.input = reactive({ ...quest })
+                        if (!quest.hasOwnProperty('permissions')) {
+                            this.input.permissions = {}
+                        }
+                    })
+            } else {
+                this.input = {
+                    objectives: [],
+                    permissions: {}
+                }
+                this.addObjective()
+            }
+        },
+        errors: {},
+        setErrors(errors) {
+            this.errors = errors
+        },
         input: {},
         addObjective() {
             this.input.objectives.push({ name: '', optional: false })
@@ -11,49 +34,45 @@ export const useQuestFormState = (store) => {
         removeObjective(index) {
             this.input.objectives.splice(index, 1)
         },
-        save: (quest) => save(store, quest)
+        save() {
+            let promise
+            const input = {
+                title: this.input.title,
+                description: this.input.description,
+                objectives: [],
+                private: this.input.private || false
+            }
+            if (can('edit', 'role')) {
+                input.permissions = this.input.permissions || {}
+            }
+            if (this.input.location_id > 0) {
+                input.location_id = this.input.location_id
+            }
+
+            for (const objective of this.input.objectives) {
+                if (objective.title != '') {
+                    input.objectives.push(objective)
+                }
+            }
+            if (this.input.id) {
+                promise = store.update({ quest: input, id: this.input.id })
+            } else {
+                promise = store.store(input)
+            }
+            promise
+                .then(() => {
+                    store.load()
+                    router.push({ name: 'quests' })
+                })
+                .catch((error) => {
+                    const messages = useMessageStore()
+                    messages.error(error.response.data.message)
+                    this.setErrors(error.response.data.errors)
+                })
+        }
     })
 
     return { state }
-}
-
-
-const save = (store, quest) => {
-    const router = useRouter()
-
-    let promise
-    const input = {
-        title: quest.title,
-        description: quest.description,
-        objectives: [],
-        private: quest.private
-    }
-    if (store.getters.can('edit', 'role')) {
-        input.permissions = quest.permissions || {}
-    }
-    if (quest.location_id > 0) {
-        input.location_id = quest.location_id
-    }
-
-    for (const objective of quest.objectives) {
-        if (objective.title != '') {
-            input.objectives.push(objective)
-        }
-    }
-    if (quest.id) {
-        promise = store.dispatch('Quests/update', { quest: input, id: quest.id })
-    } else {
-        promise = store.dispatch('Quests/store', input)
-    }
-    promise
-        .then(() => {
-            store.dispatch('Quests/load')
-            router.push({ name: 'quests' })
-        })
-        .catch((error) => {
-            store.commit('Quests/SET_ERRORS', error.response.data.errors)
-            store.dispatch('Messages/error', error.response.data.message, { root: true })
-        })
 }
 
 export const useSearch = () => {

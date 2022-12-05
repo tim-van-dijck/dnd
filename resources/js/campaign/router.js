@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '../components/NotFound'
 import Dashboard from './components/dashboard'
 import { CharacterRoutes } from './routes/characters'
@@ -32,7 +32,7 @@ const routes = [
     }
 ]
 
-const router = createRouter({ routes, history: createWebHashHistory() })
+const router = createRouter({ routes, history: createWebHistory() })
 router.beforeEach((to, from, next) => {
     if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
         document.title = to.meta.title

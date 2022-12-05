@@ -61,10 +61,10 @@
 </template>
 
 <script>
+import { useCampaignStore } from '@admin/stores/campaigns'
+import { useUserStore } from '@admin/stores/users'
 import { onMounted } from 'vue'
 import { useModals } from '../../../modals'
-import { useCampaignStore } from '../../../stores/campaigns'
-import { useUserStore } from '../../../stores/users'
 import { useUserDetailState } from './user-detail.state'
 
 export default {

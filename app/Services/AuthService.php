@@ -14,13 +14,6 @@ use Illuminate\Validation\UnauthorizedException;
 
 class AuthService
 {
-    /**
-     * @param User $user
-     * @param Model|null $model
-     * @param string $entity
-     * @param string $permission
-     * @return bool
-     */
     public static function userHasCampaignPermission(User $user, ?Model $model, string $entity, string $permission): bool
     {
         if (!in_array($permission, ['create', 'edit', 'view', 'delete'])) {
@@ -28,14 +21,14 @@ class AuthService
         }
         $campaignId = Session::get('campaign_id');
         $rolePermission = $user->roles()
-            ->join('permission_role', 'roles.id', '=', 'permission_role.role_id')
-            ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
-            ->where([
-                'roles.campaign_id' => $campaignId,
-                'permissions.name' => $entity,
-                "permission_role.$permission" => 1
-            ])
-            ->count() > 0;
+                ->join('permission_role', 'roles.id', '=', 'permission_role.role_id')
+                ->join('permissions', 'permissions.id', '=', 'permission_role.permission_id')
+                ->where([
+                    'roles.campaign_id' => $campaignId,
+                    'permissions.name' => $entity,
+                    "permission_role.$permission" => 1
+                ])
+                ->count() > 0;
 
         $private = $model ? ($model->private ?? false) : false;
 
@@ -47,21 +40,13 @@ class AuthService
         return false;
     }
 
-    /**
-     * @param int $campaignId
-     * @param int $userId
-     * @param string $entity
-     * @param int $entityId
-     * @param string $permission
-     * @return bool
-     */
     public static function hasOverridePermission(
         int $campaignId,
         int $userId,
         string $entity,
         int $entityId,
         string $permission
-    ) {
+    ): bool {
         return DB::table('user_permissions')
                 ->where([
                     'campaign_id' => $campaignId,
@@ -72,11 +57,7 @@ class AuthService
                 ])->count() > 0;
     }
 
-    /**
-     * @param int $campaignId
-     * @return array
-     */
-    public static function campaignPermissions(int $campaignId)
+    public static function campaignPermissions(int $campaignId): array
     {
         $permissions = [];
         $role = Auth::user()->roles()->where('campaign_id', $campaignId)->first();
@@ -109,7 +90,7 @@ class AuthService
         int $entityId,
         array $permissions = [],
         bool $private = false
-    ) {
+    ): void {
         if (!empty($permissions)) {
             AuthService::setCustomPermissions($campaignId, $entity, $entityId, $permissions);
         }
@@ -118,15 +99,7 @@ class AuthService
         }
     }
 
-    /**
-     * @param int $campaignId
-     * @param string $entity
-     * @param int $entityId
-     * @param array $permissions
-     *
-     * @throws UnauthorizedException
-     */
-    public static function setCustomPermissions(int $campaignId, string $entity, int $entityId, array $permissions)
+    public static function setCustomPermissions(int $campaignId, string $entity, int $entityId, array $permissions): void
     {
         if (Auth::user()->can('create', Role::class)) {
             if (empty($permissions)) {
@@ -140,11 +113,6 @@ class AuthService
     }
 
 
-    /**
-     * @param int $campaignId
-     * @param string $entity
-     * @param int $entityId
-     */
     private static function removeUserPermissions(int $campaignId, string $entity, int $entityId): void
     {
         UserPermission::where([
@@ -154,14 +122,6 @@ class AuthService
         ])->delete();
     }
 
-    /**
-     * @param int $campaignId
-     * @param string $entity
-     * @param int $entityId
-     * @param array $permissions
-     *
-     * @throws UnauthorizedException
-     */
     private static function updateUserPermissions(
         int $campaignId,
         string $entity,
@@ -173,6 +133,7 @@ class AuthService
                 $query->where('campaign_id', $campaignId);
             })
             ->get();
+
         if ($users->count() != count($permissions)) {
             throw new UnauthorizedException();
         }
@@ -191,7 +152,7 @@ class AuthService
         }
     }
 
-    public static function setPrivateEntity(int $campaignId, string $entity, int $entityId, $userId)
+    public static function setPrivateEntity(int $campaignId, string $entity, int $entityId, $userId): void
     {
         $userPermission = UserPermission::firstOrNew([
             'campaign_id' => $campaignId,

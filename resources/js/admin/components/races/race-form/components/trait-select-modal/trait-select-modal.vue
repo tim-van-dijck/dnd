@@ -47,10 +47,10 @@
 </template>
 
 <script>
+import { useRaceStore } from '@admin/stores/races'
+import HtmlEditor from '@components/partial/html-editor'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { onMounted } from 'vue'
-import HtmlEditor from '../../../../../../components/partial/html-editor'
-import { useRaceStore } from '../../../../../stores/races'
 import { useState } from './trait-select-modal.state'
 import { ui } from './trait-select-modal.ui'
 

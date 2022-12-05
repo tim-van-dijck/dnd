@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { useMessageStore } from '../../stores/messages'
+import { useMessageStore } from '@stores/messages'
 
 export default {
     name: 'Messages',

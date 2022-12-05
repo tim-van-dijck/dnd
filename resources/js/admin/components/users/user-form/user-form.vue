@@ -49,9 +49,9 @@
 </template>
 
 <script>
+import { useUserStore } from '@admin/stores/users'
+import { useMessageStore } from '@stores/messages'
 import { computed, onMounted } from 'vue'
-import { useMessageStore } from '../../../../stores/messages'
-import { useUserStore } from '../../../stores/users'
 import { useUserFormState } from './user-form.state'
 
 export default {

@@ -6,43 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\LogResource;
 use App\Managers\CampaignManager;
 use App\Models\Campaign\Campaign;
+use App\Repositories\Campaign\SearchRepository;
 use App\Repositories\CampaignRepository;
 use App\Repositories\LogRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class CampaignController extends Controller
 {
-    /**
-     * @param CampaignRepository $campaignRepository
-     * @return View
-     */
     public function index(CampaignRepository $campaignRepository): View
     {
         $campaigns = $campaignRepository->getByUserId(Auth::user()->id);
         return view('campaigns.index', ['campaigns' => $campaigns]);
     }
 
-    /**
-     * @return View
-     */
     public function create(): View
     {
         return view('campaigns.create');
     }
 
-    /**
-     * @param Request $request
-     * @param CampaignManager $campaignManager
-     * @return RedirectResponse
-     * @throws ValidationException
-     */
     public function store(Request $request, CampaignManager $campaignManager): RedirectResponse
     {
         $this->validate($request, [
@@ -55,10 +42,6 @@ class CampaignController extends Controller
         return redirect('/');
     }
 
-    /**
-     * @param Campaign $campaign
-     * @return RedirectResponse
-     */
     public function show(Campaign $campaign): RedirectResponse
     {
         if (Auth::user()->can('view', $campaign)) {
@@ -108,36 +91,11 @@ class CampaignController extends Controller
         return LogResource::collection($logRepository->recentActivity($campaignId));
     }
 
-    public function search(Request $request)
+    public function search(Request $request, SearchRepository $searchRepository): Collection
     {
         $queryString = $request->query('query', '');
+        $campaignId = Session::get('campaign_id');
 
-        $chars = DB::table('characters')
-            ->selectRaw('characters.id AS id, characters.name AS label, type AS type')
-            ->where('campaign_id', Session::get('campaign_id'))
-            ->where('characters.name', 'LIKE', "%$queryString%");
-
-        $locations = DB::table('locations')
-            ->selectRaw('locations.id AS id, locations.name AS label, "location" AS type')
-            ->where('campaign_id', Session::get('campaign_id'))
-            ->where('locations.name', 'LIKE', "%$queryString%");
-
-        $notes = DB::table('notes')
-            ->selectRaw('notes.id AS id, notes.name AS label, "note" AS type')
-            ->where('campaign_id', Session::get('campaign_id'))
-            ->where(function ($query) use ($queryString) {
-                $query->where('notes.name', 'LIKE', "%$queryString%")
-                    ->orWhere('notes.content', 'LIKE', "%$queryString%");
-            });
-
-        $quests = DB::table('quests')
-            ->selectRaw('quests.id AS id, quests.title AS label, "quest" AS type')
-            ->where('campaign_id', Session::get('campaign_id'))
-            ->where(function ($query) use ($queryString) {
-                $query->where('quests.title', 'LIKE', "%$queryString%")
-                    ->orWhere('quests.description', 'LIKE', "%$queryString%");
-            });
-
-        return $chars->union($locations)->union($notes)->union($quests)->get();
+        return $searchRepository->search($campaignId, $queryString);
     }
 }

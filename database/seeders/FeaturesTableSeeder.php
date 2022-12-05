@@ -137,7 +137,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 "name" => "Unarmored Defence (Barbarian)",
-                'description' => "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
+                'description' => "While you are not wearing any inventory-tab-armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
                 'classes' => [
                     'Barbarian' => ["level" => 1]
                 ]
@@ -176,7 +176,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 "name" => "Fast Movement II",
-                'description' => "Your speed increases by 10 feet while you aren't wearing heavy armor.",
+                'description' => "Your speed increases by 10 feet while you aren't wearing heavy inventory-tab-armor.",
                 'classes' => [
                     'Barbarian' => ["level" => 5]
                 ]
@@ -709,7 +709,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Fighting Style: Defense',
-                'description' => 'While you are wearing armor, you gain a +1 bonus to AC.',
+                'description' => 'While you are wearing inventory-tab-armor, you gain a +1 bonus to AC.',
                 'optional' => true,
                 'classes' => [
                     'Fighter' => ['level' => 1],
@@ -841,7 +841,7 @@ class FeaturesTableSeeder extends Seeder
 
             [
                 'name' => 'Unarmored Defense (Monk)',
-                'description' => 'While you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.',
+                'description' => 'While you are wearing no inventory-tab-armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.',
                 'classes' => ['Monk' => ['level' => 1]]
             ],
             [
@@ -871,7 +871,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Unarmored Movement I',
-                'description' => 'Your speed increases by 10 feet while you are not wearing armor or wielding a shield.',
+                'description' => 'Your speed increases by 10 feet while you are not wearing inventory-tab-armor or wielding a shield.',
                 'classes' => ['Monk' => ['level' => 2]]
             ],
             [
@@ -1264,7 +1264,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Eldritch Invocation: Armor of Shadows',
-                'description' => 'You can cast mage armor on yourself at will, without expending a spell slot or material components.',
+                'description' => 'You can cast mage inventory-tab-armor on yourself at will, without expending a spell slot or material components.',
                 'classes' => ['Warlock' => ['level' => 2]],
                 'optional' => true
             ],
@@ -1893,7 +1893,7 @@ class FeaturesTableSeeder extends Seeder
 
             [
                 'name' => 'Bonus Proficiency',
-                'description' => 'You gain proficiency with heavy armor.',
+                'description' => 'You gain proficiency with heavy inventory-tab-armor.',
                 'subclasses' => ['Life Domain' => ['level' => 1]]
             ],
             [
@@ -2196,7 +2196,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Draconic Resilience',
-                'description' => 'As magic flows through your body, it causes physical traits of your dragon ancestors to emerge. Your hit point maximum increases by 1 and increases by 1 again whenever you gain a level in this c1ass. Additionally, parts of your skin are covered by a thin sheen of dragon-like scales. When you aren\'t wearing armor, your AC equals 13 + your Dexterity modifier.',
+                'description' => 'As magic flows through your body, it causes physical traits of your dragon ancestors to emerge. Your hit point maximum increases by 1 and increases by 1 again whenever you gain a level in this c1ass. Additionally, parts of your skin are covered by a thin sheen of dragon-like scales. When you aren\'t wearing inventory-tab-armor, your AC equals 13 + your Dexterity modifier.',
                 'subclasses' => ['Draconic Bloodline' => ['level' => 1]]
             ],
             [
@@ -2206,7 +2206,7 @@ class FeaturesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Dragon Wings',
-                'description' => 'You gain the ability to sprout a pair of dragon wings from your back, gaining a flying speed equal to your current speed. You can create these wings as a bonus action on your turn. They last until you dismiss them as a bonus action on your turn. You can\'t manifest your wings while wearing armor unless the armor is made to accommodate them, and clothing not made to accommodate your wings might be destroyed when you manifest them.',
+                'description' => 'You gain the ability to sprout a pair of dragon wings from your back, gaining a flying speed equal to your current speed. You can create these wings as a bonus action on your turn. They last until you dismiss them as a bonus action on your turn. You can\'t manifest your wings while wearing inventory-tab-armor unless the inventory-tab-armor is made to accommodate them, and clothing not made to accommodate your wings might be destroyed when you manifest them.',
                 'subclasses' => ['Draconic Bloodline' => ['level' => 14]]
             ],
             [

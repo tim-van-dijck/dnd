@@ -13,7 +13,7 @@ class CreateArmorTable extends Migration
      */
     public function up()
     {
-        Schema::create('armor', function (Blueprint $table) {
+        Schema::create('inventory-tab-armor', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('type');
@@ -34,6 +34,6 @@ class CreateArmorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('armor');
+        Schema::dropIfExists('inventory-tab-armor');
     }
 }

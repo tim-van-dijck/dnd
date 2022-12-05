@@ -26,6 +26,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.2.0",
     "@tinymce/tinymce-vue": "^4.0.7",
     "npx": "^3.0.0",
     "pinia": "^2.0.14",
@@ -34,7 +35,7 @@
     "vue": "^3.2",
     "vue-router": "^4.0",
     "vue-select-3": "^1.0.1",
-    "vuedraggable": "^2.24.3",
+    "vuedraggable": "^4.1.0",
     "vuex": "^4.0.2"
   }
 }

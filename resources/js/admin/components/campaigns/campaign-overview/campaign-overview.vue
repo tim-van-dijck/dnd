@@ -21,10 +21,10 @@
 </template>
 
 <script>
+import { useCampaignStore } from '@admin/stores/campaigns'
 import PaginatedTable from '@components/partial/paginated-table'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { onMounted } from 'vue'
-import { useCampaignStore } from '../../../stores/campaigns'
 import { useCampaignOverviewState } from './campaign-overview.state'
 import { ui } from './campaign-overview.ui'
 

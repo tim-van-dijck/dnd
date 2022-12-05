@@ -155,11 +155,11 @@
 
 <script>
 
+import { useMainStore } from '@admin/stores/main'
+import { useRaceStore } from '@admin/stores/races'
+import HtmlEditor from '@components/partial/html-editor'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { computed, onMounted } from 'vue'
-import HtmlEditor from '../../../../components/partial/html-editor'
-import { useMainStore } from '../../../stores/main'
-import { useRaceStore } from '../../../stores/races'
 import AbilityBonusModal from './components/ability-bonus-modal/ability-bonus-modal'
 import LanguageSelectModal from './components/language-select-modal'
 import ProficiencySelectModal from './components/proficiency-select-modal/proficiency-select-modal'

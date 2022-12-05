@@ -7,10 +7,17 @@ $card-secondary-hover-background: darken($card-secondary-background, 5%);
 $card-secondary-color: #666;
 $card-secondary-title-color: $card-secondary-color;
 $card-secondary-color-mode: dark;
+$fa-font-path: '../fonts/vendor/fontawesome';
 
+// UI Kit
 @import "~uikit/src/scss/variables-theme.scss";
 @import "~uikit/src/scss/mixins-theme.scss";
 @import "~uikit/src/scss/uikit-theme.scss";
+
+// Font Awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/solid";
 
 //@import "~vue-select/src/scss/vue-select.scss";
 

@@ -9,7 +9,6 @@
     <link href="/css/app.css" rel="stylesheet">
     <script>window.App = {!! json_encode(['api_token' => Auth::user()->api_token]) !!}</script>
     <script type="text/javascript" src="/js/admin.js"></script>
-    <script src="https://kit.fontawesome.com/8c4a80dd98.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="admin-app"></div>

@@ -1,6 +1,7 @@
 * text eol=lf
 *.png binary
 *.jpg binary
+*.pdf binary
 *.gif binary
 *.css linguist-vendored
 *.scss linguist-vendored

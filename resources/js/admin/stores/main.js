@@ -5,7 +5,6 @@ export const useMainStore = defineStore('main', {
         {
             errors: {},
             languages: null,
-            logs: [],
             user: {
                 permissions: {}
             }

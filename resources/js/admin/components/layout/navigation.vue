@@ -40,7 +40,7 @@
 
 <script>
 
-import { useMainStore } from '../../stores/main'
+import { useMainStore } from '@admin/stores/main'
 
 export default {
     name: 'Navigation',

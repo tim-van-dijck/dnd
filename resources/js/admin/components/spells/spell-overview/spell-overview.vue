@@ -27,11 +27,11 @@
 </template>
 
 <script>
+import { useSpellStore } from '@admin/stores/spells'
 import PaginatedTable from '@components/partial/paginated-table'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSpellStore } from '../../../stores/spells'
 import { useState } from './spell-overview.state'
 import { ui } from './spell-overview.ui'
 

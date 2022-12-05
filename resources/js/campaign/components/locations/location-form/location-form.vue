@@ -1,71 +1,78 @@
 <template>
     <div>
-        <h1>{{ title }}</h1>
+        <h1>{{ ui.title.value }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <form v-if="location" id="location-form" class="uk-form-stacked">
-                    <ul v-if="store.getters.can('edit', 'role')" uk-tab>
-                        <li :class="{'uk-active': tab === 'details'}">
-                            <a href="" @click.prevent="tab = 'details'">Details</a>
+                <form v-if="state.input" id="location-form" class="uk-form-stacked">
+                    <ul v-if="can('edit', 'role')" uk-tab>
+                        <li :class="{'uk-active': ui.tab === 'details'}">
+                            <a href="" @click.prevent="ui.setTab('details')">Details</a>
                         </li>
-                        <li :class="{'uk-active': tab === 'permissions'}">
-                            <a href="" @click.prevent="tab = 'permissions'">Permissions</a>
+                        <li :class="{'uk-active': ui.tab === 'permissions'}">
+                            <a href="" @click.prevent="ui.setTab('permissions')">Permissions</a>
                         </li>
                     </ul>
-                    <div v-show="tab === 'details'" uk-grid>
+                    <div v-show="ui.tab === 'details'" uk-grid>
                         <div class="uk-width-1-2">
                             <div class="uk-margin">
                                 <label for="name" class="uk-form-label"
-                                       :class="{'uk-text-danger': errors.hasOwnProperty('name')}">Name*</label>
+                                       :class="{'uk-text-danger': state.errors.hasOwnProperty('name')}">Name*</label>
                                 <input id="name" title="name" type="text" class="uk-input"
-                                       :class="{'uk-form-danger': errors.hasOwnProperty('name')}"
-                                       v-model="location.name">
+                                       :class="{'uk-form-danger': state.errors.hasOwnProperty('name')}"
+                                       v-model="state.input.name">
                             </div>
                             <div class="uk-margin">
                                 <label for="type" class="uk-form-label"
-                                       :class="{'uk-text-danger': errors.hasOwnProperty('type')}">Type*</label>
+                                       :class="{'uk-text-danger': state.errors.hasOwnProperty('type')}">Type*</label>
                                 <input id="type" name="type" type="text" class="uk-input"
-                                       :class="{'uk-form-danger': errors.hasOwnProperty('type')}"
-                                       v-model="location.type">
+                                       :class="{'uk-form-danger': state.errors.hasOwnProperty('type')}"
+                                       v-model="state.input.type">
                             </div>
-                            <div class="uk-margin">
+                            <!-- <div class="uk-margin">
                                 <label for="location" class="uk-form-label"
-                                       :class="{'uk-text-danger': errors.hasOwnProperty('location_id')}">Location</label>
+                                       :class="{'uk-text-danger': state.errors.hasOwnProperty('location_id')}">Location</label>
                                 <v-select id="location" name="location_id" class="uk-select"
-                                          :class="{'uk-form-danger': errors.hasOwnProperty('location_id')}"
+                                          :class="{'uk-form-danger': state.errors.hasOwnProperty('location_id')}"
                                           @search="onSearch" :options="locations"
                                           :reduce="item => item.value"
-                                          v-model="location.location_id">
+                                          v-model="state.location.location_id">
                                 </v-select>
-                            </div>
+                            </div>-->
                             <div class="uk-margin">
                                 <label for="map" class="uk-form-label"
-                                       :class="{'uk-text-danger': errors.hasOwnProperty('map')}">Map</label>
-                                <img class="preview-image" v-if="map" :src="map" alt="Uploaded map image" width="300"
+                                       :class="{'uk-text-danger': state.errors.hasOwnProperty('map')}">Map</label>
+                                <img class="preview-image" v-if="state.src" :src="state.src" alt="Uploaded map image"
+                                     width="300"
                                      height="300">
                                 <input id="map" name="map" type="file"
-                                       :class="{'uk-form-danger': errors.hasOwnProperty('map')}" @change="onFileChange">
+                                       :class="{'uk-form-danger': state.errors.hasOwnProperty('map')}"
+                                       @change="state.handleFileChange">
                             </div>
                             <hr>
                             <div class="uk-margin uk-form-controls">
-                                <input id="private" name="private" type="checkbox" class="uk-checkbox"
-                                       :class="{'uk-form-danger': errors.hasOwnProperty('private')}"
-                                       v-model="location.private">
-                                <label for="private" :class="{'uk-text-danger': errors.hasOwnProperty('private')}">Private</label>
+                                <label for="private"
+                                       :class="{'uk-text-danger': state.errors.hasOwnProperty('private')}">
+                                    <input id="private" name="private" type="checkbox" class="uk-checkbox"
+                                           :class="{'uk-form-danger': state.errors.hasOwnProperty('private')}"
+                                           v-model="state.input.private">
+                                    Private
+                                </label>
                             </div>
                         </div>
                         <div class="uk-width-1-2">
                             <label for="description" class="uk-form-label"
-                                   :class="{'uk-text-danger': errors.hasOwnProperty('description')}">Description</label>
-                            <html-editor id="description" name="description" v-model="location.description"
+                                   :class="{'uk-text-danger': state.errors.hasOwnProperty('description')}">Description</label>
+                            <html-editor id="description" name="description" v-model="state.input.description"
                                          height="600"/>
                         </div>
                     </div>
-                    <permissions-form v-show="tab === 'permissions' && store.getters.can('edit', 'role')"
+                    <permissions-form v-show="ui.tab === 'permissions' && can('edit', 'role')"
                                       entity="location" :id="id"
-                                      v-model="location.permissions"/>
+                                      v-model="state.input.permissions"/>
                     <p class="uk-margin">
-                        <button class="uk-button uk-button-primary" @click.prevent="save">Save</button>
+                        <button class="uk-button uk-button-primary uk-margin-right"
+                                @click.prevent="state.handleSubmit">Save
+                        </button>
                         <router-link class="uk-button uk-button-danger" :to="{name: 'locations'}">
                             Cancel
                         </router-link>
@@ -80,99 +87,38 @@
 </template>
 
 <script>
+import { useLocationStore } from '@campaign/stores/locations'
+import { useMainStore } from '@campaign/stores/main'
+import HtmlEditor from '@components/partial/html-editor'
 import Editor from '@tinymce/tinymce-vue'
-import { debounce } from 'lodash'
+import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { computed, onMounted, reactive } from 'vue'
-import { useStore } from 'vuex'
-import HtmlEditor from '../../../../components/partial/html-editor'
 import PermissionsForm from '../../partial/permissions-form'
-import { createImage, onFileChange } from './location-form.methods'
+import { useLocationFormState } from './location-form.state'
 
 export default {
     name: 'LocationForm',
     props: ['id'],
     setup(props) {
-        const store = useStore()
-        let map = null
-        let input = null
+        const store = useLocationStore()
+        const main = useMainStore()
+        const state = useLocationFormState(store, main.can, props.id)
+        const locations = storeToRefs(store)
+
         onMounted(() => {
-            if (props.id) {
-                store.dispatch('Locations/find', props.id)
-                    .then((location) => {
-                        input = reactive({ ...location })
-                        if (typeof input.map == 'string' && input.map.length > 0) {
-                            map = `/storage/${input.map}`
-                        }
-                    })
-            } else {
-                input = reactive({})
-            }
+            store.load()
+            state.init()
         })
         return {
-            errors: reactive({}),
+            can: main.can,
+            state,
             store,
-            location: input,
             locations,
-            map,
-            tab: reactive('details'),
-            title: computed(() => props.id ? `Edit ${input?.name || 'location'}` : 'Add location'),
-            createImage,
-            onFileChange
+            ui: {
+                tab: reactive('details'),
+                title: computed(() => props.id ? `Edit ${state.input?.name || 'location'}` : 'Add location')
+            }
         }
-    },
-    methods: {
-        save() {
-            let location = new FormData()
-            for (let prop of ['name', 'type', 'description', 'location_id', 'map']) {
-                if ((
-                    ['map', 'location_id'].includes(prop) || this.location[prop] !== ''
-                ) && this.location[prop] != null) {
-                    location.append(prop, this.location[prop])
-                }
-            }
-            location.append('private', this.location.private ? 1 : 0)
-            if (this.$store.getters.can('edit', 'role')) {
-                for (let userId in this.location.permissions) {
-                    let permission = this.location.permissions[userId]
-                    location.append(`permissions[${userId}][view]`, permission.view ? 1 : 0)
-                    location.append(`permissions[${userId}][create]`, permission.create ? 1 : 0)
-                    location.append(`permissions[${userId}][edit]`, permission.edit ? 1 : 0)
-                    location.append(`permissions[${userId}][delete]`, permission.delete ? 1 : 0)
-                }
-            }
-
-            let promise
-            if (this.id > 0) {
-                promise = this.$store.dispatch('Locations/update', { id: this.id, location })
-            } else {
-                promise = this.$store.dispatch('Locations/store', { location })
-            }
-
-            promise
-                .then(() => {
-                    this.$router.push({ name: 'locations' })
-                })
-                .catch((error) => {
-                    this.$store.commit('Locations/SET_ERRORS', error.response.data.errors)
-                    this.$store.dispatch('Messages/error', error.response.data.message, { root: true })
-                })
-        },
-        onSearch(query, loading) {
-            if (query.length > 2) {
-                loading(true)
-                this.search(query, loading, this)
-            }
-        },
-        search: debounce((query, loading, vm) => {
-            axios.get(`/api/campaign/locations?filter[query]=${escape(query)}&page[number]=1&page[size]=10`)
-                .then((response) => {
-                    let locations = response.data.data.map((item) => {
-                        return { value: item.id, label: item.name }
-                    })
-                    vm.$set(vm, 'locations', locations)
-                    loading(false)
-                })
-        }, 1000)
     },
     components: {
         PermissionsForm,

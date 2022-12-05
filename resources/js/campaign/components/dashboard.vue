@@ -27,19 +27,19 @@
 </template>
 
 <script>
-import { useStore } from 'vuex';
-import { formatDate } from "../../libs/formatting/date";
-import { onMounted } from "vue";
+import { useMainStore } from '@campaign/stores/main'
+import { onMounted } from 'vue'
+import { formatDate } from '../../libs/formatting/date'
 
 export default {
-    name: "Dashboard",
+    name: 'Dashboard',
     setup() {
-        const store = useStore()
-        onMounted(() => store.dispatch('loadLogs'))
+        const store = useMainStore()
+        onMounted(() => store.loadLogs())
         return {
-            campaign: store.state.campaign,
+            campaign: store.campaign,
             formatDate,
-            logs: store.state.logs
+            logs: store.logs
         }
     }
 }

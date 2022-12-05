@@ -132,9 +132,9 @@
 </template>
 
 <script>
+import { useSpellStore } from '@admin/stores/spells'
+import HtmlEditor from '@components/partial/html-editor'
 import { computed, onMounted } from 'vue'
-import HtmlEditor from '../../../../components/partial/html-editor'
-import { useSpellStore } from '../../../stores/spells'
 import { useState } from './spell-form.state'
 
 export default {

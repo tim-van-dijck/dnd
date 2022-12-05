@@ -18,7 +18,7 @@ services:
       - dnd-network
 
   app:
-    image: nginx:alpine
+    image: nginx:1.23.2-alpine
     container_name: dnd-app
     restart: unless-stopped
     tty: true

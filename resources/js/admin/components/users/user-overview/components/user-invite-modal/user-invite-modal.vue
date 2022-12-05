@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { useUserStore } from '../../../../../stores/users'
+import { useUserStore } from '@admin/stores/users'
 import { useInviteModalState } from './user-invite-modal.state'
 
 export default {

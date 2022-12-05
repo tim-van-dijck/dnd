@@ -16,7 +16,6 @@
         "laravel/framework": "^9.0",
         "laravel/ui": "^3.0",
         "laravel/tinker": "^2.0",
-        "tim-van-dijck/dnd-seeds": "^0.16.0@alpha",
         "fpdf/fpdf": "1.*",
         "tmw/fpdm": "2.9.2"
     },

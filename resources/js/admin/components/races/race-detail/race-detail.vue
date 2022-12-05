@@ -92,14 +92,14 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { onMounted, reactive } from "vue";
+import { useRaceStore } from '@admin/stores/races'
+import { onMounted, reactive } from 'vue'
 
 export default {
-    name: "race-detail",
+    name: 'race-detail',
     props: ['id'],
     setup(props) {
-        const store = useStore()
+        const store = useRaceStore()
 
         const state = reactive({
             race: null,
@@ -108,7 +108,7 @@ export default {
             }
         })
 
-        onMounted(() => store.dispatch('Races/find', props.id).then(state.setRace))
+        onMounted(() => store.find(props.id).then(state.setRace))
 
         return {
             race: state.race

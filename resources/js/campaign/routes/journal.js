@@ -1,6 +1,6 @@
-import JournalOverview from "../../components/journal/journal-overview";
-import JournalForm from "../../components/journal/journal-form";
-import JournalEntry from "../../components/journal/journal-entry"
+import JournalEntry from '../components/journal/journal-entry'
+import JournalForm from '../components/journal/journal-form'
+import JournalOverview from '../components/journal/journal-overview'
 
 export const JournalRoutes = [
     {

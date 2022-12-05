@@ -16,7 +16,8 @@ module.exports = [
                 vue: 'vue/dist/vue.runtime.esm-bundler.js',
                 '@admin': path.resolve(__dirname, 'resources/js/admin'),
                 '@campaign': path.resolve(__dirname, 'resources/js/campaign'),
-                '@components': path.resolve(__dirname, 'resources/js/components')
+                '@components': path.resolve(__dirname, 'resources/js/components'),
+                '@stores': path.resolve(__dirname, 'resources/js/stores')
             },
             extensions: ['*', '.js', '.vue', '.json', 'png', 'gif', 'jpeg', 'jpg']
         },

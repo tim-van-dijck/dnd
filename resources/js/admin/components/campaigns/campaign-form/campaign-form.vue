@@ -34,10 +34,10 @@
 </template>
 
 <script>
+import { useCampaignStore } from '@admin/stores/campaigns'
 import HtmlEditor from '@components/partial/html-editor'
+import { useMessageStore } from '@stores/messages'
 import { computed, onMounted } from 'vue'
-import { useMessageStore } from '../../../../stores/messages'
-import { useCampaignStore } from '../../../stores/campaigns'
 import { useCampaignFormState } from './campaign-form.state'
 
 export default {

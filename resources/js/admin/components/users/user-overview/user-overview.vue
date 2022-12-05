@@ -17,11 +17,11 @@
 </template>
 
 <script>
+import { useUserStore } from '@admin/stores/users'
 import PaginatedTable from '@components/partial/paginated-table'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../../../stores/users'
 import UserInviteModal from './components/user-invite-modal/user-invite-modal'
 import { useUserOverviewState } from './user-overview.state'
 import { ui } from './user-overview.ui'

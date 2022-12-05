@@ -34,10 +34,10 @@
 </template>
 
 <script>
+import { useRaceStore } from '@admin/stores/races'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import UIKit from 'uikit'
 import { computed, onMounted } from 'vue'
-import { useRaceStore } from '../../../../../stores/races'
 import { useState } from './proficiency-select-modal.state'
 
 export default {

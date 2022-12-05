@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88b5fd6ebef9d1fab6e03fb6d41ef5f3",
+    "content-hash": "fad2797a22193c93e48a28a9c7be41f7",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -5115,52 +5115,6 @@
             "time": "2021-12-08T09:12:39+00:00"
         },
         {
-            "name": "tim-van-dijck/dnd-seeds",
-            "version": "v0.16-alpha",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:tim-van-dijck/dnd-seeds.git",
-                "reference": "6d7ae7e7262201680b4a6bed0c5fdc4c7756e50c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tim-van-dijck/dnd-seeds/zipball/6d7ae7e7262201680b4a6bed0c5fdc4c7756e50c",
-                "reference": "6d7ae7e7262201680b4a6bed0c5fdc4c7756e50c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "TimvanDijck\\DndSeeds\\DndSeedsServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "TimvanDijck\\DndSeeds\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tim van Dijck",
-                    "email": "tim.van.dijck@hotmail.com"
-                }
-            ],
-            "description": "Library of DB Seeders for the Dungeons & Diaries application based on WotC content",
-            "support": {
-                "source": "https://github.com/tim-van-dijck/dnd-seeds/tree/v0.16-alpha",
-                "issues": "https://github.com/tim-van-dijck/dnd-seeds/issues"
-            },
-            "time": "2021-04-13T20:09:50+00:00"
-        },
-        {
             "name": "tmw/fpdm",
             "version": "2.9.2",
             "source": {
@@ -8011,9 +7965,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "tim-van-dijck/dnd-seeds": 15
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

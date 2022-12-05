@@ -11,24 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestRepository
 {
-    /**
-     * QuestRepository constructor.
-     */
     public function __construct()
     {
         $this->logRepository = app(LogRepository::class);
     }
 
-    /** @var LogRepository */
-    private $logRepository;
+    private LogRepository $logRepository;
 
-    /**
-     * @param int $campaignId
-     * @param array $filters
-     * @param int $page
-     * @param int $pageSize
-     * @return LengthAwarePaginator
-     */
     public function get(int $campaignId, array $filters = [], int $page = 1, int $pageSize = 20): LengthAwarePaginator
     {
         $query = Quest::query()
@@ -66,17 +55,14 @@ class QuestRepository
         return $query->paginate($pageSize, ['quests.*'], 'page[number]', $page);
     }
 
-    /**
-     * @param int $campaignId
-     * @param array $data
-     */
-    public function store(int $campaignId, array $data)
+    public function store(int $campaignId, array $data): Quest
     {
         $quest = new Quest();
         $quest->campaign_id = $campaignId;
         $quest->location_id = $data['location_id'] ?? null;
         $quest->title = $data['title'];
         $quest->description = $data['description'];
+        $quest->private = $data['private'] ?? false;
         $quest->save();
 
         foreach ($data['objectives'] as $objective) {
@@ -96,14 +82,11 @@ class QuestRepository
             $quest->private
         );
         $this->logRepository->store($campaignId, 'quest', $quest->id, $quest->title, 'created');
+
+        return $quest;
     }
 
-    /**
-     * @param int $campaignId
-     * @param Quest $quest
-     * @param array $data
-     */
-    public function update(int $campaignId, Quest $quest, array $data)
+    public function update(int $campaignId, Quest $quest, array $data): Quest
     {
         if ($campaignId != $quest->campaign_id) {
             throw new ModelNotFoundException();
@@ -135,6 +118,8 @@ class QuestRepository
             $quest->private
         );
         $this->logRepository->store($campaignId, 'quest', $quest->id, $quest->title, 'updated');
+
+        return $quest;
     }
 
     /**

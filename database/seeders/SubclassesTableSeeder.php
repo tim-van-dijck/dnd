@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Character\CharacterClass;
 use App\Models\Character\Subclass;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
 
 class SubclassesTableSeeder extends Seeder
 {
@@ -75,7 +74,7 @@ class SubclassesTableSeeder extends Seeder
             [
                 "class" => "Paladin",
                 "name" => "Oath of Devotion",
-                "description" => "The Oath of Devotion binds a paladin to the loftiest ideals of justice, virtue, and order. Sometimes called cavaliers, white knights, or holy warriors, these paladins meet the ideal of the knight in shining armor, acting with honor in pursuit of justice and the greater good. They hold themselves to the highest standards of conduct, and some, for better or worse, hold the rest of the world to the same standards. Many who swear this oath are devoted to gods of law and good and use their gods' tenets as the measure of their devotion. They hold angels--the perfect servants of good--as their ideals, and incorporate images of angelic wings into their helmets or coats of arms.",
+                "description" => "The Oath of Devotion binds a paladin to the loftiest ideals of justice, virtue, and order. Sometimes called cavaliers, white knights, or holy warriors, these paladins meet the ideal of the knight in shining inventory-tab-armor, acting with honor in pursuit of justice and the greater good. They hold themselves to the highest standards of conduct, and some, for better or worse, hold the rest of the world to the same standards. Many who swear this oath are devoted to gods of law and good and use their gods' tenets as the measure of their devotion. They hold angels--the perfect servants of good--as their ideals, and incorporate images of angelic wings into their helmets or coats of arms.",
                 'spellcaster' => true,
                 'spellcasting_ability' => 'CHA'
             ],

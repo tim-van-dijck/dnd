@@ -33,9 +33,9 @@
 </template>
 
 <script>
+import { useMainStore } from '@admin/stores/main'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import UIKit from 'uikit'
-import { useMainStore } from '../../../../../stores/main'
 import { useState } from './language-select-modal.state'
 
 export default {

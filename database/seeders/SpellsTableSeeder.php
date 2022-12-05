@@ -75,7 +75,7 @@ class SpellsTableSeeder extends Seeder
                 "casting_time" => "1 action",
                 "level" => 0,
                 "school" => "Conjuration",
-                "classes" => ["Sorcerer","Wizard"],
+                "classes" => ["Sorcerer", "Wizard"],
                 "subclasses" => ["College of Lore"],
             ],
             [
@@ -272,7 +272,7 @@ class SpellsTableSeeder extends Seeder
                 "casting_time" => "1 action",
                 "level" => 5,
                 "school" => "Evocation",
-                "classes" => ["Wizard"                ],
+                "classes" => ["Wizard"],
                 "subclasses" => []
             ],
             [
@@ -399,7 +399,7 @@ class SpellsTableSeeder extends Seeder
             ],
             [
                 "name" => "Barkskin",
-                "desc" => "You touch a willing creature. Until the spell ends, the target's skin has a rough, bark-like appearance, and the target's AC can't be less than 16, regardless of what kind of armor it is wearing.",
+                "desc" => "You touch a willing creature. Until the spell ends, the target's skin has a rough, bark-like appearance, and the target's AC can't be less than 16, regardless of what kind of inventory-tab-armor it is wearing.",
                 "page" => "phb 217",
                 "range" => "Touch",
                 "components" => ["V", "S", "M"],
@@ -997,7 +997,7 @@ class SpellsTableSeeder extends Seeder
             ],
             [
                 "name" => "Control Weather",
-                "desc" =>  view('db.spells.control-weather')->render(),
+                "desc" => view('db.spells.control-weather')->render(),
                 "range" => "Self",
                 "components" => ["V", "S", "M"],
                 "material" => "Burning incense and bits of earth and wood mixed in water.",
@@ -1231,7 +1231,7 @@ class SpellsTableSeeder extends Seeder
                 "casting_time" => "1 action",
                 "level" => 1,
                 "school" => "Divination",
-                "classes" => [ "Bard", "Cleric", "Druid", "Paladin", "Ranger", "Sorcerer", "Wizard"],
+                "classes" => ["Bard", "Cleric", "Druid", "Paladin", "Ranger", "Sorcerer", "Wizard"],
                 "subclasses" => ["College of Lore"]
             ],
             [
@@ -1989,7 +1989,7 @@ class SpellsTableSeeder extends Seeder
                 "level" => 4,
                 "school" => "Abjuration",
                 "classes" => ["Bard", "Cleric", "Druid", "Ranger"],
-                "subclasses" => [ "Circle of the Land", "Oath of Devotion"]
+                "subclasses" => ["Circle of the Land", "Oath of Devotion"]
             ],
             [
                 "name" => "Otiluke's Freezing Sphere",
@@ -2817,7 +2817,7 @@ class SpellsTableSeeder extends Seeder
             ],
             [
                 "name" => "Mage Armor",
-                "desc" => "You touch a willing creature who isn't wearing armor, and a protective magical force surrounds it until the spell ends. The target's base AC becomes 13 + its Dexterity modifier. The spell ends if the target dons armor or if you dismiss the spell as an action.",
+                "desc" => "You touch a willing creature who isn't wearing inventory-tab-armor, and a protective magical force surrounds it until the spell ends. The target's base AC becomes 13 + its Dexterity modifier. The spell ends if the target dons inventory-tab-armor or if you dismiss the spell as an action.",
                 "range" => "Touch",
                 "components" => ["V", "S", "M"],
                 "material" => "A piece of cured leather.",
