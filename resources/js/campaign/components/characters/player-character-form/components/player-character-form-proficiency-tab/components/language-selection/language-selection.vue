@@ -10,7 +10,7 @@
                         <p><em>{{ language.script ? language.script : 'No' }} script</em></p>
                     </div>
                 </div>
-                <div v-for="(language) in selectedLanguages.value">
+                <div v-for="(language) in selectedLanguages">
                     <div class="uk-card uk-card-body uk-card-primary">
                         <div class="uk-card-title">{{ language.name }}</div>
                         <button class="uk-text-danger uk-float-right uk-button uk-button-primary uk-button-round"
@@ -21,19 +21,20 @@
                     </div>
                 </div>
             </div>
-            <div class="uk-margin"
-                 v-if="optionalLanguages.value > 0 && optionalLanguages.value - state.selection.length > 0">
-                <label for="language">Choose {{ optionalLanguages.value - state.selection.length }} languages</label>
+            <div class="uk-margin" v-if="remainingChoices > 0">
+                <label for="language">Choose {{ remainingChoices }} languages</label>
                 <select name="language" id="language" class="uk-select" @input="state.addLanguage">
                     <option :value="null">- Make a choice -</option>
-                    <option v-for="language in languages.value.optional" :value="language.id"
-                            :disabled="languages.value.known.includes(language.id)">
-                        {{ language.name }}
-                    </option>
+                    <template v-for="language in languages.optional">
+                        <option :value="language.id"
+                                :disabled="languages.known.includes(language.id)">
+                            {{ language.name }}
+                        </option>
+                    </template>
                 </select>
             </div>
             <div class="uk-alert uk-alert-warning"
-                 v-if="languages.known.length === 0 && optionalLanguages.value === 0">
+                 v-if="languages.known.length === 0 && optionalLanguages === 0">
                 <p>There are no languages available. Have you selected a race yet?</p>
             </div>
         </div>
@@ -41,18 +42,26 @@
 </template>
 
 <script>
-import { onMounted, watch } from 'vue'
-import { useLanguageSelectionState } from './language-selection.state'
+import { onMounted, toRefs, watch } from 'vue'
+import { useLanguageSelectionState, useLanguageSelectionUpdates } from './language-selection.state'
 
 export default {
     name: 'language-selection',
-    props: ['background', 'race', 'subrace', 'value'],
+    props: ['input', 'form'],
+    emits: ['update'],
     setup(props, ctx) {
-        const { languages, optionalLanguages, selectedLanguages, state } = useLanguageSelectionState(props)
-        onMounted(() => state.init())
-        watch(() => state.selection, () => ctx.emit(state.selection))
+        const { languages, optionalLanguages, remainingChoices, selectedLanguages, state } = useLanguageSelectionState(
+            toRefs(props))
 
-        return { languages, optionalLanguages, selectedLanguages, state }
+        useLanguageSelectionUpdates(state, props)
+
+        onMounted(() => state.init())
+
+        watch(state, () => ctx.emit('update', state.selection))
+
+        watch(props.input, () => state.refreshFromInput())
+
+        return { languages, optionalLanguages, remainingChoices, selectedLanguages, state }
     }
 }
 </script>

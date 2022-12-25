@@ -1,4 +1,3 @@
-import { capitalize } from 'lodash'
 import { computed } from 'vue'
 
 export const useTabs = (props, ctx) => {
@@ -9,7 +8,7 @@ export const useTabs = (props, ctx) => {
             for (const chosenClass of props.character.classes) {
                 if (chosenClass.class_id != null) {
                     enabled = enabled.concat(['ability', 'proficiency', 'personality', 'background'])
-                    if (props.spellcaster) {
+                    if (props.spellcaster.value) {
                         enabled.push('spells')
                     }
                 }
@@ -24,7 +23,7 @@ export const useTabs = (props, ctx) => {
             case 'proficiency':
                 return 'Languages, Skills & Proficiencies'
             default:
-                return capitalize(props.tab)
+                return props.tab.toLowerCase()
         }
     })
     const navigate = (tab) => {
@@ -33,18 +32,18 @@ export const useTabs = (props, ctx) => {
         }
     }
 
-    return { activeTab, enabledTabs, list: getTabList(props.spellcaster), navigate }
+    return { activeTab, enabledTabs, list: getTabList(props.spellcaster.value), navigate }
 }
 
 export const useStyling = (enabledTabs, activeTab) => {
-    const classes = (tab) => (
-        {
-            'uk-button-primary': tab === activeTab.value,
-            'uk-button-default': tab !== activeTab.value && enabledTabs.value.includes(tab),
-            'disabled': !enabledTabs.value.includes(tab)
-        }
-    )
-    return { classes }
+    return (tab) =>
+        (
+            {
+                'uk-button-primary': tab === activeTab.value,
+                'uk-button-default': tab !== activeTab.value && enabledTabs.value.includes(tab),
+                'disabled': !enabledTabs.value.includes(tab)
+            }
+        )
 }
 
 const getTabList = (spellcaster) => [
@@ -64,7 +63,7 @@ const getTabList = (spellcaster) => [
     },
     {
         key: 'proficiency',
-        label: 'Languages, Skills& Proficiencies',
+        label: 'Languages, Skills & Proficiencies',
         errorKey: 'proficiencies'
     },
     {

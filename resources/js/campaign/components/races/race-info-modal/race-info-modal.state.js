@@ -8,6 +8,9 @@ export const useRaceInfoModalState = (races) => reactive({
         trait: null,
         subTrait: null
     },
+    setActiveTab(tab) {
+        this.active.tab = tab
+    },
     setActive(race) {
         this.active.race = race.id
         this.active.tab = 'description'
@@ -24,16 +27,16 @@ export const useRaceInfoModalState = (races) => reactive({
         }
     },
     setActiveSubrace(subraceId) {
-        const race = races?.find?.((race) => race.id === this.active.race)
+        const race = races.value.find?.((race) => race.id === this.active.race)
         const subrace = race.subraces.find(item => item.id === subraceId)
         this.active.subrace = subraceId
-        this.active.subTrait = subrace.traits[0].id
+        this.active.subTrait = subrace.traits?.[0]?.id || null
     }
 })
 
 export const useRaceInfoModalComputed = (races, active) => {
     const activeRace = computed(() => {
-        const race = races?.find?.(active.race)
+        const race = races.value.find?.((race) => race.id === active.race)
         return race ? format(race) : null
     })
     const activeSubrace = computed(() => {

@@ -4,7 +4,7 @@
             <button v-for="tab in tabs.list"
                     v-if="!tab.hasOwnProperty('condition') || !!tab.condition"
                     class="uk-button"
-                    :class="classes(tab.key)"
+                    :class="getClasses(tab.key)"
                     @click.prevent="tabs.navigate(tab.key)">
                 {{ tab.label }}
                 <i v-if="Object.keys(errors).find(item => item.includes(tab.errorKey || tab.key))"
@@ -29,7 +29,7 @@
                                         <li v-for="tab in tabs.list">
                                             <button v-if="!tab.hasOwnProperty('condition') || !!tab.condition"
                                                     class="uk-button"
-                                                    :class="classes(tab.key)"
+                                                    :class="getClasses(tab.key)"
                                                     @click.prevent="tabs.navigate(tab.key)">
                                                 {{ tab.label }} <i
                                                 v-if="Object.keys(errors).find(item => item.includes(tab.errorKey || tab.key))"
@@ -54,9 +54,9 @@ export default {
     props: ['character', 'errors', 'spellcaster', 'tab'],
     setup(props, ctx) {
         const tabs = useTabs(props, ctx)
-        const { classes } = useStyling(tabs.enabledTabs, tabs.activeTab)
+        const getClasses = useStyling(tabs.enabledTabs, tabs.activeTab)
 
-        return { classes, tabs }
+        return { getClasses, tabs }
     }
 }
 </script>

@@ -17,7 +17,7 @@ export const usePlayerCharacterDetailState = (store, users, props) => {
             this.input = input
         },
         init() {
-            this.setInput(props.value)
+            this.setInput({ ...props.input.info })
             if (isOwner.value) {
                 users.load()
                     .then(() => {
@@ -31,7 +31,7 @@ export const usePlayerCharacterDetailState = (store, users, props) => {
 
     const subraces = computed(() => {
         if (races) {
-            const race = races.value[state.input.race_id]
+            const race = races.value.find((race) => race.id === state.input.race_id)
             if (race) {
                 return race.subraces || []
             }

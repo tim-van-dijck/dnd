@@ -48,7 +48,7 @@
 <script>
 import { useCharacterStore } from '@campaign/stores/characters'
 import { onMounted, watch } from 'vue'
-import { usePlayerCharacterBackgroundState } from './player-character-form-background.state'
+import { usePlayerCharacterBackgroundState } from './player-character-form-background-tab.state'
 
 export default {
     name: 'player-character-form-background-tab',
@@ -62,7 +62,7 @@ export default {
             state.setSelection(props.value || 0)
         })
 
-        watch(() => state.selection, () => ctx.emit('input', state.selection))
+        watch(state, () => ctx.emit('update', state.selection))
 
         return {
             info: {

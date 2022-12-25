@@ -3,15 +3,17 @@
         <button class="uk-button uk-button-secondary uk-margin-bottom" @click.prevent="ui.openModal">
             Class list
         </button>
-        <div v-if="Object.keys(info.classes).length > 0" v-for="(charClass, index) in state.input"
+        <div v-if="info.classes.value" v-for="(charClass, index) in state.input"
              class="uk-card uk-card-secondary objective">
             <div class="uk-card-header">
                 <h3 class="uk-card-title">
                     Level {{ charClass.level }}
                     {{
-                        charClass.subclass_id > 0 ? info.subclasses[charClass.class_id][charClass.subclass_id].name : ''
+                        charClass.subclass_id > 0
+                            ? info.subclasses.value?.[charClass.class_id]?.[charClass.subclass_id]?.name
+                            : ''
                     }}
-                    {{ charClass.class_id > 0 ? info.classes[charClass.class_id].name : ' Nobody' }}
+                    {{ charClass.class_id > 0 ? info.classes.value?.[charClass.class_id]?.name : ' Nobody' }}
                 </h3>
                 <div class="uk-margin">
                     <label :for="`class_${index}`" class="uk-form-label"
@@ -34,7 +36,7 @@
                             :disabled="ui.subclassDisabled(charClass)"
                             v-model="charClass.subclass_id">
                         <option :value="null">- Choose a subclass -</option>
-                        <option v-for="subclass in info.subclasses[charClass.class_id]" :value="subclass.id">
+                        <option v-for="subclass in info.subclasses.value[charClass.class_id]" :value="subclass.id">
                             {{ subclass.name }}
                         </option>
                     </select>
@@ -54,25 +56,27 @@
                                uk-tooltip="title: Check the Class List for the full description of each feature and option; pos: right; delay: 200"></i>
                         </div>
                         <div class="uk-accordion-content uk-form-horizontal">
-                            <div v-if="feature.level <= charClass.level"
-                                 v-for="feature in info.classes[charClass.class_id].features || []"
-                                 class="uk-margin">
-                                <label :class="{'uk-form-label': feature.choose > 0}"
-                                       :for="`feature_${feature.id}`">{{ feature.name }}</label>
-                                <div class="uk-form-controls" v-if="feature.choose > 0">
-                                    <select :id="`feature_${feature.id}_${index}`" class="uk-select"
-                                            v-for="index in feature.choose"
-                                            @input="state.changeChoice(charClass, feature.id, index, $event.target.value)">
-                                        <option value="">- Make a choice -</option>
-                                        <option v-if="!state.chosen(charClass, feature.id, choice.id, index)"
-                                                v-for="choice in feature.choices"
-                                                :value="choice.id"
-                                                :selected="charClass.hasOwnProperty('features') && (charClass.features[feature.id] || {})[index] == choice.id">
-                                            {{ choice.name }}
-                                        </option>
-                                    </select>
+                            <template v-for="feature in info.classes.value[charClass.class_id].features || []">
+                                <div v-if="feature.level <= charClass.level"
+                                     class="uk-margin">
+                                    <label :class="{'uk-form-label': feature.choose > 0}"
+                                           :for="`feature_${feature.id}`">{{ feature.name }}</label>
+                                    <div class="uk-form-controls" v-if="feature.choose > 0">
+                                        <select :id="`feature_${feature.id}_${index}`" class="uk-select"
+                                                v-for="index in feature.choose"
+                                                @input="state.changeChoice(charClass, feature.id, index, $event.target.value)">
+                                            <option value="">- Make a choice -</option>
+                                            <template v-for="choice in feature.choices">
+                                                <option v-if="!state.chosen(charClass, feature.id, choice.id, index)"
+                                                        :value="choice.id"
+                                                        :selected="charClass.hasOwnProperty('features') && (charClass.features[feature.id] || {})[index] == choice.id">
+                                                    {{ choice.name }}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -102,11 +106,11 @@ import { useCharacterStore } from '@campaign/stores/characters'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import UIKit from 'uikit'
 import { onMounted, watch } from 'vue'
-import { usePlayerCharacterClassState } from './player-character-form-class.state'
+import { usePlayerCharacterClassState } from './player-character-form-class-tab.state'
 
 export default {
     name: 'player-character-form-class-tab',
-    props: ['value', 'errors'],
+    props: ['input', 'errors'],
     components: { ClassInfoModal },
     setup(props, ctx) {
         const store = useCharacterStore()
@@ -114,7 +118,7 @@ export default {
         const { classOptions, state, subclasses } = usePlayerCharacterClassState(props)
 
         onMounted(() => state.init())
-        watch(() => state.input, () => ctx.emit('input', state.input))
+        watch(state, () => ctx.emit('update', state.input))
 
         return {
             state,
@@ -129,8 +133,8 @@ export default {
                 openModal: () => UIKit.modal(`#class-info-modal`).show(),
                 subclassDisabled(charClass) {
                     return charClass.class_id == null ||
-                        classes[charClass.class_id].subclasses.length === 0 ||
-                        classes[charClass.class_id].subclass_level > charClass.level
+                        classes.value?.[charClass.class_id]?.subclasses?.length === 0 ||
+                        classes.value?.[charClass.class_id]?.subclass_level > charClass.level
                 }
             }
         }

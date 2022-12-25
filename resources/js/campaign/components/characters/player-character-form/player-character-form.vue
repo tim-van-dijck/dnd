@@ -3,7 +3,7 @@
         <h1>{{ ui.title.value }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <form v-if="state.input && Object.keys(info.classes).length > 0 && Object.keys(info.races).length > 0"
+                <form v-if="state.input && info.classes.value && info.races.value"
                       id="character-form" class="uk-form-stacked">
                     <ul v-if="ui.can('edit', 'role')" uk-tab>
                         <li :class="{'uk-active': ui.navigation.page === 'form'}">
@@ -16,45 +16,46 @@
                     <player-character-form-navigation v-show="ui.navigation.page === 'form'"
                                                       :character="state.input" :spellcaster="ui.spellcaster"
                                                       :tab="ui.navigation.tab" :errors="state.errors"
-                                                      @navigate="ui.navigation.setTab"/>
+                                                      @navigate="ui.navigation.setTab($event)"/>
 
                     <player-character-form-details-tab v-show="ui.navigation.isFormTabActive('details')"
-                                                       v-model="state.input.info"
+                                                       :input="state.input"
                                                        :errors="state.errors"
+                                                       @update="state.setInfo($event)"
                                                        @next="ui.navigation.setTab('class')"/>
                     <player-character-form-class-tab v-show="ui.navigation.isFormTabActive('class')"
-                                                     v-model="state.input.classes"
+                                                     :input="state.input"
                                                      :errors="state.errors"
+                                                     @update="state.setClasses($event)"
                                                      @next="ui.navigation.setTab('background')"/>
                     <player-character-form-background-tab v-show="ui.navigation.isFormTabActive('background')"
-                                                          v-model="state.input.background_id"
+                                                          :input="state.input.background_id"
+                                                          @update="state.setBackground($event)"
                                                           :errors="state.errors"
                                                           @next="ui.navigation.setTab('proficiency')"/>
                     <player-character-form-proficiency-tab v-show="ui.navigation.isFormTabActive('proficiency')"
-                                                           v-model="state.input.proficiencies"
-                                                           :info="state.input.info"
-                                                           :background-id="state.input.background_id"
-                                                           :character-classes="state.input.classes"
+                                                           :input="state.input"
+                                                           @update="state.setProficiencies($event)"
                                                            :errors="state.errors"
                                                            @next="ui.navigation.setTab('ability')"/>
-                    <player-character-form-abilities-tab v-show="ui.navigation.isFormTabActive('ability')"
-                                                         v-model="state.input.ability_scores"
-                                                         :character-classes="state.input.classes"
-                                                         :errors="state.errors"
-                                                         :info="state.input.info"
-                                                         @next="ui.navigation.setTab('personality')"/>
-                    <player-character-form-personality-tab v-show="ui.navigation.isFormTabActive('personality')"
-                                                           v-model="state.input.personality"
-                                                           :errors="state.errors"
-                                                           :spellcaster="ui.spellcaster"
-                                                           @next="ui.navigation.nextOrSave(ui.spellcaster, 'spells')"/>
-                    <player-character-form-spell-tab v-if="ui.spellcaster"
-                                                     v-show="ui.navigation.isFormTabActive('spells')"
-                                                     v-model="state.input.spells"
-                                                     :character-classes="state.input.classes"
-                                                     :errors="state.errors"
-                                                     :info="state.input.info"
-                                                     @next="state.save"/>
+                    <!--                    <player-character-form-abilities-tab v-show="ui.navigation.isFormTabActive('ability')"-->
+                    <!--                                                         v-model="state.input.ability_scores"-->
+                    <!--                                                         :character-classes="state.input.classes"-->
+                    <!--                                                         :errors="state.errors"-->
+                    <!--                                                         :info="state.input.info"-->
+                    <!--                                                         @next="ui.navigation.setTab('personality')"/>-->
+                    <!--                    <player-character-form-personality-tab v-show="ui.navigation.isFormTabActive('personality')"-->
+                    <!--                                                           v-model="state.input.personality"-->
+                    <!--                                                           :errors="state.errors"-->
+                    <!--                                                           :spellcaster="ui.spellcaster"-->
+                    <!--                                                           @next="ui.navigation.nextOrSave(ui.spellcaster, 'spells')"/>-->
+                    <!--                    <player-character-form-spell-tab v-if="ui.spellcaster.value"-->
+                    <!--                                                     v-show="ui.navigation.isFormTabActive('spells')"-->
+                    <!--                                                     v-model="state.input.spells"-->
+                    <!--                                                     :character-classes="state.input.classes"-->
+                    <!--                                                     :errors="state.errors"-->
+                    <!--                                                     :info="state.input.info"-->
+                    <!--                                                     @next="state.save"/>-->
 
                     <permissions-form v-show="ui.navigation.page === 'permissions' && ui.can('edit', 'role')"
                                       entity="character" :id="id"

@@ -17,7 +17,7 @@ export const usePlayerCharacterClassState = (props) => {
             this.input.splice(index, 1)
         },
         init() {
-            this.setInput(props.value || [])
+            this.setInput(props.input?.classes || [])
             if (this.input.length === 0) {
                 this.addClass()
             }
@@ -58,11 +58,11 @@ export const usePlayerCharacterClassState = (props) => {
     })
     const subclasses = computed(() => {
         const subclasses = {}
-        for (const classId in classes) {
+        for (const classId in classes.value) {
             if (!subclasses.hasOwnProperty(classId)) {
                 subclasses[classId] = {}
             }
-            for (const subclass of classes[classId].subclasses || []) {
+            for (const subclass of classes.value?.[classId]?.subclasses || []) {
                 subclasses[classId][subclass.id] = { id: subclass.id, name: subclass.name }
             }
         }

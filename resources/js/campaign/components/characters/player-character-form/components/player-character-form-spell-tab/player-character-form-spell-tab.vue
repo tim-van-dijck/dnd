@@ -106,7 +106,7 @@ export default {
 
         onMounted(() => tab.state.init())
 
-        watch(() => tab.state.selection, () => ctx.emit('input', tab.state.selection))
+        watch(() => tab.state.selection, () => console.log(props))
 
         return {
             info,

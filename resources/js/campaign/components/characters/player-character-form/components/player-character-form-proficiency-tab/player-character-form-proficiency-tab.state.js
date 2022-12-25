@@ -1,6 +1,6 @@
 import { useCharacterStore } from '@campaign/stores/characters'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 import { useRelated } from '../../player-character-form.state'
 
 export const usePlayerCharacterProficiencyState = (props) => {
@@ -14,16 +14,16 @@ export const usePlayerCharacterProficiencyState = (props) => {
             tools: []
         },
         init() {
-            if (Object.keys(props.value || {}).length > 0) {
+            if (Object.keys(props.input.proficiencies || {}).length > 0) {
                 const choices = {
-                    languages: props.value.languages || [],
+                    languages: props.input.proficiencies?.languages || [],
                     instruments: [],
                     skills: [],
                     tools: []
                 }
-                for (const type in this.value) {
+                for (const type in props.input.proficiencies) {
                     if (['instruments', 'skills', 'tools'].includes(type)) {
-                        for (const proficiency of this.value[type]) {
+                        for (const proficiency of props.input.proficiencies[type]) {
                             choices[type].push(this.formatProficiency(proficiency))
                         }
                     }
@@ -32,14 +32,24 @@ export const usePlayerCharacterProficiencyState = (props) => {
             }
         },
         setLanguages(languages) {
-            this.input.languages = languages
+            this.input.languages = [...languages]
+        },
+        setProficiencies(proficiencies, type) {
+            if (![
+                'skills',
+                'tools',
+                'instruments'
+            ].includes(type)) {
+                throw new Error(`Invalid Proficiency type [${type}]`)
+            }
+            this.input[type] = [...proficiencies]
         },
         formatProficiency(proficiency) {
             return { ...proficiency, origin: getProficiencyOrigin() }
         }
     })
 
-    const { background, race, subrace } = useRelated(props.info?.race_id, props.info?.subrace_id, props.backgroundId)
+    const { background, race, subrace } = useRelated(props.input)
 
     const getProficiencyOrigin = (proficiency) => {
         switch (proficiency.origin_type) {
@@ -62,22 +72,4 @@ export const usePlayerCharacterProficiencyState = (props) => {
     return {
         background, race, state, subrace
     }
-}
-
-export const useProficiencyStateUpdates = (state, props) => {
-    watch(() => props.info.race_id, (value, oldValue) => {
-        if (oldValue !== value) {
-            state.setLanguages([])
-        }
-    })
-    watch(() => props.info.subrace_id, (value, oldValue) => {
-        if (oldValue !== value) {
-            state.setLanguages([])
-        }
-    })
-    watch(() => props.info.background_id, (value, oldValue) => {
-        if (oldValue !== value) {
-            state.setLanguages([])
-        }
-    })
 }

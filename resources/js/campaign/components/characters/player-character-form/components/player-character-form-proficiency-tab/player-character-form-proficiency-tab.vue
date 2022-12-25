@@ -2,28 +2,21 @@
     <div id="proficiency-tab">
         <div uk-accordion="multiple: true;">
             <language-selection class="uk-open"
-                                :background="ui.background"
-                                :race="ui.race"
-                                :subrace="ui.subrace"
-                                v-model="state.input.languages"/>
+                                :form="input"
+                                :input="state.input"
+                                @update="state.setLanguages($event)"/>
             <skill-selection class="uk-accordion-content uk-open"
-                             :background="ui.background"
-                             :classes="characterClasses"
-                             :race="ui.race"
-                             :subrace="ui.subrace"
-                             v-model="state.input.skills"/>
+                             :form="input"
+                             :input="state.input"
+                             @update="state.setProficiencies($event, 'skills')"/>
             <tool-selection class="uk-open"
-                            :background="ui.background"
-                            :classes="characterClasses"
-                            :race="ui.race"
-                            :subrace="ui.subrace"
-                            v-model="state.input.tools"/>
+                            :form="input"
+                            :input="state.input"
+                            @update="state.setProficiencies($event, 'tools')"/>
             <instrument-selection class="uk-open"
-                                  :background="ui.background"
-                                  :classes="characterClasses"
-                                  :race="ui.race"
-                                  :subrace="ui.subrace"
-                                  v-model="state.input.instruments"/>
+                                  :form="input"
+                                  :input="state.input"
+                                  @update="state.setProficiencies($event, 'instruments')"/>
         </div>
 
         <p class="uk-margin">
@@ -42,21 +35,19 @@ import InstrumentSelection from './components/instrument-selection'
 import LanguageSelection from './components/language-selection'
 import SkillSelection from './components/skill-selection'
 import ToolSelection from './components/tool-selection'
-import {
-    usePlayerCharacterProficiencyState,
-    useProficiencyStateUpdates
-} from './player-character-form-proficiency-tab.state'
+import { usePlayerCharacterProficiencyState } from './player-character-form-proficiency-tab.state'
 
 export default {
     name: 'player-character-form-proficiency-tab',
     components: { LanguageSelection, InstrumentSelection, ToolSelection, SkillSelection },
-    props: ['backgroundId', 'characterClasses', 'errors', 'info', 'value'],
+    props: ['errors', 'input'],
     setup(props, ctx) {
         const { background, race, state, subrace } = usePlayerCharacterProficiencyState(props)
-        useProficiencyStateUpdates(state, props)
-        watch(() => state.input, () => ctx.emit('input', state.input))
+
+        watch(state, () => ctx.emit('update', state.input))
 
         return {
+            characterClasses: props.input.classes,
             state,
             ui: {
                 background,
@@ -68,7 +59,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

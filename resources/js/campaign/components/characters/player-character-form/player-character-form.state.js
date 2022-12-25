@@ -10,6 +10,18 @@ export const usePlayerCharacterForm = (store, id) =>
         setInput(input) {
             this.input = input
         },
+        setInfo(info) {
+            this.input.info = { ...info }
+        },
+        setClasses(classes) {
+            this.input.classes = [...classes]
+        },
+        setBackground(backgroundId) {
+            this.input.background_id = backgroundId
+        },
+        setProficiencies(proficiencies) {
+            this.input.proficiencies = { ...proficiencies }
+        },
         setErrors(errors) {
             this.errors = errors
         },
@@ -23,8 +35,9 @@ export const usePlayerCharacterForm = (store, id) =>
                     this.setInput(CharacterFormatter.format(character))
                 })
             } else {
-                this.setInput(getEmptyCharacter())
-                return Promise.resolve(getEmptyCharacter())
+                const char = getEmptyCharacter()
+                this.setInput(char)
+                return Promise.resolve(char)
             }
         },
         save() {
@@ -70,13 +83,13 @@ const getEmptyCharacter = () => (
     }
 )
 
-export const useRelated = (raceId, subraceId, backgroundId) => {
+export const useRelated = (input) => {
     const store = useCharacterStore()
     const { backgrounds, races } = storeToRefs(store)
 
-    const background = computed(() => backgrounds.value?.find(item => item.id == backgroundId) || null)
-    const race = computed(() => races?.[raceId] || null)
-    const subrace = computed(() => race?.subraces?.find(item => item.id == subraceId) || null)
+    const background = computed(() => backgrounds.value?.find(item => item.id === input.background_id) || null)
+    const race = computed(() => races.value?.find(race => race.id === input.info.race_id) || null)
+    const subrace = computed(() => race.value?.subraces?.find(item => item.id === input.info.subrace_id) || null)
 
     return { background, race, subrace }
 }

@@ -8,7 +8,7 @@
                            :class="{'uk-text-danger': info.errors.hasOwnProperty('info.race_id')}">Race*</label>
                     <select id="race" name="race" class="uk-select"
                             :class="{'uk-form-danger': info.errors.hasOwnProperty('info.race_id')}"
-                            v-model="state.input.race_id" @input="state.input.subrace_id = null">
+                            v-model="state.input.race_id" @input.stop="state.input.subrace_id = null">
                         <option :value="null">- Choose a race -</option>
                         <option v-for="race in info.races.value" :value="race.id">{{ race.name }}</option>
                     </select>
@@ -99,7 +99,7 @@ import { alignments, usePlayerCharacterDetailState } from './player-character-fo
 
 export default {
     name: 'player-character-form-details-tab',
-    props: ['value', 'errors'],
+    props: ['errors', 'input'],
     setup(props, ctx) {
         const store = useCharacterStore()
         const userStore = useUserStore()
@@ -109,7 +109,7 @@ export default {
 
         onMounted(() => state.init())
 
-        watch(() => state.input, () => ctx.emit('input', state.input))
+        watch(state, () => ctx.emit('update', { ...state.input }))
 
         return {
             state,
