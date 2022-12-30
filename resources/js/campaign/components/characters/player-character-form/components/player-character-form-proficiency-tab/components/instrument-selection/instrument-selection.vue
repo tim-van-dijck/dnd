@@ -35,7 +35,7 @@
                             <select :name="`instruments_${classIndex}`" :id="`instruments_${classIndex}`"
                                     class="uk-select"
                                     @input="state.addToClass(info.availableClasses.value[charClass.class_id], $event.target.value); $event.target.value = ''">
-                                <option :value="null">- Make a choice -</option>
+                                <option value="">- Make a choice -</option>
                                 <option v-for="instrument in ui.classInstruments.value[charClass.class_id].optional"
                                         :value="instrument.id"
                                         :disabled="ui.classInstruments.value[charClass.class_id].known.includes(instrument.id)">

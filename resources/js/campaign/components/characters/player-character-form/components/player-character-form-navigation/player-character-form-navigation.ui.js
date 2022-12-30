@@ -2,12 +2,12 @@ import { computed } from 'vue'
 
 export const useTabs = (props, ctx) => {
     const enabledTabs = computed(() => {
-        let enabled = ['details']
+        const enabled = ['details']
         if (props.character.info.hasOwnProperty('race_id') && props.character.info.race_id != null) {
             enabled.push('class')
             for (const chosenClass of props.character.classes) {
                 if (chosenClass.class_id != null) {
-                    enabled = enabled.concat(['ability', 'proficiency', 'personality', 'background'])
+                    enabled.push('ability', 'proficiency', 'personality', 'background')
                     if (props.spellcaster.value) {
                         enabled.push('spells')
                     }

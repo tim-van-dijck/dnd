@@ -55,7 +55,7 @@ import { useActive } from './player-character-class-tab.ui'
 
 export default {
     name: 'player-character-class-tab',
-    props: ['classes'],
+    props: ['input'],
     setup: function (props) {
         const store = useCharacterStore()
         const ui = useActive()
@@ -63,12 +63,13 @@ export default {
         const { classes } = storeToRefs(store)
 
         onMounted(() => store.loadClasses())
+
         const characterClasses = computed(() => {
             const formatted = []
             if (Object.keys(classes.value || {}).length === 0) {
                 return formatted
             }
-            for (const charClass of props.classes) {
+            for (const charClass of props.input.classes) {
                 const classObject = {
                     ...(
                         classes.value[charClass.id] || {}

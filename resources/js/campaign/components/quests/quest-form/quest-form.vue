@@ -111,9 +111,7 @@ export default {
         const { state } = useQuestFormState(store, main.can)
         const { locations, search } = useSearch()
 
-        onMounted(() => {
-            state.init(props.id)
-        })
+        onMounted(() => state.init(props.id))
 
         return {
             id: props.id,

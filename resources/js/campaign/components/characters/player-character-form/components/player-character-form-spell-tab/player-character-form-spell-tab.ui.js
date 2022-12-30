@@ -8,6 +8,7 @@ export const useFormatteValues = (ctx, selection, chosenClasses) => {
 
     const spellsAvailable = computed(() => {
         const casterClasses = []
+        console.log(chosenClasses)
         for (const charClass of chosenClasses.value) {
             if (charClass.currentLevel.spells_known > 0) {
                 casterClasses.push(charClass)

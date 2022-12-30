@@ -57,10 +57,7 @@ export default {
         const store = useCharacterStore()
         const { backgrounds, selected, state } = usePlayerCharacterBackgroundState(props)
 
-        onMounted(() => {
-            store.loadBackgrounds()
-            state.setSelection(props.value || 0)
-        })
+        onMounted(() => state.setSelection(props.value || 0))
 
         watch(state, () => ctx.emit('update', state.selection))
 

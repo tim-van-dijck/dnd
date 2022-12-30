@@ -3,7 +3,7 @@
         <h1>{{ ui.title.value }}</h1>
         <div class="uk-section uk-section-default">
             <div class="uk-container padded">
-                <form v-if="state.input && info.classes.value && info.races.value"
+                <form v-if="ui.loaded.value"
                       id="character-form" class="uk-form-stacked">
                     <ul v-if="ui.can('edit', 'role')" uk-tab>
                         <li :class="{'uk-active': ui.navigation.page === 'form'}">
@@ -38,24 +38,23 @@
                                                            @update="state.setProficiencies($event)"
                                                            :errors="state.errors"
                                                            @next="ui.navigation.setTab('ability')"/>
-                    <!--                    <player-character-form-abilities-tab v-show="ui.navigation.isFormTabActive('ability')"-->
-                    <!--                                                         v-model="state.input.ability_scores"-->
-                    <!--                                                         :character-classes="state.input.classes"-->
-                    <!--                                                         :errors="state.errors"-->
-                    <!--                                                         :info="state.input.info"-->
-                    <!--                                                         @next="ui.navigation.setTab('personality')"/>-->
-                    <!--                    <player-character-form-personality-tab v-show="ui.navigation.isFormTabActive('personality')"-->
-                    <!--                                                           v-model="state.input.personality"-->
-                    <!--                                                           :errors="state.errors"-->
-                    <!--                                                           :spellcaster="ui.spellcaster"-->
-                    <!--                                                           @next="ui.navigation.nextOrSave(ui.spellcaster, 'spells')"/>-->
-                    <!--                    <player-character-form-spell-tab v-if="ui.spellcaster.value"-->
-                    <!--                                                     v-show="ui.navigation.isFormTabActive('spells')"-->
-                    <!--                                                     v-model="state.input.spells"-->
-                    <!--                                                     :character-classes="state.input.classes"-->
-                    <!--                                                     :errors="state.errors"-->
-                    <!--                                                     :info="state.input.info"-->
-                    <!--                                                     @next="state.save"/>-->
+                    <player-character-form-abilities-tab v-show="ui.navigation.isFormTabActive('ability')"
+                                                         :input="state.input"
+                                                         @update="state.setAbilityScores($event)"
+                                                         :errors="state.errors"
+                                                         @next="ui.navigation.setTab('personality')"/>
+                    <player-character-form-personality-tab v-show="ui.navigation.isFormTabActive('personality')"
+                                                           :input="state.input"
+                                                           @update="state.setPersonality($event)"
+                                                           :spellcaster="ui.spellcaster"
+                                                           @next="ui.navigation.nextOrSave(ui.spellcaster, 'spells')"/>
+                    <player-character-form-spell-tab v-if="ui.spellcaster.value && state.input.classes.length > 0"
+                                                     v-show="ui.spellcaster.value && ui.navigation.isFormTabActive('spells')"
+                                                     :input="state.input"
+                                                     :classes="state.input.classes"
+                                                     @update="state.setSpells($event)"
+                                                     :errors="state.errors"
+                                                     @next="state.save"/>
 
                     <permissions-form v-show="ui.navigation.page === 'permissions' && ui.can('edit', 'role')"
                                       entity="character" :id="id"
@@ -73,7 +72,7 @@
 import { useCharacterStore } from '@campaign/stores/characters'
 import { useMainStore } from '@campaign/stores/main'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import PermissionsForm from '../../partial/permissions-form'
 import PlayerCharacterFormAbilitiesTab from './components/player-character-form-abilities-tab'
 import PlayerCharacterFormBackgroundTab from './components/player-character-form-background-tab'
@@ -92,11 +91,13 @@ export default {
     setup(props) {
         const store = useCharacterStore()
         const main = useMainStore()
-        const { classes, races } = storeToRefs(store)
+        const { backgrounds, classes, races } = storeToRefs(store)
         const state = usePlayerCharacterForm(store, props.id)
         const navigation = useFormNavigation(state.save)
         const title = useTitle(props.id, state.input)
-        const spellcaster = useSpellcaster(state.input, classes)
+        const spellcaster = useSpellcaster(state, classes)
+
+        const loaded = computed(() => classes.value && races.value && backgrounds.value && state.input !== null)
 
         onMounted(() => state.init())
 
@@ -110,7 +111,8 @@ export default {
                 can: main.can,
                 navigation,
                 spellcaster,
-                title
+                title,
+                loaded
             }
         }
     },

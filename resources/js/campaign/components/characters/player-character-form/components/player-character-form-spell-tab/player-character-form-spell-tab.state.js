@@ -3,12 +3,11 @@ import { useSpellStore } from '@campaign/stores/spells'
 import { storeToRefs } from 'pinia/dist/pinia.esm-browser'
 import { computed, reactive } from 'vue'
 
-export const usePlayerCharacterSpellState = (props, backgrounds, classes, races, subrace, raceCantrips) => {
+export const usePlayerCharacterSpellState = (input, background, classes, race, subrace, raceCantrips) => {
     const formatSpell = useFormatSpell(
-        props.info,
-        backgrounds,
+        background,
         classes,
-        races,
+        race,
         subrace
     )
 
@@ -53,8 +52,8 @@ export const usePlayerCharacterSpellState = (props, backgrounds, classes, races,
                 cantrip.origin_name = subrace.value.name
                 cantrip.origin_type = 'Subrace'
             } else {
-                cantrip.origin_id = props.info.race_id
-                cantrip.origin_name = races.value?.[props.info.race_id].name
+                cantrip.origin_id = input.info.race_id
+                cantrip.origin_name = race.value?.name
                 cantrip.origin_type = 'Race'
             }
             this.selection.cantrips.push(cantrip)
@@ -62,7 +61,7 @@ export const usePlayerCharacterSpellState = (props, backgrounds, classes, races,
         removeRaceCantrip() {
             if (raceCantrip) {
                 this.selection.cantrips = this.selection.cantrips
-                    .filter((item) => item.level === 0 && item.origin_type === 'Race')
+                    .filter((item) => item.level === 0 && ['Race', 'Subrace'].includes(item.origin_type))
             }
         },
         addToClassCount(type, classId) {
@@ -77,21 +76,18 @@ export const usePlayerCharacterSpellState = (props, backgrounds, classes, races,
         init() {
             const store = useSpellStore()
             store.load().then(() => {
-                if (props.value) {
+                if (input.spells) {
                     this.setSelection({
-                        cantrips: props.value.cantrips.map(spell => formatSpell(spell)),
-                        spells: props.value.spells.map(spell => formatSpell(spell))
+                        cantrips: input.spells.cantrips.map(spell => formatSpell(spell)),
+                        spells: input.spells.spells.map(spell => formatSpell(spell))
                     })
                 }
             })
         }
     })
 
-    const raceCantrip = computed(() => {
-        return state.selection.cantrips.find((item) => {
-            return item.level === 0 && ['Race', 'Subrace'].includes(item.origin_type)
-        })
-    })
+    const raceCantrip = computed(() =>
+        state.selection.cantrips.find((item) => item.level === 0 && ['Race', 'Subrace'].includes(item.origin_type)))
 
     return {
         raceCantrip,
@@ -99,13 +95,12 @@ export const usePlayerCharacterSpellState = (props, backgrounds, classes, races,
     }
 }
 
-const useFormatSpell = (info, backgrounds, classes, races, subrace) => {
+const useFormatSpell = (background, classes, race, subrace) => {
     return (spell) => {
         const formatted = { ...spell }
         switch (formatted.origin_type) {
             case 'background':
-                const background = backgrounds.find(item => item.id === formatted.origin_id)
-                formatted.origin_name = background?.name || 'Background'
+                formatted.origin_name = background.value?.name || 'Background'
                 break
             case 'class':
                 formatted.origin_name = classes[formatted.origin_id]?.name || 'Class'
@@ -122,8 +117,7 @@ const useFormatSpell = (info, backgrounds, classes, races, subrace) => {
                 }
                 break
             case 'race':
-                const race = races.find((race) => race.id === spell.origin_id === info.race_id)
-                formatted.origin_name = race.name || 'Race'
+                formatted.origin_name = race.value?.name || 'Race'
                 break
             case 'subrace':
                 formatted.origin_name = subrace?.id === spell.origin_id ? subrace.name || 'Subrace' : 'Subrace'
@@ -134,40 +128,44 @@ const useFormatSpell = (info, backgrounds, classes, races, subrace) => {
     }
 }
 
-export const usePlayerCharacterSpellsComputed = (info, characterClasses) => {
+export const usePlayerCharacterSpellsComputed = (input, race, subrace) => {
     const characters = useCharacterStore()
-    const spellStore = useSpellStore()
-    const { spells } = storeToRefs(spellStore)
-    const { backgrounds, classes, races } = storeToRefs(characters)
+    const { classes } = storeToRefs(characters)
 
-    const subrace = computed(() => races?.[info.subrace_id]?.subraces.find(item => item.id === info.subrace_id) || null)
+    // watch(input.value, () => console.log(input.value))
+
     const chosenClasses = computed(() => {
-        return characterClasses?.filter((item) => item.class_id && classes.hasOwnProperty(item.class_id))
-            ?.map((charClass) => {
-                const chosenClass = { ...(classes[charClass.class_id] || {}) }
-                const currentLevel = chosenClass.levels.find(lvl => lvl.level === charClass.level)
-                chosenClass.currentLevel = currentLevel || {}
-                if (charClass.subclass_id) {
-                    chosenClass.subclass = chosenClass.subclasses.find(item => item.id === charClass.subclass_id)
+        console.log('kapot')
+        return 'kapot'
+        return input.classes.map((cl) => {
+            if (classes.value.hasOwnProperty(cl.class_id)) {
+                const chosenClass = { ...classes.value[cl.class_id] }
+                console.log('HALLO')
+                if (cl.subclass_id) {
+                    chosenClass.subclass = {
+                        ...chosenClass.subclasses?.find(item => item.id === input.info.subclass_id) || {}
+                    }
                 }
+
                 return chosenClass
-            }) || []
+            }
+            return null
+        }).filter(Boolean)
     })
 
     const raceCantrips = computed(() => {
         let spells = []
-        if (info.race_id > 0) {
+        if (race.value) {
             const wizardSpells = Object.values(classes)
                 .find(([id, cl]) => cl.name === 'Wizard')
                 ?.map(([id, cl]) => cl.spells?.filter((item) => item.level === 0)) || []
 
-            const race = races[info.race_id]
-            if (race.traits.find(item => item.name.includes('Cantrip')) != null) {
+            if (race.value.traits.find(item => item.name.includes('Cantrip')) != null) {
                 spells = wizardSpells.map(spell => ({
                     ...spell,
-                    origin_id: race.id,
+                    origin_id: race.value.id,
                     origin_type: 'race',
-                    origin_name: race.name
+                    origin_name: race.value.name
                 }))
             }
 
@@ -183,5 +181,5 @@ export const usePlayerCharacterSpellsComputed = (info, characterClasses) => {
         return spells
     })
 
-    return { backgrounds, chosenClasses, classes, races, subrace, raceCantrips, spells }
+    return { chosenClasses, classes, raceCantrips }
 }

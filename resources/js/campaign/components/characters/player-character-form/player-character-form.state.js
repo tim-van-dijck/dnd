@@ -22,6 +22,15 @@ export const usePlayerCharacterForm = (store, id) =>
         setProficiencies(proficiencies) {
             this.input.proficiencies = { ...proficiencies }
         },
+        setAbilityScores(scores) {
+            this.input.ability_scores = { ...scores }
+        },
+        setPersonality(personality) {
+            this.input.personality = { ...personality }
+        },
+        setSpells(spells) {
+            this.input.spellcaster = { ...spells }
+        },
         setErrors(errors) {
             this.errors = errors
         },
@@ -85,11 +94,12 @@ const getEmptyCharacter = () => (
 
 export const useRelated = (input) => {
     const store = useCharacterStore()
-    const { backgrounds, races } = storeToRefs(store)
+    const { backgrounds, classes: classList, races } = storeToRefs(store)
 
     const background = computed(() => backgrounds.value?.find(item => item.id === input.background_id) || null)
     const race = computed(() => races.value?.find(race => race.id === input.info.race_id) || null)
     const subrace = computed(() => race.value?.subraces?.find(item => item.id === input.info.subrace_id) || null)
+    const classes = computed(() => input.classes.map((c) => classList[c.class_id]).filter(Boolean))
 
-    return { background, race, subrace }
+    return { background, classes, race, subrace }
 }

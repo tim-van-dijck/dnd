@@ -2,7 +2,7 @@ import { computed, reactive, watch } from 'vue'
 import { useRelated } from '../../player-character-form.state'
 
 export const usePlayerCharacterAbilitiesState = (props, ctx) => {
-    const { race, subrace } = useRelated(props.info?.race_id, props.info?.subrace_id)
+    const { race, subrace } = useRelated(props.input)
 
     const state = reactive({
         input: {
@@ -18,17 +18,19 @@ export const usePlayerCharacterAbilitiesState = (props, ctx) => {
             subrace: []
         },
         init() {
-            if (props.value) {
+            if (props.input.ability_scores) {
                 const input = {}
                 for (const ability of abilities) {
-                    input[ability] = (props.value?.[ability] || 3) - (bonuses.value?.[ability] || 0)
+                    input[ability] = (props.input.ability_scores?.[ability] || 3) - (bonuses.value?.[ability] || 0)
                 }
                 this.setInput(input)
             }
         },
         addAbilityBonus(value) {
-            const [ability, score] = value.split('_')
-            this.choices.race.push({ ability, score })
+            if (value !== '') {
+                const [ability, score] = value.split('_')
+                this.choices.race.push({ ability, score })
+            }
         },
         setInput(input) {
             this.input = input
@@ -91,7 +93,7 @@ export const usePlayerCharacterAbilitiesState = (props, ctx) => {
         ctx.emit('input', scores)
     })
 
-    return { bonuses, race, state, subrace, totalAbilities }
+    return { state, computed: { bonuses, race, subrace, totalAbilities } }
 }
 
 const abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']

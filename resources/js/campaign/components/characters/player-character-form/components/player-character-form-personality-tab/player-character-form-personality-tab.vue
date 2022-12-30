@@ -35,7 +35,7 @@ import { onMounted, reactive, watch } from 'vue'
 
 export default {
     name: 'player-character-form-personality-tab',
-    props: ['value', 'spellcaster'],
+    props: ['input', 'spellcaster'],
     setup(props, ctx) {
         const state = reactive({
             input: {
@@ -54,9 +54,9 @@ export default {
             }
         })
 
-        onMounted(() => state.setInput(props.value))
+        onMounted(() => state.setInput(props.input.personality))
 
-        watch(() => state.input, () => ctx.emit('input', state.input))
+        watch(state, () => ctx.emit('update', { ...state.input }))
 
         return {
             state,

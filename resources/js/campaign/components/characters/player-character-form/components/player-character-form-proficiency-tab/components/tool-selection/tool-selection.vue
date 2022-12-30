@@ -36,7 +36,7 @@
                             <select :name="`tools_${classIndex}`" :id="`tools_${classIndex}`" class="uk-select"
                                     :class="{'uk-form-danger': ui.errors?.hasOwnProperty('proficiencies.tools')}"
                                     @input="state.addToClass(info.availableClasses.value[charClass.class_id], $event.target.value); $event.target.value = ''">
-                                <option :value="null">- Make a choice -</option>
+                                <option value="">- Make a choice -</option>
                                 <option v-for="tool in ui.classTools.value[charClass.class_id].optional"
                                         :value="tool.id"
                                         :disabled="ui.classTools.value[charClass.class_id].known.includes(tool.id)">
