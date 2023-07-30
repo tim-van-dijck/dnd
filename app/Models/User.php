@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
  *
  * @property Role[]|Collection roles
  * @property Permission[]|Collection permissions
+ * @property InviteCode[]|Collection invites
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -55,6 +56,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function permissions(): HasMany
     {
         return $this->hasMany(UserPermission::class);
+    }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(InviteCode::class);
     }
 
     public function grantRole(int $campaignId, int $roleId)

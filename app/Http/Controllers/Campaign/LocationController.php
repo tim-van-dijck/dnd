@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class LocationController extends Controller
@@ -49,13 +48,13 @@ class LocationController extends Controller
      * @return Location
      * @throws AuthorizationException
      */
-    public function show(Location $location): Location
+    public function show(Location $location): LocationResource
     {
         $this->authorize('view', $location);
         if (Session::get('campaign_id') != $location->campaign_id) {
             throw new ModelNotFoundException();
         }
-        return $location;
+        return new LocationResource($location);
     }
 
     /**

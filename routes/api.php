@@ -20,6 +20,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/languages', 'Character\ApiController@languages');
     Route::get('/races', 'Character\ApiController@races');
     Route::get('/spells', 'Magic\SpellController@all');
+    Route::get('/permissions', 'Campaign\RoleController@permissions');
+    Route::get('me', 'UserController@me')->name('users.me');
 
     Route::group(['prefix' => '/campaign', 'middleware' => [ValidateCampaignId::class]], function () {
         Route::get('/', 'Campaign\CampaignController@currentCampaign');
@@ -28,12 +30,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::resource('locations', 'Campaign\LocationController')->except(['create', 'edit']);
         Route::resource('characters', 'Character\CharacterController')->except(['create', 'edit']);
 
-        Route::get('inventories', 'Campaign\InventoryController@index');
-        Route::get('inventories/{inventory}', 'Campaign\InventoryController@show');
-        Route::put('inventories/{inventory}', 'Campaign\InventoryController@update');
+        Route::resource('inventories', 'Campaign\InventoryController')->only(['index', 'show', 'update']);
         Route::post('inventories/{inventory}/items', 'Campaign\InventoryController@addItem');
         Route::delete('inventories/{inventory}/items', 'Campaign\InventoryController@removeItem');
-
         Route::get('items/{category}', 'Campaign\ItemController@index');
 
         Route::resource('journal', 'Campaign\JournalController')
@@ -51,7 +50,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::resource('users', 'Campaign\UserController')->except(['create', 'store', 'edit']);
         Route::post('users/invite', 'Campaign\UserController@invite')->name('users.invite');
-        Route::get('me', 'Campaign\UserController@me')->name('users.me');
     });
 
     Route::group(['prefix' => 'admin'], function () {

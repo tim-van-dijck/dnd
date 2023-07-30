@@ -9,17 +9,13 @@ use App\Repositories\NoteRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
 class NoteController extends Controller
 {
-    /**
-     * @param NoteRepository $noteRepository
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function index(NoteRepository $noteRepository, Request $request)
+    public function index(NoteRepository $noteRepository, Request $request): AnonymousResourceCollection
     {
         $page = $request->query('page', []);
         $notes = $noteRepository->get(Session::get('campaign_id'), $page['number'] ?? 1, $page['size'] ?? 20);
@@ -27,12 +23,10 @@ class NoteController extends Controller
     }
 
     /**
-     * @param NoteRepository $noteRepository
-     * @param Request $request
      * @throws ValidationException
      * @throws AuthorizationException
      */
-    public function store(NoteRepository $noteRepository, Request $request)
+    public function store(NoteRepository $noteRepository, Request $request): void
     {
         $this->authorize('create', Note::class);
         $this->validate($request, [
@@ -41,7 +35,6 @@ class NoteController extends Controller
             'private' => 'boolean',
             'permissions' => 'sometimes|nullable|array',
             'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
             'permissions.*.edit' => 'required|boolean',
             'permissions.*.delete' => 'required|boolean',
         ]);
@@ -49,28 +42,22 @@ class NoteController extends Controller
     }
 
     /**
-     * @param NoteRepository $noteRepository
-     * @param Note $note
-     * @return Note
      * @throws AuthorizationException
      */
-    public function show(Note $note): Note
+    public function show(Note $note): NoteResource
     {
         $this->authorize('view', $note);
         if (Session::get('campaign_id') != $note->campaign_id) {
             throw new ModelNotFoundException();
         }
-        return $note;
+        return new NoteResource($note);
     }
 
     /**
-     * @param NoteRepository $noteRepository
-     * @param Request $request
-     * @param Note $note
      * @throws AuthorizationException
      * @throws ValidationException
      */
-    public function update(NoteRepository $noteRepository, Request $request, Note $note)
+    public function update(NoteRepository $noteRepository, Request $request, Note $note): void
     {
         $this->authorize('update', $note);
         $this->validate($request, [
@@ -79,7 +66,6 @@ class NoteController extends Controller
             'private' => 'boolean',
             'permissions' => 'sometimes|nullable|array',
             'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
             'permissions.*.edit' => 'required|boolean',
             'permissions.*.delete' => 'required|boolean',
         ]);
@@ -87,11 +73,9 @@ class NoteController extends Controller
     }
 
     /**
-     * @param NoteRepository $noteRepository
-     * @param Note $note
      * @throws AuthorizationException
      */
-    public function destroy(NoteRepository $noteRepository, Note $note)
+    public function destroy(NoteRepository $noteRepository, Note $note): void
     {
         $this->authorize('destroy', $note);
         $noteRepository->destroy(Session::get('campaign_id'), $note);

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Campaign;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CurrentUserResource;
+use App\Http\Requests\UserInviteRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Campaign\Role;
 use App\Models\User;
@@ -11,7 +11,6 @@ use App\Repositories\UserRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
@@ -27,15 +26,9 @@ class UserController extends Controller
     /**
      * @throws ValidationException
      */
-    public function invite(UserRepository $userRepository, Request $request): void
+    public function invite(UserRepository $userRepository, UserInviteRequest $request): void
     {
         $campaignId = Session::get('campaign_id');
-        $roles = implode(',', Role::where('campaign_id', $campaignId)->get('id')->pluck('id')->toArray());
-        $this->validate($request, [
-            'email' => 'required|email|max:191',
-            'role' => "required|integer|in:$roles"
-        ]);
-
         $userRepository->invite($campaignId, $request->input('email'), $request->input('role'));
     }
 
@@ -58,10 +51,5 @@ class UserController extends Controller
     public function destroy(User $user): void
     {
         $user->revokeRoles(Session::get('campaign_id'));
-    }
-
-    public function me(): CurrentUserResource
-    {
-        return new CurrentUserResource(Auth::user());
     }
 }

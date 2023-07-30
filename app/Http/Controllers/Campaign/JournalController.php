@@ -7,34 +7,23 @@ use App\Http\Requests\JournalEntryRequest;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\Campaign\JournalEntry;
 use App\Services\AuthService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class JournalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Collection
-     */
-    public function index(): Collection
+    public function index(): AnonymousResourceCollection
     {
-        return JournalEntry::query()
+        $entries = JournalEntry::query()
             ->where('campaign_id', Session::get('campaign_id'))
             ->orderBy('order')
             ->get();
+        return JournalEntryResource::collection($entries);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param JournalEntryRequest $request
-     * @return JournalEntryResource
-     */
     public function store(JournalEntryRequest $request): JournalEntryResource
     {
         $campaignId = Session::get('campaign_id');
@@ -47,24 +36,11 @@ class JournalController extends Controller
         return new JournalEntryResource($journalEntry);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param JournalEntry $journalEntry
-     * @return JournalEntry
-     */
-    public function show(JournalEntry $journalEntry): JournalEntry
+    public function show(JournalEntry $journalEntry): JournalEntryResource
     {
-        return $journalEntry;
+        return new JournalEntryResource($journalEntry);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param JournalEntryRequest $request
-     * @param JournalEntry $journalEntry
-     * @return JournalEntryResource
-     */
     public function update(JournalEntryRequest $request, JournalEntry $journalEntry): JournalEntryResource
     {
         if (Session::get('campaign_id') != $journalEntry->campaign_id) {
@@ -76,12 +52,7 @@ class JournalController extends Controller
         return new JournalEntryResource($journalEntry);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param JournalEntry $journalEntry
-     */
-    public function destroy(JournalEntry $journalEntry)
+    public function destroy(JournalEntry $journalEntry): void
     {
         if (Session::get('campaign_id') != $journalEntry->campaign_id) {
             throw new ModelNotFoundException();
@@ -95,7 +66,7 @@ class JournalController extends Controller
         $journalEntry->delete();
     }
 
-    public function sort(Request $request)
+    public function sort(Request $request): void
     {
         if (!AuthService::userHasCampaignPermission(Auth::user(), null, 'journal', 'edit')) {
             abort(403);

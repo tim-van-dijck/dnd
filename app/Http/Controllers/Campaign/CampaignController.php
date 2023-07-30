@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Campaign;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CurrentCampaignResource;
 use App\Http\Resources\LogResource;
 use App\Managers\CampaignManager;
 use App\Models\Campaign\Campaign;
 use App\Repositories\Campaign\SearchRepository;
 use App\Repositories\CampaignRepository;
 use App\Repositories\LogRepository;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -50,15 +50,12 @@ class CampaignController extends Controller
         return redirect('/');
     }
 
-    public function currentCampaign(): JsonResponse
+    public function currentCampaign(): CurrentCampaignResource
     {
         /** @var Campaign $campaign */
         $campaign = Campaign::findOrFail(Session::get('campaign_id'));
         if (Auth::user()->can('view', $campaign)) {
-            return response()->json([
-                'name' => $campaign->name,
-                'description' => $campaign->description,
-            ]);
+            return new CurrentCampaignResource($campaign);
         } else {
             abort(403);
         }

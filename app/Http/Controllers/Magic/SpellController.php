@@ -25,9 +25,9 @@ class SpellController extends Controller
         return $spellRepository->store($request->input());
     }
 
-    public function show(Spell $spell): Spell
+    public function show(Spell $spell): SpellResource
     {
-        return $spell;
+        return new SpellResource($spell);
     }
 
     public function update(SpellRepository $spellRepository, SpellRequest $request, Spell $spell): Spell

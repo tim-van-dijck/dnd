@@ -11,7 +11,8 @@ class CurrentUserResource extends JsonResource
 {
     public function toArray($request)
     {
-        $permissions = AuthService::campaignPermissions(Session::get('campaign_id'));
+        $campaignId = Session::get('campaign_id') ?? $request->header('Campaign-Id');
+        $permissions = empty($campaignId) ? [] : AuthService::campaignPermissions($campaignId);
         return [
             'id' => Auth::user()->id,
             'name' => Auth::user()->name,

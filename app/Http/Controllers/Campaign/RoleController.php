@@ -8,17 +8,21 @@ use App\Models\Campaign\Permission;
 use App\Models\Campaign\Role;
 use App\Models\Campaign\UserPermission;
 use App\Repositories\RoleRepository;
-use App\Services\AuthService;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class RoleController extends Controller
 {
     /**
      * @param RoleRepository $roleRepository
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(RoleRepository $roleRepository, Request $request)
     {
@@ -30,7 +34,7 @@ class RoleController extends Controller
     /**
      * @param RoleRepository $roleRepository
      * @param Request $request
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(RoleRepository $roleRepository, Request $request)
     {
@@ -52,7 +56,7 @@ class RoleController extends Controller
      * @param RoleRepository $roleRepository
      * @param Role $role
      * @return RoleResource
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function show(Role $role): RoleResource
     {
@@ -68,7 +72,7 @@ class RoleController extends Controller
      * @param RoleRepository $roleRepository
      * @param Request $request
      * @param Role $role
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function update(RoleRepository $roleRepository, Request $request, Role $role)
     {
@@ -87,7 +91,7 @@ class RoleController extends Controller
     /**
      * @param RoleRepository $roleRepository
      * @param Role $role
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(RoleRepository $roleRepository, Role $role)
     {
@@ -96,7 +100,7 @@ class RoleController extends Controller
 
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function permissions()
     {
@@ -106,7 +110,7 @@ class RoleController extends Controller
     /**
      * @param string $entity
      * @param int $entityId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function customEntityPermissions(string $entity, int $entityId)
     {
@@ -115,15 +119,13 @@ class RoleController extends Controller
             'entity' => $entity,
             'entity_id' => $entityId
         ])->get()
-            ->map(function ($permission) {
-                return [
-                    'view' => $permission->view,
-                    'create' => $permission->create,
-                    'edit' => $permission->edit,
-                    'delete' => $permission->delete
-                ];
-            })
-            ->keyBy('user_id');
+            ->keyBy('user_id')
+            ->map(fn ($permission) => [
+                'view' => $permission->view,
+                'create' => $permission->create,
+                'edit' => $permission->edit,
+                'delete' => $permission->delete
+            ]);
         return response()->json($permissions);
     }
 }

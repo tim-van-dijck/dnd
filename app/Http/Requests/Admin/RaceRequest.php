@@ -15,8 +15,11 @@ class RaceRequest extends FormRequest
 
     public function rules(): array
     {
+        $race = $this->route('race');
+        $ignoreId = empty($race) ? null : $race->id;
+
         return [
-            'name' => ['required', 'string', Rule::unique('races', 'name')->ignore($this->route('race')->id)],
+            'name' => ['required', 'string', Rule::unique('races', 'name')->ignore($ignoreId)],
             'description' => ['required', 'string'],
             'speed' => ['required', 'integer'],
             'size' => ['required', 'string', Rule::in(['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'])],

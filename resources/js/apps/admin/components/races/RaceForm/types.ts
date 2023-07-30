@@ -1,0 +1,16 @@
+export interface RaceErrors {
+  name?: string[]
+  description?: string[]
+  size?: string[]
+  speed?: string[]
+  ability_bonuses?: string[]
+  feats?: string[]
+  languages?: string[]
+  proficiencies?: string[]
+  traits?: string[]
+  optional_ability_bonuses?: string[]
+  optional_feats?: string[]
+  optional_languages?: string[]
+  optional_proficiencies?: string[]
+  optional_traits?: string[]
+}

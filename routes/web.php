@@ -24,8 +24,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/campaign/characters/{character}/sheet', 'Character\CharacterController@sheet');
     Route::get('/profile', 'UserController@profile')->name('profile.index');
     Route::post('/profile', 'UserController@save')->name('profile.save');
-
-    Route::get('/permissions', 'Campaign\RoleController@permissions');
     Route::resource('/campaigns', 'Campaign\CampaignController');
 
     Route::get('/{page?}', 'PageController@index')->where('page', '.*')->name('campaign');

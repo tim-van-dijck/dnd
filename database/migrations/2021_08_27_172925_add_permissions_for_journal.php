@@ -13,12 +13,14 @@ class AddPermissionsForJournal extends Migration
      */
     public function up()
     {
-        /** @var Permission $permission */
-        $permission = Permission::query()->create(['name' => 'journal']);
-        $roles = Role::where('system', 1)->get();
-        /** @var Role $role */
-        foreach ($roles as $role) {
-            $role->permissions()->attach($permission->id, ['view' => 1, 'create' => 1, 'edit' => 1, 'delete' => 1]);
+        if (Permission::where('name', 'journal')->count() === 0) {
+            /** @var Permission $permission */
+            $permission = Permission::query()->create(['name' => 'journal']);
+            $roles = Role::where('system', 1)->get();
+            /** @var Role $role */
+            foreach ($roles as $role) {
+                $role->permissions()->attach($permission->id, ['view' => 1, 'create' => 1, 'edit' => 1, 'delete' => 1]);
+            }
         }
     }
 

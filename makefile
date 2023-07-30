@@ -21,3 +21,6 @@ access:
 
 node:
 	docker run -itv $(PWD):/app -w /app node:16.13 bash
+
+composer:
+	docker run -itv $(PWD):/app -w /app composer composer update
