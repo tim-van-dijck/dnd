@@ -3,16 +3,16 @@ import UserFormModal from "./components/UserFormModal";
 import { useUserOverview } from "./UserOverview.state";
 
 const UserOverview: FC = () => {
-  const { can, invite, input, onFinish, edit, userRepository, destroy } = useUserOverview()
+  const { can, invite, input, me, onFinish, edit, userRepository, destroy } = useUserOverview()
 
   return <div id="users">
     <h1>Users</h1>
-    <div className="uk-section uk-section-default">
+    <div className="uk-section uk-section-default uk-padding-remove-top">
       <button className="uk-button uk-button-primary" onClick={invite}>
         <i className="fas fa-plus" /> Invite user
       </button>
       {
-        userRepository.users != null && userRepository.users.data.length > 0 ?
+        userRepository.users != null && userRepository.users.length > 0 ?
           <table className="uk-table uk-table-divider">
             <thead>
             <tr>
@@ -23,12 +23,12 @@ const UserOverview: FC = () => {
             </thead>
             <tbody>
             {
-              userRepository.users.data.map((user) => <tr>
+              userRepository.users.map((user) => <tr>
                 <td className="uk-width-small">
                   <ul className="uk-iconnav">
                     {
-                      can('delete', 'user') ?
-                        <li><a href="/"
+                      can('delete', 'user') && user.id !== me?.id ?
+                        <li><a title="Revoke campaign access"
                                className="uk-text-danger"
                                onClick={(e) => {
                                  e.preventDefault()
@@ -38,7 +38,7 @@ const UserOverview: FC = () => {
                     }
                     {
                       can('edit', 'user') ?
-                        <li><a onClick={(e) => {
+                        <li><a title="Edit user" onClick={(e) => {
                           e.preventDefault()
                           edit(user);
                         }}><i className="fas fa-edit" /></a></li> : null

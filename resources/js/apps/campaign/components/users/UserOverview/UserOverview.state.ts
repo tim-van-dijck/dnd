@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import UIkit from "uikit";
 import { useModals } from "../../../../admin/modals";
 import { useCampaignRepositories } from "../../../providers/CampaignRepositoryProvider";
-import { useUserRepository } from "../../../repositories/UserRepository";
+import { useCampaignUserRepository } from "../../../repositories/CampaignUserRepository";
 
 export const useUserOverview = () => {
-  const { confirmDelete } = useModals()
+  const { prompt } = useModals()
   const { AuthRepository } = useCampaignRepositories()
-  const userRepository = useUserRepository()
+  const userRepository = useCampaignUserRepository()
   const [ input, setInput ] = useState<CampaignUser | null>(null)
 
   useEffect(() => void userRepository.load(), [])
@@ -30,14 +30,22 @@ export const useUserOverview = () => {
 
   return {
     can: AuthRepository.can,
+    me: AuthRepository.user,
     userRepository,
     invite,
     edit,
     input,
     onFinish,
     destroy: (userId) => {
-      confirmDelete(
-        'user',
+      prompt(
+        `Are you sure you want to revoke this user's access to the campaign?? Please write REVOKE to confirm`,
+        {
+          labels: {
+            ok: 'Delete',
+            cancel: 'cancel'
+          }
+        }, 'REVOKE',
+        'Invalid input, delete cancelled.',
         () => userRepository.destroy(userId).then(() => userRepository.load())
       )
     }

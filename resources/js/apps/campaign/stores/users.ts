@@ -1,9 +1,8 @@
 import { CampaignUser } from "@dnd/types";
 import { createSlice } from "@reduxjs/toolkit";
-import { PaginatedData } from "../../../repositories/BaseRepository";
 
 type CampaignUserState = {
-  users: PaginatedData<CampaignUser> | null
+  users: CampaignUser[] | null
 }
 
 const initialState: CampaignUserState = {

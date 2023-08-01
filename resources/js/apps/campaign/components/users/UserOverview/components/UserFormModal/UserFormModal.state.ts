@@ -5,11 +5,11 @@ import { IFormOption } from "../../../../../../../components/layout/form/types";
 import { useMessageBus } from "../../../../../../../services/messages";
 import { Role } from "../../../../../../../types/roles";
 import { useUpdateField } from "../../../../../../admin/utils";
+import { useCampaignUserRepository } from "../../../../../repositories/CampaignUserRepository";
 import { useRoleRepository } from "../../../../../repositories/RoleRepository";
-import { useUserRepository } from "../../../../../repositories/UserRepository";
 
 export const useUserFormModalState = (user: CampaignUser | null, onFinish?: () => void) => {
-  const userRepository = useUserRepository()
+  const userRepository = useCampaignUserRepository()
   const roleRepository = useRoleRepository()
   const [ input, setInput ] = useState(getDefaultUserInput([], user))
   const [ errors, setErrors ] = useState<CampaignUserErrors>({})

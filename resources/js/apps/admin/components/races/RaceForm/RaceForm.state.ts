@@ -1,9 +1,9 @@
 import { RaceAttribute, RaceInput, Trait } from "@dnd/types";
 import { FormEvent, useEffect, useState } from "react";
-import { useUpdateField } from "../../../utils";
-import { useRaceRepository } from "../../../repositories/RaceRepository";
-import { useMessageBus } from "../../../../../services/messages";
 import { useNavigate } from "react-router-dom";
+import { useMessageBus } from "../../../../../services/messages";
+import { useRaceRepository } from "../../../repositories/RaceRepository";
+import { useUpdateField } from "../../../utils";
 import { RaceErrors } from "./types";
 
 export const useRaceFormState = (id?: number) => {
@@ -15,10 +15,10 @@ export const useRaceFormState = (id?: number) => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    setRace(emptyRace)
     if (id) {
-      void raceRepository.find(id).then(({ id, ...race }) => setRace(race));
+      // void raceRepository.find(id).then(({ id, ...race }) => setRace(race));
     } else {
-      setRace(emptyRace)
     }
   }, [ id ])
 

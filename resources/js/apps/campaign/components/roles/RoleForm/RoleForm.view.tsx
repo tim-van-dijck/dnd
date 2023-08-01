@@ -48,7 +48,11 @@ const RoleFormView: FC<RoleFormViewProps> = ({ state, ui }) => {
                             <input type="checkbox"
                                    className="uk-checkbox"
                                    checked={state.input!.permissions[permission.id][action]}
-                                   onChange={(e) => state.updatePermission(permission.id, action, e.target.checked)} />
+                                   onChange={(e) => state.updatePermission(
+                                     permission.id.toString(),
+                                     action,
+                                     e.target.checked
+                                   )} />
                           </td>)
                         }
                       </tr>

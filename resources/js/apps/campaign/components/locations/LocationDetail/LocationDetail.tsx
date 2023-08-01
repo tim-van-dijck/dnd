@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import Private from "../../common/layout/Private";
 import { useLocation } from "./LocationDetail.state";
 
 const LocationDetail = () => {
@@ -9,9 +10,8 @@ const LocationDetail = () => {
 
   return <div>
     <h1>
-      <Link className="uk-link-text" to="/locations"><i className="fas fa-chevron-left" /></Link>
       {location ? location.name : ''}
-      {location?.private ? <span title="This location is private">(<i className="fas fa-user-secret" />)</span> : null}
+      {location?.private ? <Private entity="location" /> : null}
     </h1>
     <div className="uk-section uk-section-default">
       {
@@ -44,6 +44,11 @@ const LocationDetail = () => {
           <p className="uk-text-center"><i className="fas fa-2x fa-sync fa-spin" /></p>
       }
     </div>
+    <p className="uk-margin">
+      <Link className="uk-button uk-button-text" to="/locations">
+        <i className="fa fa-chevron-left fa-fw"></i> Back to locations
+      </Link>
+    </p>
   </div>
 }
 

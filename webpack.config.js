@@ -37,8 +37,8 @@ module.exports = [
       ]
     },
     output: {
-      filename: 'js/[name].js',
-      path: path.join(__dirname, 'public')
+      filename: '[name].js',
+      path: path.join(__dirname, 'public/js')
     }
   },
   {
@@ -48,7 +48,10 @@ module.exports = [
       app: path.join(__dirname, 'resources/sass/app.scss')
     },
     plugins: [
-      new MiniCssExtractPlugin({ filename: '[name].css' })
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].[contenthash].css'
+      })
     ],
     module: {
       rules: [
@@ -77,10 +80,8 @@ module.exports = [
       ]
     },
     output: {
-      filename: '[chunkHash].js',
       path: path.join(__dirname, 'public/css')
     }
   }
-
 ]
 // module.exports.parallelism = 2;

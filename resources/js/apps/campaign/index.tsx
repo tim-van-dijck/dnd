@@ -7,7 +7,7 @@ import { store } from "./store";
 
 
 axios.defaults.headers.common['Campaign-Id'] =
-  document.querySelector('meta[name="campaign-id"]')?.getAttribute('content')!
+  document.querySelector('meta[name="campaign-id"]')?.getAttribute('content')!;
 
 window.onload = () => {
   createRoot(document.getElementById('app')!).render(<Bootstrap store={store}>

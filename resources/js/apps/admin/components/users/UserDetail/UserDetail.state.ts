@@ -1,5 +1,5 @@
+import { Campaign, User } from "@dnd/types";
 import { useEffect, useState } from "react";
-import { Campaign, User } from "../../../../../types";
 import { useModals } from "../../../modals";
 import { useCampaignRepository } from "../../../repositories/CampaignRepository";
 import { useUserRepository } from "../../../repositories/UserRepository";

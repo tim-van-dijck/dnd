@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Campaign\Quest;
 use App\Models\Campaign\QuestObjective;
 use App\Services\AuthService;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -94,6 +95,7 @@ class QuestRepository
         $quest->location_id = $data['location_id'] ?? null;
         $quest->title = $data['title'];
         $quest->description = $data['description'];
+        $quest->private = $data['private'] ?? false;
         $quest->save();
 
         foreach ($data['objectives'] as $objective) {
@@ -125,7 +127,7 @@ class QuestRepository
     /**
      * @param int $campaignId
      * @param Quest $quest
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(int $campaignId, Quest $quest)
     {

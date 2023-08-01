@@ -20,7 +20,7 @@ access:
 	docker exec -it dnd-$(inst) bash
 
 node:
-	docker run -itv $(PWD):/app -w /app node:16.13 bash
+	docker run -u 1000:1000 -itv $(PWD):/app -w /app node:19.1.0-bullseye bash
 
 composer:
 	docker run -itv $(PWD):/app -w /app composer composer update

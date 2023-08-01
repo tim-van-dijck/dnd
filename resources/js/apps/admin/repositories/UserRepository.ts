@@ -40,7 +40,7 @@ export const useUserRepository = (): UserRepositoryInterface => {
     }),
     find: (id: number): Promise<User> => axios.get(`${url}/${id}`).then((response) => response.data.data),
 
-    invite: (user: User) => axios.post(`${url}/invite`, user).then(() => messageBus.success('User invited!')),
+    invite: (user: UserInput) => axios.post(`${url}/invite`, user).then(() => messageBus.success('User invited!')),
     store: (user: UserInput) => axios.post(url, user).then(() => messageBus.success('User saved!')),
     update: (id: number, user: UserInput) =>
       axios.put(`${url}/${id}`, user).then(() => messageBus.success('User saved!')),

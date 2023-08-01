@@ -53,6 +53,6 @@ export interface SpellRepositoryInterface extends BaseRepositoryInterface<Spell,
 
 export interface UserRepositoryInterface extends BaseRepositoryInterface<User, UserInput> {
   users: PaginatedData<User> | null
-  invite: (user: User) => Promise<void>
+  invite: (user: UserInput) => Promise<void>
   resetPassword: (id: number) => Promise<void>
 }

@@ -1,5 +1,5 @@
-import { User } from "../../../../../../../types";
+import { UserInput } from "@dnd/types";
 
 export interface UserInviteModalProps {
-  onInvite: (user: User) => void
+  onInvite: (user: UserInput) => void
 }

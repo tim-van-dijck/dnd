@@ -1,12 +1,12 @@
-import UIkit from 'uikit'
+import { UserErrors, UserInput } from "@dnd/types";
 import { FormEvent, useState } from "react";
-import { User, UserErrors } from "../../../../../../../types";
+import UIkit from 'uikit'
 import { useUserRepository } from "../../../../../repositories/UserRepository";
 import { useUpdateField } from "../../../../../utils";
 
-export const useInviteModalState = (onInvite: (user: User) => void) => {
+export const useInviteModalState = (onInvite: (user: UserInput) => void) => {
   const userRepository = useUserRepository()
-  const [ user, setUser ] = useState<User>({ ...emptyUser })
+  const [ user, setUser ] = useState<UserInput>({ ...emptyUser })
   const [ errors, setErrors ] = useState<UserErrors>({})
   const updateField = useUpdateField(user)
 
@@ -37,7 +37,7 @@ export const useInviteModalState = (onInvite: (user: User) => void) => {
   return { user, errors, submit, open, cancel, onUpdate }
 }
 
-const emptyUser: User = {
+const emptyUser: UserInput = {
   email: '',
   admin: false
 }

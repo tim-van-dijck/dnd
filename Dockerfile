@@ -1,11 +1,54 @@
-FROM php:8.0-fpm
+FROM php:8.1-fpm AS php-builder
 
 WORKDIR /app
 
-# Install dependencies
+RUN apt-get update
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    locales \
+    zip \
+    unzip
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+COPY . /app
+
+RUN composer install --no-dev
+
+#---------------------------------------------------------#
+
+FROM node:19.1.0 AS node-builder
+
+WORKDIR /app
+
+COPY package-lock.json /app
+COPY package.json /app
+RUN npm ci
+
+COPY webpack.config.js /app
+COPY babel.config.json /app
+COPY tsconfig.json /app
+COPY resources/js /app/resources/js
+COPY resources/sass /app/resources/sass
+
+USER root
+RUN npm run prod
+
+#---------------------------------------------------------#
+
+FROM php:8.1-fpm
+
+ARG UID=1000
+ARG GID=1000
+ARG PORT=8080
+
+WORKDIR /app
+
 RUN apt-get update
 RUN apt-get install -y \
     curl \
+    nginx \
+    sudo \
     libjpeg62-turbo \
     libonig5 \
     libpng16-16 \
@@ -34,16 +77,24 @@ RUN install-php-extensions \
     pdo_mysql \
     sockets
 
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN groupadd -g $GID www
+RUN useradd -Ms /bin/bash -u $UID -g www www
+RUN usermod -aG www-data www
 
-COPY --chown=www:www . /app
+COPY ./docker/nginx/app.conf /etc/nginx/sites-enabled/default
+
+COPY --chown=www:www-data . /app
+COPY --chown=www:www-data --from=node-builder /app/public/js /app/public/js
+COPY --chown=www:www-data --from=node-builder /app/public/css /app/public/css
+COPY --chown=www:www-data --from=php-builder /app/storage /app/storage
+COPY --chown=www:www-data --from=php-builder /app/vendor /app/vendor
+
 RUN chmod -R ug+w /app/storage
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --optimize-autoloader --no-dev
+RUN echo "www ALL=(ALL) NOPASSWD: /usr/sbin/service nginx start" >> /etc/sudoers
+RUN echo "www ALL=(ALL) NOPASSWD: /usr/sbin/service nginx stop" >> /etc/sudoers
 
 USER www
 
-EXPOSE 9000
-CMD ["php-fpm"]
+EXPOSE $PORT
+ENTRYPOINT ["bash", "-c", "sudo service nginx start && php-fpm"]

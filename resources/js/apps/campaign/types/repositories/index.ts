@@ -54,11 +54,8 @@ export interface RoleRepositoryInterface extends BaseRepositoryInterface<Role, R
 }
 
 export interface CampaignUserRepositoryInterface {
-  users: PaginatedData<CampaignUser> | null
-  load: () => Promise<PaginatedData<CampaignUser>>
-  previous: () => Promise<PaginatedData<CampaignUser>> | null
-  page: (number: number) => Promise<PaginatedData<CampaignUser>> | null,
-  next: () => Promise<PaginatedData<CampaignUser>> | null
+  users: CampaignUser[] | null
+  load: () => Promise<CampaignUser[]>
   find: (id: number) => Promise<CampaignUser>
   invite: (user: CampaignUserInput) => Promise<void>
   update: (id: number, user: CampaignUserInput) => Promise<void>

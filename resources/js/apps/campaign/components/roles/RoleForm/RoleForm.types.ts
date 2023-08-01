@@ -15,7 +15,7 @@ export interface RoleFormViewProps {
       delete: boolean
     }
     save: (e: FormEvent) => void
-    updatePermission: (permissionId: number, action: Action, value: boolean) => void
+    updatePermission: (permissionId: string, action: Action, value: boolean) => void
     update: (field: string, value) => void
   }
   ui: {

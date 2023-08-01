@@ -19,17 +19,15 @@ const JournalEntryDetails: FC = () => {
     <div className="uk-section uk-section-default">
       {
         entry ?
-          <div id="journal-entry" className="uk-container padded">
-            <div dangerouslySetInnerHTML={{ __html: entry.content }} />
-            <p className="uk-margin-large-top">
-              <Link className="uk-button uk-button-text" to="/journal">
-                <i className="fa fa-chevron-left fa-fw"></i> Back to journal
-              </Link>
-            </p>
-          </div> :
+          <div dangerouslySetInnerHTML={{ __html: entry.content }} /> :
           <p className="uk-text-center"><i className="fas fa-2x fa-sync fa-spin"></i></p>
       }
     </div>
+    <p className="uk-margin-large-top">
+      <Link className="uk-button uk-button-text" to="/journal">
+        <i className="fa fa-chevron-left fa-fw"></i> Back to journal
+      </Link>
+    </p>
   </div>
 }
 
