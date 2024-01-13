@@ -1,15 +1,16 @@
-import { AuthRepositoryInterface } from "@dnd/types";
-import { createContext, ReactNode, useContext } from "react";
-import { useAuthRepository } from "../../../repositories/AuthRepository";
-import { useCampaignRepository } from "../repositories/CampaignRepository";
-import { useCampaignUserRepository } from "../repositories/CampaignUserRepository";
-import { useJournalRepository } from "../repositories/JournalRepository";
-import { useLocationRepository } from "../repositories/LocationRepository";
-import { useNoteRepository } from "../repositories/NoteRepository";
-import { usePermissionRepository } from "../repositories/PermissionRepository";
-import { useQuestRepository } from "../repositories/QuestRepository";
-import { useRoleRepository } from "../repositories/RoleRepository";
-import { TCampaignRepositoryContext } from "../types";
+import { AuthRepositoryInterface } from '@dnd/types'
+import { createContext, ReactNode, useContext } from 'react'
+import { useAuthRepository } from '../../../repositories/AuthRepository'
+import { useCampaignRepository } from '../repositories/CampaignRepository'
+import { useCampaignUserRepository } from '../repositories/CampaignUserRepository'
+import { useCharacterRepository } from '../repositories/CharacterRepository'
+import { useJournalRepository } from '../repositories/JournalRepository'
+import { useLocationRepository } from '../repositories/LocationRepository'
+import { useNoteRepository } from '../repositories/NoteRepository'
+import { usePermissionRepository } from '../repositories/PermissionRepository'
+import { useQuestRepository } from '../repositories/QuestRepository'
+import { useRoleRepository } from '../repositories/RoleRepository'
+import { TCampaignRepositoryContext } from '../types'
 import {
   CampaignRepositoryInterface,
   CampaignUserRepositoryInterface,
@@ -17,9 +18,10 @@ import {
   LocationRepositoryInterface,
   NoteRepositoryInterface,
   PermissionRepositoryInterface,
+  PlayerCharacterRepositoryInterface,
   QuestRepositoryInterface,
   RoleRepositoryInterface
-} from "../types/repositories";
+} from '../types/repositories'
 
 export const CampaignRepositoryContext = createContext<TCampaignRepositoryContext>({
   AuthRepository: {} as unknown as AuthRepositoryInterface,
@@ -28,6 +30,7 @@ export const CampaignRepositoryContext = createContext<TCampaignRepositoryContex
   LocationRepository: {} as unknown as LocationRepositoryInterface,
   NoteRepository: {} as unknown as NoteRepositoryInterface,
   PermissionRepository: {} as unknown as PermissionRepositoryInterface,
+  PlayerCharacterRepository: {} as unknown as PlayerCharacterRepositoryInterface,
   QuestRepository: {} as unknown as QuestRepositoryInterface,
   RoleRepository: {} as unknown as RoleRepositoryInterface,
   UserRepository: {} as unknown as CampaignUserRepositoryInterface
@@ -40,6 +43,7 @@ export const CampaignRepositoryProvider = ({ children }: { children: ReactNode }
   const LocationRepository = useLocationRepository()
   const NoteRepository = useNoteRepository()
   const PermissionRepository = usePermissionRepository()
+  const PlayerCharacterRepository = useCharacterRepository()
   const RoleRepository = useRoleRepository()
   const QuestRepository = useQuestRepository()
   const UserRepository = useCampaignUserRepository()
@@ -51,6 +55,7 @@ export const CampaignRepositoryProvider = ({ children }: { children: ReactNode }
     LocationRepository,
     NoteRepository,
     PermissionRepository,
+    PlayerCharacterRepository,
     QuestRepository,
     RoleRepository,
     UserRepository

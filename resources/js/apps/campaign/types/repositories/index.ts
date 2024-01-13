@@ -1,8 +1,10 @@
 import {
+  Background,
   Campaign,
   CampaignLog,
   CampaignUser,
   CampaignUserInput,
+  CharacterClass,
   EntityUserPermissionList,
   JournalEntry,
   JournalEntryInput,
@@ -10,12 +12,15 @@ import {
   LocationInput,
   Note,
   NoteInput,
+  PlayerCharacter,
+  PlayerCharacterInput,
   Quest,
-  QuestInput
-} from "@dnd/types";
-import { PaginatedData } from "../../../../repositories/BaseRepository";
-import { Permission, Role, RoleInput } from "../../../../types/roles";
-import { BaseRepositoryInterface } from "../../../admin/repositories/types";
+  QuestInput,
+  Race
+} from '@dnd/types'
+import { PaginatedData } from '../../../../repositories/BaseRepository'
+import { Permission, Role, RoleInput } from '../../../../types/roles'
+import { BaseRepositoryInterface } from '../../../admin/repositories/types'
 
 export interface CampaignRepositoryInterface {
   campaign: Campaign | null
@@ -39,7 +44,21 @@ export interface JournalRepositoryInterface extends BaseRepositoryInterface<Jour
 }
 
 export interface LocationRepositoryInterface extends BaseRepositoryInterface<Location, LocationInput> {
-  locations: PaginatedData<Location> | null,
+  locations: PaginatedData<Location> | null
+}
+
+export interface PlayerCharacterRepositoryInterface extends BaseRepositoryInterface<PlayerCharacter, PlayerCharacterInput> {
+  backgrounds: Background[] | null
+  characters: PaginatedData<PlayerCharacter> | null
+  classes: Record<number, CharacterClass> | null
+  races: Race[] | null
+  npcs: PaginatedData<PlayerCharacter> | null
+
+  loadBackgrounds: () => Promise<Background[]>
+  loadClasses: () => Promise<Record<number, CharacterClass>>
+  loadRaces: () => Promise<Race[]>
+  store: (model: PlayerCharacterInput) => Promise<number>
+  update: (id: number, model: PlayerCharacterInput) => Promise<number>
 }
 
 export interface PermissionRepositoryInterface {

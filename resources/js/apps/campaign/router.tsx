@@ -1,13 +1,16 @@
-import NotFound from "../../components/views/NotFound";
+import { BaseRoute, IndexRoute, Route } from '@dnd/types'
+import { Route as ReactRoute } from 'react-router-dom'
+import NotFound from '../../components/views/NotFound'
 import Dashboard from './components/Dashboard'
-import { JournalRoutes } from "./routes/journal";
-import { LocationRoutes } from "./routes/locations";
-import { NoteRoutes } from "./routes/notes";
-import { QuestRoutes } from "./routes/quests";
-import { RoleRoutes } from "./routes/roles";
-import { UserRoutes } from "./routes/users";
+import { CharacterRoutes } from './routes/characters'
+import { JournalRoutes } from './routes/journal'
+import { LocationRoutes } from './routes/locations'
+import { NoteRoutes } from './routes/notes'
+import { QuestRoutes } from './routes/quests'
+import { RoleRoutes } from './routes/roles'
+import { UserRoutes } from './routes/users'
 
-const routes = [
+const routes: Route[] = [
   {
     path: '/',
     element: <Dashboard />
@@ -17,6 +20,7 @@ const routes = [
     element: <Dashboard />
   },
 
+  ...CharacterRoutes,
   ...LocationRoutes,
   ...QuestRoutes,
   ...JournalRoutes,
@@ -24,14 +28,34 @@ const routes = [
   ...UserRoutes,
   ...RoleRoutes,
   /*
-    ...CharacterRoutes,
     ...InventoryRoutes,
   */
 
   {
-    path: '/:pathMatch(.*)/*',
-    component: NotFound
+    path: '*',
+    element: <NotFound />
   }
 ]
 
-export default routes
+const router = {
+  routes,
+  get() {
+    return routes.map(mapRoute)
+  }
+}
+
+const mapRoute = (route: Route) => {
+  return !route.index ? mapBaseRoute(route) : mapIndexRoute(route as IndexRoute)
+}
+const mapBaseRoute = (route: BaseRoute) => (
+  <ReactRoute key={route.path}
+              path={route.path}
+              element={route.element}>
+    {route.children?.map((sub) => mapRoute(sub))}
+  </ReactRoute>
+)
+const mapIndexRoute = (route: IndexRoute, parent?: BaseRoute) => <ReactRoute key={`${parent ?
+  parent.path + '-' :
+  ''}index`} element={route.element} index />
+
+export default router

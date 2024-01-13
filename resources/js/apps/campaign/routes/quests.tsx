@@ -1,8 +1,9 @@
-import QuestDetail from "../components/quests/QuestDetail";
-import QuestForm from "../components/quests/QuestForm";
-import QuestOverview from '../components/quests/QuestOverview'
+import { Route } from '@dnd/types'
+import QuestDetail from '../components/Quests/QuestDetail'
+import QuestForm from '../components/Quests/QuestForm'
+import QuestOverview from '../components/Quests/QuestOverview'
 
-export const QuestRoutes = [
+export const QuestRoutes: Route[] = [
   {
     path: '/quests',
     element: <QuestOverview />

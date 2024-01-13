@@ -4,6 +4,7 @@ import authReducer from '../../stores/auth'
 import messageReducer from '../../stores/messages'
 import spellReducer from '../../stores/spells'
 import campaignReducer from './stores/campaign'
+import characterReducer from './stores/characters'
 import journalReducer from './stores/journal'
 import locationReducer from './stores/locations'
 import noteReducer from './stores/notes'
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     campaign: campaignReducer,
+    characters: characterReducer,
     journal: journalReducer,
     locations: locationReducer,
     messages: messageReducer,

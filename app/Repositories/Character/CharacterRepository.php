@@ -8,6 +8,8 @@ use App\Models\Character\Character;
 use App\Repositories\LogRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
+use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -19,11 +21,11 @@ class CharacterRepository
      * @param array $filters
      * @param int $page
      * @param int $pageSize
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function get(int $campaignId, array $filters, array $includes, int $page = 1, int $pageSize = 20)
     {
-        $type = $filters['type'] == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
+        $type = ($filters['type'] ?? '') == CharacterTypes::PLAYER ? CharacterTypes::PLAYER : CharacterTypes::NPC;
         $query = Character::query()->where([
             'characters.campaign_id' => $campaignId,
             'type' => $type
@@ -125,7 +127,7 @@ class CharacterRepository
     /**
      * @param int $campaignId
      * @param int $characterId
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(int $campaignId, int $characterId)
     {

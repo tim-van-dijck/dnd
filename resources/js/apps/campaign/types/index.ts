@@ -6,6 +6,7 @@ import {
   LocationRepositoryInterface,
   NoteRepositoryInterface,
   PermissionRepositoryInterface,
+  PlayerCharacterRepositoryInterface,
   QuestRepositoryInterface,
   RoleRepositoryInterface
 } from "./repositories";
@@ -13,6 +14,7 @@ import {
 export type TCampaignRepositoryContext = {
   AuthRepository: AuthRepositoryInterface
   CampaignRepository: CampaignRepositoryInterface
+  PlayerCharacterRepository: PlayerCharacterRepositoryInterface
   JournalRepository: JournalRepositoryInterface
   LocationRepository: LocationRepositoryInterface
   NoteRepository: NoteRepositoryInterface

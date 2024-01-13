@@ -1,7 +1,6 @@
 import {
   Campaign,
   CampaignInput,
-  Language,
   Proficiency,
   Race,
   RaceInput,
@@ -10,8 +9,8 @@ import {
   Trait,
   User,
   UserInput
-} from "@dnd/types";
-import { PaginatedData } from "../../../repositories/BaseRepository";
+} from '@dnd/types'
+import { PaginatedData } from '../../../repositories/BaseRepository'
 
 export type TAdminRepositoryContext = {
   CampaignRepository: CampaignRepositoryInterface
@@ -24,10 +23,10 @@ export interface BaseRepositoryInterface<Entity, EntityInput> {
   previous: () => Promise<PaginatedData<Entity>> | null
   page: (number: number) => Promise<PaginatedData<Entity>> | null,
   next: () => Promise<PaginatedData<Entity>> | null
-  load: () => Promise<PaginatedData<Entity>>
+  load: (filters?: Record<string, any>) => Promise<PaginatedData<Entity>>
   find: (id: number) => Promise<Entity>
-  store: (model: EntityInput) => Promise<void>
-  update: (id: number, model: EntityInput) => Promise<void>
+  store: (model: EntityInput) => Promise<void | number>
+  update: (id: number, model: EntityInput) => Promise<void | number>
   destroy: (id: number) => Promise<void>
 }
 
@@ -38,11 +37,9 @@ export interface CampaignRepositoryInterface extends BaseRepositoryInterface<Cam
 }
 
 export interface RaceRepositoryInterface extends BaseRepositoryInterface<Race, RaceInput> {
-  languages: Language[] | null
   proficiencies: Proficiency[] | null
   races: PaginatedData<Race> | null
   traits: Trait[] | null
-  loadLanguages: () => Promise<void>
   loadProficiencies: () => Promise<void>
   loadTraits: () => Promise<void>
 }

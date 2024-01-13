@@ -1,7 +1,8 @@
-import RoleForm from '../components/roles/RoleForm'
-import RoleOverview from '../components/roles/RoleOverview'
+import { Route } from '@dnd/types'
+import RoleForm from '../components/Roles/RoleForm'
+import RoleOverview from '../components/Roles/RoleOverview'
 
-export const RoleRoutes = [
+export const RoleRoutes: Route[] = [
   {
     path: '/roles',
     element: <RoleOverview />

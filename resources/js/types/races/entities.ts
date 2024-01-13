@@ -1,5 +1,7 @@
-import { Subrace } from "./subrace";
-import { AbilityBonusSelection } from "./input";
+import { Ability } from '../characters'
+import { Proficiency } from '../proficiencies'
+import { AbilityBonusSelection } from './input'
+import { Subrace } from './subrace'
 
 export interface RaceBase {
   name: string
@@ -18,16 +20,10 @@ export interface RaceBase {
 export interface Race extends RaceBase {
   id: number
   traits: Trait[]
+  abilities: AbilityBonus[]
   ability_bonuses: AbilityBonusSelection[]
   languages: Language[]
   subraces: Subrace[]
-}
-
-export interface Proficiency {
-  id: number
-  name: string
-  type: 'skills' | 'tools' | 'instruments'
-  optional?: boolean
 }
 
 export interface Trait {
@@ -42,7 +38,7 @@ export interface Feat {
 }
 
 
-export type RaceAttribute = 'ability_bonuses' | 'feats' | "languages" | 'proficiencies' | 'traits'
+export type RaceAttribute = 'ability_bonuses' | 'feats' | 'languages' | 'proficiencies' | 'traits'
 
 export interface Language extends LanguageBase {
   name: string
@@ -59,6 +55,12 @@ export interface Trait {
   id: number
   name: string
   description: string
+}
+
+export type AbilityBonus = {
+  ability: Ability
+  bonus: number
+  optional: boolean
 }
 
 export type LanguageScript = 'Celestial' | 'Common' | 'Draconic' | 'Dwarvish' | 'Elvish' | 'Infernal' | ''

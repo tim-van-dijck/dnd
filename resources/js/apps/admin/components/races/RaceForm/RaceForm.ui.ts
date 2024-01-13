@@ -1,13 +1,14 @@
-import { RaceInput } from "../../../../../types";
-import { useEffect } from "react";
-import { useAdminRepositories } from "../../../providers/AdminRepositoryProvider";
+import { useEffect } from 'react'
+import { useLanguages } from '../../../../../hooks/useLanguages'
+import { RaceInput } from '../../../../../types'
+import { useAdminRepositories } from '../../../providers/AdminRepositoryProvider'
 
 export const useRaceFormUI = (race: RaceInput | null, id?: string) => {
+  const { languages } = useLanguages()
   const { RaceRepository } = useAdminRepositories()
   const title = id ? `Edit ${race ? race.name : 'race'}` : 'Add race'
 
   useEffect(() => {
-    void RaceRepository.loadLanguages()
     void RaceRepository.loadProficiencies()
     void RaceRepository.loadTraits()
   }, [])
@@ -15,7 +16,7 @@ export const useRaceFormUI = (race: RaceInput | null, id?: string) => {
   const selected = {
     ability_bonuses: race?.ability_bonuses || [],
     languages: race?.languages?.map((lang) => {
-      const language = RaceRepository.languages?.find(item => item.id === lang.id)
+      const language = languages?.find(item => item.id === lang.id)
       return {
         ...lang,
         name: language?.name || ''
@@ -23,7 +24,7 @@ export const useRaceFormUI = (race: RaceInput | null, id?: string) => {
     }) || [],
     proficiencies: race?.proficiencies?.map((prof) => {
       const proficiency = RaceRepository.proficiencies?.find((item) => {
-        return item.id === prof.id;
+        return item.id === prof.id
       })
       return {
         ...prof,

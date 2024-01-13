@@ -1,0 +1,3 @@
+import PlayerCharacterProficiencyTab from './PlayerCharacterProficiencyTab'
+
+export default PlayerCharacterProficiencyTab

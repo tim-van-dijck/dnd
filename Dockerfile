@@ -1,4 +1,4 @@
-FROM php:8.1-fpm AS php-builder
+FROM php:8.2-fpm AS php-builder
 
 WORKDIR /app
 
@@ -36,7 +36,7 @@ RUN npm run prod
 
 #---------------------------------------------------------#
 
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 ARG UID=1000
 ARG GID=1000

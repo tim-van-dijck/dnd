@@ -1,16 +1,15 @@
-import { PaginatedData, useRepository } from "../../../repositories/BaseRepository";
-import axios from "axios";
-import { RaceRepositoryInterface } from "./types";
-import { useAdminDispatch, useAdminSelector } from "../store";
-import { setLanguages, setProficiencies, setRaces, setTraits } from "../stores/races";
-import { Race, RaceInput } from "@dnd/types";
-import { useMessageBus } from "../../../services/messages";
+import { Race, RaceInput } from '@dnd/types'
+import axios from 'axios'
+import { PaginatedData, useRepository } from '../../../repositories/BaseRepository'
+import { useMessageBus } from '../../../services/messages'
+import { useAdminDispatch, useAdminSelector } from '../store'
+import { setProficiencies, setRaces, setTraits } from '../stores/races'
+import { RaceRepositoryInterface } from './types'
 
 export const useRaceRepository = (): RaceRepositoryInterface => {
   const url = '/api/admin/races'
   const messageBus = useMessageBus()
   const repo = useRepository<Race>(url)
-  const languages = useAdminSelector(state => state.races.languages)
   const proficiencies = useAdminSelector(state => state.races.proficiencies)
   const races = useAdminSelector(state => state.races.races)
   const traits = useAdminSelector(state => state.races.traits)
@@ -26,7 +25,6 @@ export const useRaceRepository = (): RaceRepositoryInterface => {
   }
 
   return {
-    languages,
     proficiencies,
     races,
     traits,
@@ -39,15 +37,15 @@ export const useRaceRepository = (): RaceRepositoryInterface => {
         races?.meta?.current_page < races?.meta?.last_page
       ) ? page(races?.meta?.current_page + 1) : null,
     load: (): Promise<PaginatedData<Race>> => repo.load().then((records) => {
-      dispatch(setRaces(records));
+      dispatch(setRaces(records))
       return records
     }),
     find: (id: number): Promise<Race> => axios.get(`${url}/${id}`).then((response) => response.data.data),
 
-    loadLanguages: (): Promise<void> => axios.get(`/api/languages`)
+    /*loadLanguages: (): Promise<void> => axios.get(`/api/languages`)
       .then((response) => void (
         dispatch(setLanguages(response.data.data))
-      )),
+      )),*/
     loadProficiencies: (): Promise<void> => axios.get('/api/admin/proficiencies')
       .then((response) => void (
         dispatch(setProficiencies(response.data.data))

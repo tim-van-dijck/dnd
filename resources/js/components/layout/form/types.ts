@@ -22,4 +22,5 @@ export interface InputProps {
   info?: string | JSX.Element
   required?: boolean
   onChange: (value) => void
+  disabled?: boolean
 }

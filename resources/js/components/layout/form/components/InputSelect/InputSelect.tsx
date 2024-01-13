@@ -1,7 +1,7 @@
-import classNames from "classnames";
-import { FC } from "react";
-import { useInputSelectState } from "./InputSelect.state";
-import { SelectProps } from "./types";
+import classNames from 'classnames'
+import { FC } from 'react'
+import { useInputSelectState } from './InputSelect.state'
+import { SelectProps } from './types'
 
 const InputSelect: FC<SelectProps> = ({
   id,
@@ -12,7 +12,8 @@ const InputSelect: FC<SelectProps> = ({
   options,
   errors,
   onChange,
-  required
+  required,
+  disabled
 }) => {
   const { value, update } = useInputSelectState(initialValue, onChange)
 
@@ -41,10 +42,12 @@ const InputSelect: FC<SelectProps> = ({
               }
             )}
             value={value}
-            onChange={(e) => update(e.target.value)}>
+            onChange={(e) => update(e.target.value)}
+            disabled={disabled}
+    >
       <option value="">- {emptyLabel || 'Make a choice'} -</option>
       {options.map((option) => {
-        if (option?.type === "group") {
+        if (option?.type === 'group') {
           return <optgroup key={option.label} label={option.label}>
             {option.children
               .map((child) =>

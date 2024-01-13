@@ -1,8 +1,9 @@
-import JournalEntryDetails from "../components/journal/JournalEntryDetails";
-import JournalForm from "../components/journal/JournalForm";
-import JournalOverview from '../components/journal/JournalOverview'
+import { Route } from '@dnd/types'
+import JournalEntryDetails from '../components/Journal/JournalEntryDetails'
+import JournalForm from '../components/Journal/JournalForm'
+import JournalOverview from '../components/Journal/JournalOverview'
 
-export const JournalRoutes = [
+export const JournalRoutes: Route[] = [
   {
     path: '/journal',
     element: <JournalOverview />

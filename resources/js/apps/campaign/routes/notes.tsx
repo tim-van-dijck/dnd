@@ -1,8 +1,9 @@
-import NoteDetail from '../components/notes/NoteDetail';
-import NoteForm from "../components/notes/NoteForm";
-import NoteOverview from '../components/notes/NoteOverview';
+import { Route } from '@dnd/types'
+import NoteDetail from '../components/Notes/NoteDetail'
+import NoteForm from '../components/Notes/NoteForm'
+import NoteOverview from '../components/Notes/NoteOverview'
 
-export const NoteRoutes = [
+export const NoteRoutes: Route[] = [
   {
     path: '/notes',
     element: <NoteOverview />

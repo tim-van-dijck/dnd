@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useUpdateField } from "../../../../../utils";
-import UIKit from "uikit";
-import { useRaceRepository } from "../../../../../repositories/RaceRepository";
-import { IFormOption } from "../../../../../../../components/layout/form/types";
-import { LanguageSelection } from "../../../../../../../types";
+import { LanguageSelection } from '@dnd/types'
+import { useEffect, useState } from 'react'
+import UIKit from 'uikit'
+import { IFormOption } from '../../../../../../../components/layout/form/types'
+import { useLanguages } from '../../../../../../../hooks/useLanguages'
+import { useUpdateField } from '../../../../../utils'
 
 export const useLanguageModalState = (selected: number[], onChange: (value) => void) => {
   const [ input, setInput ] = useState<LanguageSelection | null>({ ...emptyLanguage })
-  const { languages } = useRaceRepository()
+  const { languages } = useLanguages()
 
   useEffect(() => {
     const uk = UIKit.util as any

@@ -1,9 +1,9 @@
 import { FC } from "react";
+import { Link } from 'react-router-dom'
+import Pagination from "./components/Pagination";
 import { useSearch } from "./PaginatedTable.state";
 import { getHref, getTo, getValue } from './PaginatedTable.ui'
 import { IProps } from "./types";
-import { Link } from 'react-router-dom'
-import Pagination from "./components/Pagination";
 
 const PaginatedTable: FC<IProps> = ({ actions, columns, repository, records, onAction }) => {
   const { query, setQuery, search } = useSearch(repository)
@@ -50,7 +50,7 @@ const PaginatedTable: FC<IProps> = ({ actions, columns, repository, records, onA
               </td>
               {
                 columns.map((column) => <td key={`${row.id}_${column.name}`}>
-                    {column.format ? column.format(getValue(row, column.name), row) : getValue(row, column.name)}
+                    {column?.format?.(getValue(row, column.name), row) || getValue(row, column.name)}
                   </td>
                 )
               }

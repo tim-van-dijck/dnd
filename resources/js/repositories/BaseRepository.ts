@@ -7,7 +7,7 @@ export interface PaginatedData<T> {
 }
 
 export interface BaseRepository<T> {
-  load: (filters?: { [k: string]: string }) => Promise<PaginatedData<T>>
+  load: (params?: { filters?: Record<string, string>, includes?: string[] }) => Promise<PaginatedData<T>>
   page: (number: number) => Promise<PaginatedData<T>> | null
 }
 
@@ -22,14 +22,15 @@ export const useRepository = <T>(url): BaseRepository<T> => {
       return axios.get(`${url}?page[number]=${number}`)
         .then((response) => response.data)
     },
-    load(filters?: { [k: string]: string }): Promise<PaginatedData<T>> {
-      const params = {}
-      if (filters != null) {
-        for (let key in filters || {}) {
-          params[`filters[${key}]`] = filters[key]
-        }
+    load(params?: { filters?: Record<string, string>, includes?: string[] }): Promise<PaginatedData<T>> {
+      const urlParams = {
+        ...Object.fromEntries(Object.entries(params?.filters || {})
+          .map(([ field, value ]) => [ `filter[${field}]`, value ])),
+        ...(
+          Array.isArray(params?.includes) ? { includes: params?.includes.join(',') } : {}
+        )
       }
-      const query = new URLSearchParams(params)
+      const query = new URLSearchParams(urlParams)
       return axios.get(`${url}?${query}`)
         .then((response) => response.data)
     }

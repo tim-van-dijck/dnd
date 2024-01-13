@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HeaderNavbar from "../../../components/layout/HeaderNavbar";
-import { MessagesProvider } from "../../../components/layout/Messages";
-import { useCampaignRepositories } from "../providers/CampaignRepositoryProvider";
+import { useEffect } from 'react'
+import { BrowserRouter, Routes } from 'react-router-dom'
+import HeaderNavbar from '../../../components/layout/HeaderNavbar'
+import { MessagesProvider } from '../../../components/layout/Messages'
+import { useCampaignRepositories } from '../providers/CampaignRepositoryProvider'
 import router from '../router'
-import Navigation from "./common/layout/Navigation";
+import Navigation from './Common/Layout/Navigation'
 
 const Campaign = () => {
   const { AuthRepository, CampaignRepository } = useCampaignRepositories()
@@ -27,10 +27,7 @@ const Campaign = () => {
               <div className="uk-container uk-container-expand">
                 <div className="uk-section uk-section-default">
                   <div className="uk-container padded">
-                    <Routes>
-                      {router.map((route) =>
-                        <Route key={route.path} path={route.path} element={route.element} />)}
-                    </Routes>
+                    <Routes>{router.get()}</Routes>
                   </div>
                 </div>
                 <footer className="uk-section uk-section-small uk-text-center">
