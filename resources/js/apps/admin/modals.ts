@@ -1,12 +1,13 @@
 import UIKit from 'uikit'
-import { useMessageBus } from "../../services/messages";
+import { useMessageBus } from '../../services/messages'
 
 export const useModals = () => {
   const messageBus = useMessageBus()
-  const confirm = (message, errorMessage, callback) => {
+  const confirm = (message: string, callback: () => Promise<void>) => {
     UIKit.modal.confirm(message)
-      .then(() => callback)
-      .catch(() => {
+      .then(() => {
+        console.log('heeelllpppp')
+        return callback()
       })
   }
 
@@ -14,7 +15,7 @@ export const useModals = () => {
     UIKit.modal.prompt(message, '', options)
       .then((input) => {
         if (input === expectedInput) {
-          callback()
+          return callback()
         } else {
           messageBus.error(errorMessage)
         }

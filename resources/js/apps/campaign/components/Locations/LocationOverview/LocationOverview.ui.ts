@@ -1,4 +1,5 @@
-import { useCampaignRepositories } from "../../../providers/CampaignRepositoryProvider";
+import { Location } from '@dnd/types'
+import { useCampaignRepositories } from '../../../providers/CampaignRepositoryProvider'
 
 export const useLocationOverviewUI = () => {
   const { AuthRepository } = useCampaignRepositories()
@@ -9,18 +10,24 @@ export const useLocationOverviewUI = () => {
       actions: [
         {
           name: 'destroy',
+          title: 'Delete',
           icon: 'trash',
-          classes: 'uk-text-danger'
+          classes: 'uk-text-danger',
+          condition: ({ id }) => AuthRepository.can('delete', 'location', id)
         },
         {
           name: 'edit',
+          title: 'Edit',
           icon: 'edit',
-          to: (location) => `/locations/${location.id}/edit`
+          to: ({ id }) => `/locations/${id}/edit`,
+          condition: ({ id }) => AuthRepository.can('edit', 'location', id)
         },
         {
           name: 'view',
+          title: 'View',
           icon: 'eye',
-          to: (location) => `/locations/${location.id}`
+          to: ({ id }) => `/locations/${id}`,
+          condition: ({ id }) => AuthRepository.can('view', 'location', id)
         }
       ],
       columns: [
@@ -35,9 +42,9 @@ export const useLocationOverviewUI = () => {
         {
           name: 'location',
           title: 'Location',
-          format: (location) => location ? location.name || 'N/A' : 'N/A'
+          format: (location: Location | undefined) => location?.name || 'N/A'
         }
       ]
     }
-  );
+  )
 }

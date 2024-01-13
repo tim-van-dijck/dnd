@@ -1,11 +1,18 @@
+import { CampaignEntity } from '../../apps/campaign/types'
+import { UserPermissions } from '../permissions'
+import { Role } from '../roles'
+
 export interface User {
   id: number
   email: string
   name: string
   active: boolean
   admin: boolean
-  permissions?
+  permissions?: Record<CampaignEntity, UserPermissionsWithOverrides>
+  roles?: Role[]
 }
+
+type UserPermissionsWithOverrides = UserPermissions & { exceptions: Record<number, UserPermissions> }
 
 export interface UserInput {
   email?: string

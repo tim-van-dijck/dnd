@@ -1,6 +1,7 @@
-import { Campaign } from "../campaigns";
-import { Action } from "../permissions";
-import { User } from "../users";
+import { CampaignEntity } from '../../apps/campaign/types'
+import { Campaign } from '../campaigns'
+import { Action } from '../permissions'
+import { User } from '../users'
 
 
 export interface AuthRepositoryInterface {
@@ -8,7 +9,7 @@ export interface AuthRepositoryInterface {
   campaign: () => Promise<Campaign>
   loadUser: () => Promise<User>
   logout: () => Promise<string | void>
-  can: (permission: Action, entity: string, id?: number | null) => boolean
+  can: (permission: Action, entity: CampaignEntity | string, id?: number | null) => boolean
   hasRole: (user, role) => boolean
 }
 

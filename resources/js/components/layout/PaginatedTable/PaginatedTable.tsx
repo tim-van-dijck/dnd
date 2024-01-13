@@ -1,9 +1,9 @@
-import { FC } from "react";
+import { FC } from 'react'
 import { Link } from 'react-router-dom'
-import Pagination from "./components/Pagination";
-import { useSearch } from "./PaginatedTable.state";
+import Pagination from './components/Pagination'
+import { useSearch } from './PaginatedTable.state'
 import { getHref, getTo, getValue } from './PaginatedTable.ui'
-import { IProps } from "./types";
+import { IProps } from './types'
 
 const PaginatedTable: FC<IProps> = ({ actions, columns, repository, records, onAction }) => {
   const { query, setQuery, search } = useSearch(repository)
@@ -26,7 +26,7 @@ const PaginatedTable: FC<IProps> = ({ actions, columns, repository, records, onA
             <tr key={row.id}>
               <td key={`${row.id}_actions`} className="uk-width-small">
                 <ul className="uk-iconnav">
-                  {actions.map((action) => (
+                  {actions.filter(({ condition }) => condition == undefined || condition?.(row)).map((action) => (
                     <li key={`${row.id}_action_${action.name}`}>
                       {action.to ?
                         <Link to={getTo(action.to, row)} title={action.title}>

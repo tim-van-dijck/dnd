@@ -1,11 +1,12 @@
-import { FC } from "react";
-import { Link } from "react-router-dom";
-import PaginatedTable from "../../../../../components/layout/PaginatedTable";
-import { useNoteOverviewState } from "./NoteOverview.state";
-import { ui } from "./NoteOverview.ui";
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import PaginatedTable from '../../../../../components/layout/PaginatedTable'
+import { useNoteOverviewState } from './NoteOverview.state'
+import { useNoteOverviewTable } from './NoteOverview.ui'
 
 const NoteOverview: FC = () => {
   const { noteRepository, destroy } = useNoteOverviewState()
+  const ui = useNoteOverviewTable()
 
   return <div id="Notes">
     <h1>Notes</h1>

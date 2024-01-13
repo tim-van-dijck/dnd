@@ -1,8 +1,8 @@
-import { Campaign, User } from "@dnd/types";
-import { useEffect, useState } from "react";
-import { useModals } from "../../../modals";
-import { useCampaignRepository } from "../../../repositories/CampaignRepository";
-import { useUserRepository } from "../../../repositories/UserRepository";
+import { Campaign, User } from '@dnd/types'
+import { useEffect, useState } from 'react'
+import { useModals } from '../../../modals'
+import { useCampaignRepository } from '../../../repositories/CampaignRepository'
+import { useUserRepository } from '../../../repositories/UserRepository'
 
 export const useUserDetailState = (id?: number) => {
   const userRepository = useUserRepository()
@@ -23,7 +23,6 @@ export const useUserDetailState = (id?: number) => {
     if (user) {
       modals.confirm(
         `Are you sure you want to send a password reset link to ${user.email}?`,
-        '',
         () => userRepository.resetPassword(user.id!)
       )
     }

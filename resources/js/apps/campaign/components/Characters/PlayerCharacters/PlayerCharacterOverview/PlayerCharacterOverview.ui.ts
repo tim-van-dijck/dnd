@@ -1,3 +1,4 @@
+import { PlayerCharacter } from '@dnd/types'
 import { useCampaignRepositories } from '../../../../providers/CampaignRepositoryProvider'
 
 export const usePlayerCharacterOverviewUi = () => {
@@ -11,32 +12,38 @@ export const usePlayerCharacterOverviewUi = () => {
           name: 'destroy',
           title: 'Delete character',
           icon: 'trash',
-          classes: 'uk-text-danger'
+          classes: 'uk-text-danger',
+          condition: ({ id }) => AuthRepository.can('delete', 'character', id)
         },
         {
           name: 'edit',
           title: 'Edit character',
           icon: 'edit',
-          to: ({ id }) => `/characters/players/${id}/edit`
+          to: ({ id }) => `/characters/players/${id}/edit`,
+          condition: ({ id }) => AuthRepository.can('edit', 'character', id)
         },
         {
           name: 'view',
           title: 'Go to player-character',
           icon: 'eye',
-          to: ({ id }) => `/characters/players/${id}`
+          to: ({ id }) => `/characters/players/${id}`,
+          condition: ({ id }) => AuthRepository.can('view', 'character', id)
         },
         {
           name: 'sheet',
           title: 'Download character sheet',
           href: ({ id }) => `/campaign/characters/${id}/sheet`,
           icon: 'file',
-          newTab: true
+          newTab: true,
+          condition: ({ id }) => AuthRepository.can('view', 'character', id)
         },
         {
           name: 'inventory',
           title: 'Go to inventories',
           icon: 'shopping-bag',
-          to: (character) => `/inventories/${character.info.inventory_id}`
+          to: (character: PlayerCharacter) => `/inventories/${character.info.inventory_id}`,
+          condition: ({ id, info }: PlayerCharacter) => AuthRepository.can('view', 'character', id)
+          // && AuthRepository.can('view', 'inventory', info.inventory_id)
         }
       ],
       columns: [
