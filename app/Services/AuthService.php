@@ -15,7 +15,7 @@ use Illuminate\Validation\UnauthorizedException;
 class AuthService
 {
     const PASSWORD_REGEX = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{16,}/';
-    
+
     public static function userHasCampaignPermission(User $user, ?Model $model, string $entity, string $permission): bool
     {
         if (!in_array($permission, ['create', 'edit', 'view', 'delete'])) {
@@ -147,7 +147,6 @@ class AuthService
                 'user_id' => $userId
             ]);
             $userPermission->view = $permissionSet['view'];
-            $userPermission->create = $permissionSet['create'];
             $userPermission->edit = $permissionSet['edit'];
             $userPermission->delete = $permissionSet['delete'];
             $userPermission->save();
