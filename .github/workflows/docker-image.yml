@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: docker/login-action@v3
       with:
-        registry: ${{ vars.HARBOR_URL }}/harbor
+        registry: ${{ vars.HARBOR_HOST }}
         username: ${{ secrets.HARBOR_USERNAME  }}
         password: ${{ secrets.HARBOR_PASSWORD }}
     - uses: actions/checkout@v3
