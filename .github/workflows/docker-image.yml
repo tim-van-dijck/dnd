@@ -9,17 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: docker/login-action@v3
-      with:
-        registry: ${{ vars.HARBOR_HOST }}
-        username: ${{ secrets.HARBOR_USERNAME }}
-        password: ${{ secrets.HARBOR_PASSWORD }}
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag dnd-app:$GITHUB_SHA
-        docker tag dnd-app:$GITHUB_SHA ${{ vars.HARBOR_HOST }}/library/dnd-app:$GITHUB_SHA
-        docker tag dnd-app:$GITHUB_SHA ${{ vars.HARBOR_HOST }}/library/dnd-app:latest
-        docker push ${{ vars.HARBOR_HOST }}/library/dnd-app:latest
-        docker push ${{ vars.HARBOR_HOST }}/library/dnd-app:$GITHUB_SHA
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ vars.HARBOR_HOST }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: |
+          docker build . --build-arg="PORT=8080" --file Dockerfile --tag dnd-app:$GITHUB_SHA
+          docker tag dnd-app:$GITHUB_SHA ${{ vars.HARBOR_HOST }}/library/dnd-app:$GITHUB_SHA
+          docker tag dnd-app:$GITHUB_SHA ${{ vars.HARBOR_HOST }}/library/dnd-app:latest
+          docker push ${{ vars.HARBOR_HOST }}/library/dnd-app:latest
+          docker push ${{ vars.HARBOR_HOST }}/library/dnd-app:$GITHUB_SHA
       
