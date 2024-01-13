@@ -82,6 +82,7 @@ RUN useradd -Ms /bin/bash -u $UID -g www www
 RUN usermod -aG www-data www
 
 COPY ./docker/nginx/app.conf /etc/nginx/sites-enabled/default
+RUN sed -i s/\$\{PORT\}/$PORT/ /etc/nginx/sites-enabled/default
 
 COPY --chown=www:www-data . /app
 COPY --chown=www:www-data --from=node-builder /app/public/js /app/public/js
