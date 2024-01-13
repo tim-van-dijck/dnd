@@ -3,6 +3,8 @@
 *.jpg binary
 *.pdf binary
 *.gif binary
+*.ttf binary
+*.woff2 binary
 *.css linguist-vendored
 *.scss linguist-vendored
 *.js linguist-vendored
