@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Character;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BackgroundResource;
 use App\Http\Resources\ClassResource;
+use App\Http\Resources\LanguageResource;
 use App\Http\Resources\RaceResource;
 use App\Models\Character\Background;
 use App\Models\Character\Language;
@@ -15,34 +16,24 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @param ClassRepository $classRepository
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function classes(Request $request, ClassRepository $classRepository)
+    public function classes(Request $request, ClassRepository $classRepository): AnonymousResourceCollection
     {
         $includes = $request->has('include') ? explode(',', $request->query('include', '')) : [];
         return ClassResource::collection($classRepository->get($includes));
     }
 
-    public function languages()
+    public function languages(): AnonymousResourceCollection
     {
-        return response()->json(Language::get());
+        return LanguageResource::collection(Language::get());
     }
 
-    /**
-     * @param Request $request
-     * @param RaceRepository $raceRepository
-     * @return AnonymousResourceCollection
-     */
-    public function races(Request $request, RaceRepository $raceRepository)
+    public function races(Request $request, RaceRepository $raceRepository): AnonymousResourceCollection
     {
         $includes = $request->has('include') ? explode(',', $request->query('include', '')) : [];
         return RaceResource::collection($raceRepository->get($includes));
     }
 
-    public function backgrounds()
+    public function backgrounds(): AnonymousResourceCollection
     {
         return BackgroundResource::collection(Background::get());
     }

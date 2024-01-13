@@ -35,7 +35,7 @@ class ItemTableSeeder extends Seeder
         return [
             [
                 'name' => 'Padded Armor',
-                'description' => 'Padded armor consists of quilted layers of cloth and batting.',
+                'description' => 'Padded inventory-tab-armor consists of quilted layers of cloth and batting.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Light',
@@ -52,7 +52,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Leather Armor',
-                'description' => 'The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials.',
+                'description' => 'The breastplate and shoulder protectors of this inventory-tab-armor are made of leather that has been stiffened by being boiled in oil. The rest of the inventory-tab-armor is made of softer and more flexible materials.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Light',
@@ -86,7 +86,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Hide Armor',
-                'description' => 'This crude armor consists of thick furs and pelts. It is commonly worn by barbarian tribes, evil humanoids, and other folk who lack access to the tools and materials needed to create better armor.',
+                'description' => 'This crude inventory-tab-armor consists of thick furs and pelts. It is commonly worn by barbarian tribes, evil humanoids, and other folk who lack access to the tools and materials needed to create better inventory-tab-armor.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Medium',
@@ -104,7 +104,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Chain shirt',
-                'description' => 'Made of interlocking metal rings, a chain shirt is worn between layers of clothing or leather. This armor offers modest protection to the wearer\'s body and allows the sound of rings rubbing against one another to be muffled by outer layers.',
+                'description' => 'Made of interlocking metal rings, a chain shirt is worn between layers of clothing or leather. This inventory-tab-armor offers modest protection to the wearer\'s body and allows the sound of rings rubbing against one another to be muffled by outer layers.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Medium',
@@ -122,7 +122,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Scale mail',
-                'description' => 'This armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much likes the scales of a fish. The suit includes gauntlets.',
+                'description' => 'This inventory-tab-armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much likes the scales of a fish. The suit includes gauntlets.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Medium',
@@ -140,7 +140,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Breastplate',
-                'description' => 'This armor consists of a fitted metal chest piece worn with supple leather. Although it leaves the legs and arms relatively unprotected, this armor provides good protection for the wearer\'s vital organs while leaving the wearer relatively unencumbered.',
+                'description' => 'This inventory-tab-armor consists of a fitted metal chest piece worn with supple leather. Although it leaves the legs and arms relatively unprotected, this inventory-tab-armor provides good protection for the wearer\'s vital organs while leaving the wearer relatively unencumbered.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Medium',
@@ -176,7 +176,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Ring mail',
-                'description' => 'This armor is leather armor with heavy rings sewn into it. The rings help reinforce the armor against blows from swords and axes. Ring mail is inferior to chain mail, and it\'s usually worn only by those who can\'t afford better armor.',
+                'description' => 'This inventory-tab-armor is leather inventory-tab-armor with heavy rings sewn into it. The rings help reinforce the inventory-tab-armor against blows from swords and axes. Ring mail is inferior to chain mail, and it\'s usually worn only by those who can\'t afford better inventory-tab-armor.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Heavy',
@@ -211,7 +211,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Splint Armor',
-                'description' => 'This armor is made of narrow vertical strips of metal riveted to a backing of leather that is worn over cloth padding. Flexible chain mail protects the joints.',
+                'description' => 'This inventory-tab-armor is made of narrow vertical strips of metal riveted to a backing of leather that is worn over cloth padding. Flexible chain mail protects the joints.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Heavy',
@@ -229,7 +229,7 @@ class ItemTableSeeder extends Seeder
             ],
             [
                 'name' => 'Plate Armor',
-                'description' => 'Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body.',
+                'description' => 'Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the inventory-tab-armor. Buckles and straps distribute the weight over the body.',
                 'category' => 'Armor',
                 'rarity' => 'Common',
                 'type' => 'Heavy',

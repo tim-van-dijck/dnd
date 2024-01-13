@@ -7,23 +7,24 @@ $card-secondary-hover-background: darken($card-secondary-background, 5%);
 $card-secondary-color: #666;
 $card-secondary-title-color: $card-secondary-color;
 $card-secondary-color-mode: dark;
+$fa-font-path: '../fonts/vendor/fontawesome';
 
+// UI Kit
 @import "~uikit/src/scss/variables-theme.scss";
 @import "~uikit/src/scss/mixins-theme.scss";
 @import "~uikit/src/scss/uikit-theme.scss";
 
-@import "~vue-select/src/scss/vue-select.scss";
+// Font Awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/solid";
 
-@import "partial/header";
-@import "partial/form";
-@import "partial/login";
-@import "partial/messages";
-@import "partial/navigation";
-@import "partial/cards";
-@import "partial/text";
+//@import "~vue-select/src/scss/vue-select.scss";
 
-@import "player/create";
-@import "player/inventory";
+@import "partial";
+
+@import "modules/quest";
+@import "modules/player";
 
 
 #content {
@@ -83,23 +84,6 @@ $card-secondary-color-mode: dark;
   @media (max-width: $breakpoint-medium) {
     & {
       padding: 20px;
-    }
-  }
-}
-
-#quest {
-  .actions {
-    i.fas {
-      cursor: pointer;
-      transition: color .3s ease;
-
-      &.fa-check-circle:hover {
-        @extend .uk-text-success;
-      }
-
-      &.fa-times-circle:hover {
-        @extend .uk-text-danger;
-      }
     }
   }
 }

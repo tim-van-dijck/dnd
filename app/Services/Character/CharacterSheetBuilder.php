@@ -218,10 +218,10 @@ class CharacterSheetBuilder
         $first = $spellcasters[0];
         $spellcastingClass = $first instanceof Subclass ? "$first->name ({$first->class->name})" : $first->name;
         $spellInfo = [
-            'SpellcastingAbility' => $first->spellcasting_ability,
+            'Spellcasting Ability' => $first->spellcasting_ability,
             'Spellcasting Class' => $spellcastingClass,
-            'SpellSaveDC' => 8 + $proficiencyBonus + $character->ability_scores[$first->spellcasting_ability],
-            'SpellAtkBonus' => $proficiencyBonus + $character->ability_scores[$first->spellcasting_ability]
+            'Spell Save DC' => 8 + $proficiencyBonus + $character->ability_scores[$first->spellcasting_ability],
+            'Spell Atk Bonus' => $proficiencyBonus + $character->ability_scores[$first->spellcasting_ability]
         ];
 
         $spellSlots = SpellSlotHelper::getSpellSlotsForCharacter($character);
@@ -229,11 +229,11 @@ class CharacterSheetBuilder
         $spellsPerLevel = $character->spells->groupBy('level');
         for ($level = 0; $level <= 9; $level++) {
             if ($level > 0) {
-                $spellInfo["SlotsTotal $level"] = $spellSlots["spell_slots_level_$level"];
+                $spellInfo["SlotsTotal $level"] = $spellSlots["spell_slots_level_$level"] ?: '';
             }
             $spells = $spellsPerLevel[$level] ?? [];
             foreach ($spells as $index => $spell) {
-                $number = $index + 1;
+                $number = str_pad($index + 1, 2, 0, STR_PAD_LEFT);
                 $spellInfo["Spells {$level}{$number}"] = $spell->name;
             }
         }

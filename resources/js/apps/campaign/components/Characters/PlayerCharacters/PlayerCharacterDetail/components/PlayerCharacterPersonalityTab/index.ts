@@ -1,0 +1,3 @@
+import PlayerCharacterPersonalityTab from './PlayerCharacterPersonalityTab'
+
+export default PlayerCharacterPersonalityTab

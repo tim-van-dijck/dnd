@@ -1,0 +1,3 @@
+import PlayerCharacterFormDetailsTab from './PlayerCharacterFormDetailsTab'
+
+export default PlayerCharacterFormDetailsTab

@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class QuestController extends Controller
@@ -58,14 +57,14 @@ class QuestController extends Controller
      * @return Quest
      * @throws AuthorizationException
      */
-    public function show(Quest $quest): Quest
+    public function show(Quest $quest): QuestResource
     {
         $this->authorize('view', $quest);
         $quest->load('objectives');
         if (Session::get('campaign_id') != $quest->campaign_id) {
             throw new ModelNotFoundException();
         }
-        return $quest;
+        return new QuestResource($quest);
     }
 
     /**

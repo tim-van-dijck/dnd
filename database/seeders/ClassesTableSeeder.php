@@ -119,7 +119,7 @@ class ClassesTableSeeder extends Seeder
                         'from' => ['Animal Handling', 'Athletics', 'Intimidation', 'Nature', 'Perception', 'Survival']
                     ]
                 ],
-                'proficiencies' => ['Light armor', 'Medium armor', 'Shields', 'Simple weapons', 'Martial weapons'],
+                'proficiencies' => ['Light inventory-tab-armor', 'Medium inventory-tab-armor', 'Shields', 'Simple weapons', 'Martial weapons'],
                 'saving_throws' => ['STR', 'CON'],
                 'levels' => [
                     [
@@ -573,7 +573,7 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'proficiencies' => ['Light armor', 'Simple weapons', 'Longswords', 'Rapiers', 'Shortswords', 'Crossbows, hand'],
+                'proficiencies' => ['Light inventory-tab-armor', 'Simple weapons', 'Longswords', 'Rapiers', 'Shortswords', 'Crossbows, hand'],
                 'saving_throws' => ['DEX', 'CHA'],
                 'levels' => [
                     [
@@ -913,7 +913,7 @@ class ClassesTableSeeder extends Seeder
                         'from' => ['History', 'Insight', 'Medicine', 'Persuasion', 'Religion']
                     ]
                 ],
-                'proficiencies' => ['Light armor', 'Medium armor', 'Shields', 'Simple weapons'],
+                'proficiencies' => ['Light inventory-tab-armor', 'Medium inventory-tab-armor', 'Shields', 'Simple weapons'],
                 'saving_throws' => ['WIS', 'CHA'],
                 'levels' => [
                     [
@@ -1254,8 +1254,8 @@ class ClassesTableSeeder extends Seeder
                     ]
                 ],
                 'proficiencies' => [
-                    'Light armor',
-                    'Medium armor',
+                    'Light inventory-tab-armor',
+                    'Medium inventory-tab-armor',
                     'Shields',
                     'Clubs',
                     'Daggers',
@@ -1608,7 +1608,7 @@ class ClassesTableSeeder extends Seeder
                         'from' => ['Acrobatics', 'Animal Handling', 'Athletics', 'History', 'Insight', 'Intimidation', 'Perception', 'Survival']
                     ]
                 ],
-                'proficiencies' => ['All armor', 'Shields', 'Simple weapons', 'Martial weapons'],
+                'proficiencies' => ['All inventory-tab-armor', 'Shields', 'Simple weapons', 'Martial weapons'],
                 'saving_throws' => ['STR', 'CON'],
                 'levels' => [
                     [
@@ -2416,7 +2416,7 @@ class ClassesTableSeeder extends Seeder
                         'from' => ['Athletics', 'Insight', 'Intimidation', 'Medicine', 'Persuasion', 'Religion']
                     ]
                 ],
-                'proficiencies' => ['All armor', 'Shields', 'Simple weapons', 'Martial weapons'],
+                'proficiencies' => ['All inventory-tab-armor', 'Shields', 'Simple weapons', 'Martial weapons'],
                 'saving_throws' => ['WIS', 'CHA'],
                 'levels' => [
                     [
@@ -2756,7 +2756,7 @@ class ClassesTableSeeder extends Seeder
                         'from' => ['Animal Handling', 'Athletics', 'Insight', 'Investigation', 'Nature', 'Perception', 'Stealth', 'Survival']
                     ]
                 ],
-                'proficiencies' => ['Light armor', 'Medium armor', 'Shields', 'Simple weapons', 'Martial weapons'],
+                'proficiencies' => ['Light inventory-tab-armor', 'Medium inventory-tab-armor', 'Shields', 'Simple weapons', 'Martial weapons'],
                 'saving_throws' => ['STR', 'DEX'],
                 'levels' => [
                     [
@@ -3109,7 +3109,7 @@ class ClassesTableSeeder extends Seeder
                     ]
                 ],
                 'proficiencies' => [
-                    'Light armor',
+                    'Light inventory-tab-armor',
                     'Simple weapons',
                     'Longswords',
                     'Rapiers',
@@ -3923,7 +3923,7 @@ class ClassesTableSeeder extends Seeder
                         ]
                     ]
                 ],
-                'proficiencies' => ['Light armor', 'Simple weapons'],
+                'proficiencies' => ['Light inventory-tab-armor', 'Simple weapons'],
                 'saving_throws' => ['WIS', 'CHA'],
                 'levels' => [
                     [

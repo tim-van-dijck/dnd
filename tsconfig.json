@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "umd",
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "baseUrl": "resources/js",
+    "paths": {
+      "@dnd/admin": [
+        "apps/admin"
+      ],
+      "@dnd/campaign": [
+        "apps/campaign"
+      ],
+      "@dnd/components": [
+        "components"
+      ],
+      "@dnd/libs": [
+        "libs"
+      ],
+      "@dnd/types": [
+        "types"
+      ],
+      "@dnd/stores": [
+        "stores"
+      ]
+    }
+  },
+  "include": [
+    "resources/js"
+  ]
+}

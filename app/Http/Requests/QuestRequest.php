@@ -41,7 +41,6 @@ class QuestRequest extends FormRequest
             'objectives.*.optional' => 'required|boolean',
             'permissions' => 'sometimes|nullable|array',
             'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
             'permissions.*.edit' => 'required|boolean',
             'permissions.*.delete' => 'required|boolean',
         ];

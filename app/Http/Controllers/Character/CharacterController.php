@@ -10,20 +10,13 @@ use App\Models\Character\Character;
 use App\Repositories\Character\CharacterRepository;
 use App\Services\Character\CharacterSheetBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 
 class CharacterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param CharacterRepository $characterRepository
-     * @param Request $request
-     * @param int $campaignId
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function index(CharacterRepository $characterRepository, Request $request)
+    public function index(CharacterRepository $characterRepository, Request $request): AnonymousResourceCollection
     {
         $this->authorize('viewAny', Character::class);
         $filters = $request->query('filter', []);
@@ -34,15 +27,6 @@ class CharacterController extends Controller
         return CharacterResource::collection($characters);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param CharacterManager $characterManager
-     * @param  CharacterRequest $request
-     * @param int $campaignId
-     * @return void
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function store(CharacterManager $characterManager, CharacterRequest $request): CharacterResource
     {
         $this->authorize('create', Character::class);
@@ -51,15 +35,6 @@ class CharacterController extends Controller
         return new CharacterResource($character);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param CharacterRepository $characterRepository
-     * @param Request $request
-     * @param Character $character
-     * @return CharacterResource
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
     public function show(CharacterRepository $characterRepository, Request $request, Character $character): CharacterResource
     {
         $this->authorize('view', $character);
@@ -67,14 +42,6 @@ class CharacterController extends Controller
         return new CharacterResource($characterRepository->find(Session::get('campaign_id'), $character->id, $includes));
     }
 
-    /**
-     * Export the specified character as a PDF Character Sheet.
-     *
-     * @param CharacterRepository $characterRepository
-     * @param Character $character
-     * @return Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
     public function sheet(CharacterSheetBuilder $builder, Character $character): Response
     {
         $this->authorize('view', $character);

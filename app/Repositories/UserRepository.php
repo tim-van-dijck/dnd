@@ -2,22 +2,17 @@
 
 namespace App\Repositories;
 
+use App\Models\InviteCode;
 use App\Models\User;
 use App\Notifications\InviteUser;
+use App\Notifications\InviteUserForCampaign;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserRepository
 {
-    /**
-     * @param array $filters
-     * @param int $page
-     * @param int $pageSize
-     * @return LengthAwarePaginator
-     */
     public function get(array $filters, int $page, int $pageSize): LengthAwarePaginator
     {
         $query = User::query();
@@ -30,12 +25,6 @@ class UserRepository
         return $query->paginate($pageSize, ['*'], 'page[number]', $page);
     }
 
-    /**
-     * @param int $campaignId
-     * @param int $page
-     * @param int $pageSize
-     * @return LengthAwarePaginator
-     */
     public function getByCampaign(int $campaignId, int $page, int $pageSize): LengthAwarePaginator
     {
         return User::join('role_user', 'role_user.user_id', '=', 'users.id')
@@ -44,6 +33,17 @@ class UserRepository
                     ->where('roles.campaign_id', $campaignId);
             })
             ->paginate($pageSize, ['users.*', 'roles.name AS role', 'roles.id AS role_id'], 'page[number]', $page);
+    }
+
+    public function update(User $user, array $input): User
+    {
+        $user->name = $input['name'];
+        $user->email = $input['email'];
+        $user->active = !empty($input['active']);
+        $user->admin = !empty($input['admin']);
+        $user->save();
+
+        return $user;
     }
 
     public function userExistsInCampaign(int $campaignId, int $userId): bool
@@ -57,54 +57,63 @@ class UserRepository
             ->exists();
     }
 
-    /**
-     * @param int $campaignId
-     * @param string $email
-     * @param int $roleId
-     */
-    public function invite(int $campaignId, string $email, int $roleId)
+    public function invite(int $campaignId, string $email, int $roleId): void
     {
         $user = User::where('email', $email)->first();
         $newUser = empty($user);
         if ($newUser) {
-            $codes = User::get(['invite_code'])->pluck('invite_code')->toArray();
             $user = new User();
             $user->name = '';
             $user->email = $email;
             $user->password = '';
-            do {
-                $user->invite_code = Str::random(16);
-            } while (in_array($user->invite_code, $codes));
             $user->save();
         }
+
         $user->grantRole($campaignId, $roleId);
-        $link = route('invitation', ['token' => $user->invite_code]);
-        $user->notify(new InviteUser($campaignId, Auth::user()->name, $link, $newUser));
+
+        $link = $this->generateInvite($user, $campaignId);
+        $user->notify(new InviteUserForCampaign($campaignId, Auth::user()->name, $link, $newUser));
     }
 
-    /**
-     * @param int $campaignId
-     * @param User $user
-     * @param int $roleId
-     */
-    public function updateRole(int $campaignId, User $user, int $roleId)
+    public function inviteAdmin(string $email, bool $admin): void
+    {
+        $user = new User();
+        $user->name = '';
+        $user->email = $email;
+        $user->password = '';
+        $user->admin = $admin;
+        $user->active = true;
+        $user->save();
+
+        $inviteLink = $this->generateInvite($user, null);
+        $user->notify(new InviteUser(Auth::user()->name, $inviteLink));
+    }
+
+    public function updateRole(int $campaignId, User $user, int $roleId): void
     {
         $user->revokeRoles($campaignId);
         $user->grantRole($campaignId, $roleId);
     }
 
-    /**
-     * @param string $token
-     * @param array $data
-     */
-    public function register(string $token, array $data)
+    public function register(InviteCode $code, array $data): void
     {
-        /** @var User $user */
-        $user = User::where('invite_code', $token)->firstOrFail();
+        $user = $code->user;
+
         $user->name = $data['name'];
         $user->password = Hash::make($data['password']);
         $user->invite_code = null;
         $user->email_verified_at = Carbon::now();
         $user->save();
+
+        $code->delete();
+    }
+
+    private function generateInvite(User $user, ?string $campaignId): string
+    {
+        $inviteCode = new InviteCode();
+        $inviteCode->campaign_id = $campaignId;
+        $user->invites()->save($inviteCode);
+
+        return route('invitation', ['token' => $inviteCode->id]);
     }
 }

@@ -9,7 +9,7 @@
         <div class="uk-navbar-right">
             <slot name="right">
                 <ul class="uk-navbar-nav">
-                    <li><a href="/admin" class="uk-navbar-item">Admin</a></li>
+                    <li><a href="/admin" class="uk-navbar-item">Campaign</a></li>
                     <li><a href="/campaigns" class="uk-navbar-item">My Campaigns</a></li>
                     <li><a href="/profile" class="uk-navbar-item">My Profile</a></li>
                     <li>

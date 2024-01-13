@@ -1,73 +1,72 @@
 {
-    "name": "tim-van-dijck/dnd",
-    "type": "project",
-    "description": "D&D Campaign Manager",
-    "keywords": [
-        "D&D",
-        "Dungeons",
-        "Dragons",
-        "Campaign"
-    ],
-    "license": "MIT",
-    "require": {
-        "php": "^8.0",
-        "ext-json": "*",
-        "aws/aws-sdk-php": "^3.138",
-        "laravel/framework": "^9.0",
-        "laravel/ui": "^3.0",
-        "laravel/tinker": "^2.0",
-        "tim-van-dijck/dnd-seeds": "^0.16.0@alpha",
-        "fpdf/fpdf": "1.*",
-        "tmw/fpdm": "2.9.2"
+  "name": "tim-van-dijck/dnd",
+  "type": "project",
+  "description": "D&D Campaign Manager",
+  "keywords": [
+    "D&D",
+    "Dungeons",
+    "Dragons",
+    "Campaign"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": "^8.0",
+    "ext-json": "*",
+    "aws/aws-sdk-php": "^3.138",
+    "laravel/framework": "^v9.52",
+    "laravel/ui": "^3.0",
+    "laravel/tinker": "^2.0",
+    "fpdf/fpdf": "1.*",
+    "tmw/fpdm": "2.9.2"
+  },
+  "require-dev": {
+    "spatie/laravel-ignition": "^1.0",
+    "fzaninotto/faker": "^1.4",
+    "mockery/mockery": "^1.0",
+    "nunomaduro/collision": "^6.1",
+    "phpunit/phpunit": "^9.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
     },
-    "require-dev": {
-        "spatie/laravel-ignition": "^1.0",
-        "fzaninotto/faker": "^1.4",
-        "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.0"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/"
-        },
-        "classmap": [
-            "database/seeders"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "scripts": {
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
-        ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
-        ]
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:tim-van-dijck/dnd-seeds.git"
-        }
+    "classmap": [
+      "database/seeders"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi"
+    ]
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:tim-van-dijck/dnd-seeds.git"
+    }
+  ]
 }

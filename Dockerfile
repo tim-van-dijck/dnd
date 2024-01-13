@@ -1,51 +1,100 @@
-FROM php:8.0-fpm
+FROM php:8.2-fpm AS php-builder
 
-# Copy composer.lock and composer.json
-#COPY code/composer.lock code/composer.json /var/www/app/
+WORKDIR /app
 
-# Set working directory
-WORKDIR /var/www/app
-
-# Install dependencies
+RUN apt-get update
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    mariadb-client \
-    libpng-dev \
     libzip-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
     locales \
     zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
+    unzip
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+COPY . /app
+
+RUN composer install --no-dev
+
+#---------------------------------------------------------#
+
+FROM node:19.1.0 AS node-builder
+
+WORKDIR /app
+
+COPY package-lock.json /app
+COPY package.json /app
+RUN npm ci
+
+COPY webpack.config.js /app
+COPY babel.config.json /app
+COPY tsconfig.json /app
+COPY resources/js /app/resources/js
+COPY resources/sass /app/resources/sass
+
+USER root
+RUN npm run prod
+
+#---------------------------------------------------------#
+
+FROM php:8.2-fpm
+
+ARG UID=1000
+ARG GID=1000
+ARG PORT=8080
+
+WORKDIR /app
+
+RUN apt-get update
+RUN apt-get install -y \
     curl \
-    libonig-dev
+    nginx \
+    sudo \
+    libjpeg62-turbo \
+    libonig5 \
+    libpng16-16 \
+    libzip4 \
+    locales \
+    mariadb-client \
+    jpegoptim \
+    optipng \
+    pngquant \
+    gifsicle \
+    git \
+    unzip \
+    zip
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl sockets
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
+# Install PHP extensions
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions
+RUN install-php-extensions \
+    exif \
+    gd \
+    mbstring \
+    pcntl \
+    pdo_mysql \
+    sockets
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN groupadd -g $GID www
+RUN useradd -Ms /bin/bash -u $UID -g www www
+RUN usermod -aG www-data www
 
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+COPY ./docker/nginx/app.conf /etc/nginx/sites-enabled/default
 
-# Copy existing application directory contents
-COPY ./ /var/www/app
+COPY --chown=www:www-data . /app
+COPY --chown=www:www-data --from=node-builder /app/public/js /app/public/js
+COPY --chown=www:www-data --from=node-builder /app/public/css /app/public/css
+COPY --chown=www:www-data --from=php-builder /app/storage /app/storage
+COPY --chown=www:www-data --from=php-builder /app/vendor /app/vendor
 
-# Copy existing application directory permissions
-COPY --chown=www:www . /var/www/app
+RUN chmod -R ug+w /app/storage
 
-# Change current user to www
+RUN echo "www ALL=(ALL) NOPASSWD: /usr/sbin/service nginx start" >> /etc/sudoers
+RUN echo "www ALL=(ALL) NOPASSWD: /usr/sbin/service nginx stop" >> /etc/sudoers
+
 USER www
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+EXPOSE $PORT
+ENTRYPOINT ["bash", "-c", "sudo service nginx start && php-fpm"]

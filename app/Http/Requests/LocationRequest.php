@@ -27,8 +27,8 @@ class LocationRequest extends FormRequest
     {
         $campaignId = Session::get('campaign_id');
         return [
-            'name' => 'required|string',
-            'type' => 'required|string',
+            'name' => ['required', 'string'],
+            'type' => ['required', 'string'],
             'description' => 'string',
             'location_id' => [
                 'nullable',
@@ -37,12 +37,11 @@ class LocationRequest extends FormRequest
                     $query->where('campaign_id', $campaignId);
                 })
             ],
-            'map' => 'image|dimensions:max_height=1920,max_width=1920|max:8192',
-            'permissions' => 'sometimes|nullable|array',
-            'permissions.*.view' => 'required|boolean',
-            'permissions.*.create' => 'required|boolean',
-            'permissions.*.edit' => 'required|boolean',
-            'permissions.*.delete' => 'required|boolean',
+            'map' => ['image', 'dimensions:max_height=2560,max_width=2560', 'max:8192'],
+            'permissions' => ['sometimes', 'nullable', 'array'],
+            'permissions.*.view' => ['required', 'boolean'],
+            'permissions.*.edit' => ['required', 'boolean'],
+            'permissions.*.delete' => ['required', 'boolean'],
         ];
     }
 }

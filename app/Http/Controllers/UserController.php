@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CurrentUserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,5 +50,10 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('profile.index');
+    }
+
+    public function me(): CurrentUserResource
+    {
+        return new CurrentUserResource(Auth::user());
     }
 }

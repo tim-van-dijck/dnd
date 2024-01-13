@@ -37,9 +37,9 @@ class RaceController extends Controller
         return new RaceResource($raceRepository->find($race->id));
     }
 
-    public function update(Request $request, Race $race)
+    public function update(RaceRepository $raceRepository, RaceRequest $request, Race $race)
     {
-        //
+        return new RaceResource($raceRepository->update($race, $request->input()));
     }
 
     public function destroy(RaceRepository $raceRepository, Race $race)

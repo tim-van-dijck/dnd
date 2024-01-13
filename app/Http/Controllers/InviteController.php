@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\InviteCode;
 use App\Repositories\UserRepository;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 
 class InviteController extends Controller
 {
-    public function invitation(string $token)
+    public function invitation(InviteCode $token)
     {
-        $user = User::where('invite_code', $token)->firstOrFail();
         return view('auth.register', ['token' => $token]);
     }
 
-    public function registerInvitation(UserRepository $userRepository, Request $request, string $token)
+    public function registerInvitation(UserRepository $userRepository, Request $request, InviteCode $token)
     {
+        $regex = AuthService::PASSWORD_REGEX;
         $this->validate($request, [
             'name' => ['required', 'string', 'max:255', 'min:3'],
-            'password' => ['required', 'string', 'min:16', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/'],
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:16', 'confirmed', "regex:$regex"],
         ]);
 
         $userRepository->register($token, $request->input());

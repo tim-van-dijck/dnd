@@ -40,7 +40,7 @@ use Illuminate\Support\Carbon;
  * @property Subrace subrace
  * @property Background background
  * @property User owner
- * @property Inventory inventory
+ * @property Inventory inventories
  * @property Collection|CharacterClass[] classes
  * @property Collection|Subclass[] subclasses
  * @property Collection|Proficiency[] proficiencies
@@ -70,7 +70,7 @@ class Character extends Model
         return $this->belongsTo(Subrace::class);
     }
 
-    public function background():BelongsTo
+    public function background(): BelongsTo
     {
         return $this->belongsTo(Background::class);
     }

@@ -24,19 +24,19 @@ class CampaignManager
     {
         $campaign = $this->campaignRepository->store($data);
 
-        $adminRole = new Role();
-        $adminRole->campaign_id = $campaign->id;
-        $adminRole->name = 'Admin';
-        $adminRole->system = 1;
-        $adminRole->save();
+        $dmRole = new Role();
+        $dmRole->campaign_id = $campaign->id;
+        $dmRole->name = 'Dungeon Master';
+        $dmRole->system = 1;
+        $dmRole->save();
 
         $permissions = Permission::whereIn('name', ['campaign', 'character', 'location', 'quest', 'note', 'user', 'role', 'journal'])
             ->get();
         foreach ($permissions as $permission) {
-            $adminRole->permissions()->attach($permission->id, ['view' => 1, 'create' => 1, 'edit' => 1, 'delete' => 1]);
+            $dmRole->permissions()->attach($permission->id, ['view' => 1, 'create' => 1, 'edit' => 1, 'delete' => 1]);
         }
 
-        Auth::user()->grantRole($campaign->id, $adminRole->id);
+        Auth::user()->grantRole($campaign->id, $dmRole->id);
         return $campaign;
     }
 }
