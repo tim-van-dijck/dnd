@@ -4,6 +4,7 @@ namespace App\Models\Campaign;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class UserPermission
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int entity_id
  * @property int user_id
  * @property bool view
- * @property bool create
  * @property bool edit
  * @property bool delete
  */
@@ -23,7 +23,7 @@ class UserPermission extends Model
     protected $fillable = ['campaign_id', 'entity', 'entity_id', 'user_id'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function campaign()
     {
@@ -31,7 +31,7 @@ class UserPermission extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {

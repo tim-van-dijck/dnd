@@ -1,11 +1,12 @@
-import { useSharedDispatch, useSharedSelector } from "@dnd/stores";
-import axios, { AxiosResponse } from "axios";
-import { setCampaign } from "../apps/campaign/stores/campaign";
-import { setUser } from "../stores/auth";
-import { Action, AuthRepositoryInterface, Campaign, User } from "../types";
+import { useSharedDispatch, useSharedSelector } from '@dnd/stores'
+import axios, { AxiosResponse } from 'axios'
+import { setCampaign } from '../apps/campaign/stores/campaign'
+import { CampaignEntity } from '../apps/campaign/types'
+import { setUser } from '../stores/auth'
+import { Action, AuthRepositoryInterface, Campaign, User } from '../types'
 
 export const useAuthRepository = (): AuthRepositoryInterface => {
-  const user = useSharedSelector(state => state.auth.user)
+  const user: User | null = useSharedSelector(state => state.auth.user)
   const campaign = useSharedSelector(state => state.auth.campaign)
   const dispatch = useSharedDispatch()
 
@@ -16,8 +17,8 @@ export const useAuthRepository = (): AuthRepositoryInterface => {
       return axios.get('/api/campaign').then((response: AxiosResponse<{ data: Campaign }>) => {
         const campaign = response.data.data
         dispatch(setCampaign(campaign))
-        return campaign;
-      });
+        return campaign
+      })
     },
     loadUser: (): Promise<User> => {
       if (user !== null) return Promise.resolve(user)
@@ -33,22 +34,18 @@ export const useAuthRepository = (): AuthRepositoryInterface => {
             window.location.href = '/'
           }
           return {} as unknown as User
-        });
+        })
     },
     logout: (): Promise<string | void> => axios.post('/logout').then(() => document.location.href = '/'),
-    can: (permission: Action, entity: string, id = null): boolean => {
+    can: (permission: Action, entity: CampaignEntity | string, id = null): boolean => {
       if (!user?.permissions?.hasOwnProperty(entity)) return false
 
       const permissions = user?.permissions[entity]
-      if (permissions?.[permission]) return true
+      if (id && permissions.exceptions?.[id]?.[permission] != null) return !!permissions.exceptions?.[id]?.[permission]
 
-      if (permissions?.exceptions) {
-        return id ? permissions.exceptions.hasOwnProperty(id) && permissions.exceptions[id][permission]
-          : Object.keys(permissions.exceptions).length > 0
-      }
-      return false
+      return !!permissions?.[permission]
     },
-    hasRole: (user, role): boolean => (
+    hasRole: (user: User, role: string | number): boolean => (
       user?.roles || []
     ).filter(item => item.id === role || item.name === role).length > 0
   }

@@ -7,6 +7,7 @@ use App\Models\Campaign\Role;
 use App\Models\Campaign\UserPermission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -36,7 +37,7 @@ class AuthService
 
         if ($rolePermission && !$private) {
             return true;
-        } elseif ($model) {
+        } elseif ($model && $permission !== 'create') {
             return self::hasOverridePermission($campaignId, $user->id, $entity, $model->id, $permission);
         }
         return false;
@@ -59,7 +60,7 @@ class AuthService
                 ])->count() > 0;
     }
 
-    public static function campaignPermissions(int $campaignId): array
+    public static function campaignPermissions(int $campaignId): Collection
     {
         $permissions = [];
         $role = Auth::user()->roles()->where('campaign_id', $campaignId)->first();
@@ -76,14 +77,13 @@ class AuthService
         $exceptions = Auth::user()->permissions()->where(['campaign_id' => $campaignId])->get();
         /** @var UserPermission $exception */
         foreach ($exceptions as $exception) {
-            $permissions[$exception->entity]['exceptions'][$exception->entity_id] = [
+            $permissions[$exception->entity]['exceptions'][strval($exception->entity_id)] = [
                 'view' => $exception->view,
-                'create' => $exception->create,
                 'edit' => $exception->edit,
                 'delete' => $exception->delete,
             ];
         }
-        return $permissions;
+        return collect($permissions);
     }
 
     public static function managePermissions(
@@ -162,7 +162,6 @@ class AuthService
             'user_id' => $userId
         ]);
         $userPermission->view = true;
-        $userPermission->create = true;
         $userPermission->edit = true;
         $userPermission->delete = true;
         $userPermission->save();

@@ -1,8 +1,8 @@
-import { Action } from "@dnd/types";
-import classNames from "classnames";
-import { FC } from "react";
-import { usePermissionsFormState } from "./PermissionsForm.state";
-import { PermissionFormProps } from "./types";
+import { Action } from '@dnd/types'
+import classNames from 'classnames'
+import { FC } from 'react'
+import { usePermissionsFormState } from './PermissionsForm.state'
+import { PermissionFormProps } from './types'
 
 const PermissionForm: FC<PermissionFormProps> = ({ entity, id, value, className, onChange }) => {
   const { input, override, selected, setOverride, selectAll, toggle, users } = usePermissionsFormState(
@@ -13,7 +13,7 @@ const PermissionForm: FC<PermissionFormProps> = ({ entity, id, value, className,
   )
   const actions: Action[] = [ 'view', 'edit', 'delete' ]
 
-  return <div className={classNames("permissions", className)}>
+  return <div className={classNames('permissions', className)}>
     <div className="uk-margin">
       <p>Do you want to override the standard permissions per user?</p>
       <label className="uk-margin-right">
@@ -52,7 +52,7 @@ const PermissionForm: FC<PermissionFormProps> = ({ entity, id, value, className,
           <tbody>
           {
             users.map((user) => <tr key={`user-${user.id}`}>
-              <td style={{ textTransform: 'capitalize' }}>{user.name}</td>
+              <td style={{ textTransform: user.name ? 'capitalize' : 'none' }}>{user.name || user.email}</td>
               {actions.map((action) => <td key={`user-${user.id}-${action}`}>
                   <input type="checkbox"
                          className="uk-checkbox"

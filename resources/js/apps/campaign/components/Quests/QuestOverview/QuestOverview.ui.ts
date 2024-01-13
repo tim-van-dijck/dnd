@@ -1,4 +1,5 @@
-import { useCampaignRepositories } from "../../../providers/CampaignRepositoryProvider";
+import { PaginatedTableAction } from '../../../../../components/layout/PaginatedTable/types'
+import { useCampaignRepositories } from '../../../providers/CampaignRepositoryProvider'
 
 export const useQuestOverviewUI = () => {
   const { AuthRepository } = useCampaignRepositories()
@@ -8,20 +9,25 @@ export const useQuestOverviewUI = () => {
       actions: [
         {
           name: 'destroy',
+          title: 'Delete',
           icon: 'trash',
-          classes: 'uk-text-danger'
+          classes: 'uk-text-danger',
+          condition: ({ id }) => AuthRepository.can('delete', 'quest', id)
         },
         {
           name: 'edit',
+          title: 'Edit',
           icon: 'edit',
-          to: ({ id }) => `/quests/${id}/edit`
+          to: ({ id }) => `/quests/${id}/edit`,
+          condition: ({ id }) => AuthRepository.can('edit', 'quest', id)
         },
         {
           name: 'view',
+          title: 'View',
           icon: 'eye',
           to: ({ id }) => `/quests/${id}`
         }
-      ],
+      ] as PaginatedTableAction[],
       can: AuthRepository.can,
       columns: [
         { title: 'Title', name: 'title' },
@@ -37,5 +43,5 @@ export const useQuestOverviewUI = () => {
         }
       ]
     }
-  );
+  )
 }
