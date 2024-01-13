@@ -15,11 +15,9 @@ $fa-font-path: '../fonts/vendor/fontawesome';
 @import "~uikit/src/scss/uikit-theme.scss";
 
 // Font Awesome
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/brands";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-
-//@import "~vue-select/src/scss/vue-select.scss";
+@import "./vendor/fontawesome/fontawesome";
+@import "./vendor/fontawesome/brands";
+@import "./vendor/fontawesome/solid";
 
 @import "partial";
 
