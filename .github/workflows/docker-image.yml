@@ -22,4 +22,19 @@ jobs:
           docker tag dnd-app:$GITHUB_SHA ${{ vars.HARBOR_HOST }}/library/dnd-app:latest
           docker push ${{ vars.HARBOR_HOST }}/library/dnd-app:latest
           docker push ${{ vars.HARBOR_HOST }}/library/dnd-app:$GITHUB_SHA
-      
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 10m
+          script: | 
+            cd /var/www/dnd-timvandijck-com
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
