@@ -44,7 +44,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router": "^6.6.1",
-    "tinymce": "^5.10.0",
+    "tinymce": "^7.0.0",
     "uikit": "^3.10",
     "uuid": "^9.0.0"
   }
